@@ -17,6 +17,7 @@ import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalcompassquiz.R
 import eltonio.projects.politicalcompassquiz.models.*
 import eltonio.projects.politicalcompassquiz.other.*
+import eltonio.projects.politicalcompassquiz.other.App.Companion.crashlytics
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
@@ -118,7 +119,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.exists()) {
                     userExists = false
-                    toast("The user does not exist")
+                    crashlytics.log("FirebaseDatabase: OnDataChange: User does not exest")
+                    //toast("The user does not exist")
                     val currentDate = Date()
                     userCreationDate = formatter.format(currentDate)
                 }

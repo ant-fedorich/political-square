@@ -16,6 +16,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+        crashlytics = FirebaseCrashlytics.getInstance()
 
         // Reset splash appearance on starting the app
         val prefs = getSharedPreferences(PREF_SETTINGS, MODE_PRIVATE).edit()

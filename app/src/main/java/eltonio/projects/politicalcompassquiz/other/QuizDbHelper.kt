@@ -8,6 +8,7 @@ import android.util.Log
 import eltonio.projects.politicalcompassquiz.models.Answer
 import eltonio.projects.politicalcompassquiz.models.Question
 import eltonio.projects.politicalcompassquiz.models.QuizResult
+import eltonio.projects.politicalcompassquiz.other.App.Companion.crashlytics
 import java.io.FileOutputStream
 import java.lang.Exception
 import eltonio.projects.politicalcompassquiz.models.QuizContract.QuestionsEntry as ques
@@ -38,6 +39,7 @@ class QuizDbHelper(private val context: Context) : SQLiteOpenHelper(context,
                 copyDB()
                 Log.e(TAG, "Copying DB (onUpgrade)")
             } catch (e: Exception) {
+                crashlytics.log("Error copying DB (onUpgrade): $e")
                 Log.e(TAG, "Error copying DB (onUpgrade)")
             }
         }
@@ -57,6 +59,7 @@ class QuizDbHelper(private val context: Context) : SQLiteOpenHelper(context,
             try {
                 copyDB()
             } catch (e: Exception) {
+                crashlytics.log("Error copying DB (onUpgrade): $e")
                 Log.e(TAG, "Error copying DB")
             }
         }
@@ -68,7 +71,8 @@ class QuizDbHelper(private val context: Context) : SQLiteOpenHelper(context,
         try {
             check = SQLiteDatabase.openDatabase(dbFullPath, null, SQLiteDatabase.OPEN_READWRITE)
         } catch (e: Exception) {
-            Log.e(TAG, "ERROR while checking to open DB. Copy DB if does not exist")
+            crashlytics.log("ERROR while checking to open DB. DB does not exist (this time): $e")
+            Log.e(TAG, "ERROR while checking to open DB. DB does not exist (this time)")
         }
         check?.close()
         return check != null
@@ -274,6 +278,7 @@ class QuizDbHelper(private val context: Context) : SQLiteOpenHelper(context,
             Log.d(TAG, "The row is put: $newRowId")
             db?.setTransactionSuccessful()
         } catch (e: Exception) {
+            crashlytics.log("The row put error: $e")
             Log.d(TAG, "The row put error: $e")
         } finally {
             db?.endTransaction()
@@ -282,7 +287,7 @@ class QuizDbHelper(private val context: Context) : SQLiteOpenHelper(context,
     }
 
     companion object {
-        const val DB_PATH = "/data/data/eltonio.projects.politicalcompass/databases/"
+        const val DB_PATH = "/data/data/eltonio.projects.politicalcompassquiz/databases/"
         const val DB_NAME = "PoliticalCompass.db"
         const val DB_VERSION = 1
     }
