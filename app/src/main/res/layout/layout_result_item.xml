@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_item_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/image_compass_saved_result"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:transitionName="transition_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/imp_compass_without_text" />
+
+    <FrameLayout
+        android:id="@+id/frame_quiz_result_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="13dp"
+        app:layout_constraintStart_toStartOf="@+id/image_compass_saved_result"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--        <view-->
+        <!--            android:id="@+id/frame_result_point_view"-->
+        <!--            class="eltonio.projects.politicalcompass.other.ResultPointView"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent" />-->
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_date_and_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_compass_saved_result"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_saved_result_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:text="2020-05-01 20:50:35"
+            android:textAppearance="@style/TextAppearance.MyApp.Overline"
+            android:transitionName="transition_date" />
+
+        <TextView
+            android:id="@+id/text_saved_result_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="18dp"
+            android:textAppearance="@style/TextAppearance.MyApp.Headline6"
+            android:textColor="@color/on_surface"
+            android:transitionName="transition_result"
+            tools:text="Социал-демократизм" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text_saved_result_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MyApp.Headline6"
+        android:textColor="@color/on_surface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/image_compass_saved_result"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1" />
+
+    <ImageView
+        android:id="@+id/image_delete_item"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_delete"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="32dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

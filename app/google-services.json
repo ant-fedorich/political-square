@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "285621923308",
+    "firebase_url": "https://political-compass-879c8.firebaseio.com",
+    "project_id": "political-compass-879c8",
+    "storage_bucket": "political-compass-879c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285621923308:android:e9aa6b500654890b86a4c9",
+        "android_client_info": {
+          "package_name": "eltonio.projects.politicalcompass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285621923308-biu12b6j6t38a7ggc99tdgcu89rbk976.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eltonio.projects.politicalcompass",
+            "certificate_hash": "d0854041d155b4a87e8b64db8ef8c986e1399a2a"
+          }
+        },
+        {
+          "client_id": "285621923308-tmbuu20m9gf2hbn4s8osu1br1720c2oo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC0NH8AWbbhzsOq4cn6r_aL9QpYV6WUqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285621923308-tmbuu20m9gf2hbn4s8osu1br1720c2oo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285621923308:android:099905e8eba4228786a4c9",
+        "android_client_info": {
+          "package_name": "eltonio.projects.politicalcompassquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285621923308-tmbuu20m9gf2hbn4s8osu1br1720c2oo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC0NH8AWbbhzsOq4cn6r_aL9QpYV6WUqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285621923308-tmbuu20m9gf2hbn4s8osu1br1720c2oo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

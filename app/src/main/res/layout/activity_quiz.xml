@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.QuizActivity">
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/radio_group_answers"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_question_new"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:text="@string/txt_question_template"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.MyApp.Headline6" />
+
+        <TextView
+            android:id="@+id/text_question_old"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.MyApp.Headline6"
+            tools:text="@string/txt_question_template" />
+
+
+    </FrameLayout>
+
+    <RadioGroup
+        android:id="@+id/radio_group_answers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/text_questions_left"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.549"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+            android:id="@+id/radio_answer_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/shape_radio"
+            android:button="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/radio_answer_1_template"
+            android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+            android:textColor="@color/on_surface"
+/>
+
+
+        <!--            android:text="@string/radio_answer_1_template"-->
+
+        <RadioButton
+            android:id="@+id/radio_answer_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/shape_radio"
+            android:button="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/radio_answer_2_template"
+            android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+            android:textColor="@color/on_surface" />
+
+        <RadioButton
+            android:id="@+id/radio_answer_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/shape_radio"
+            android:button="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/radio_answer_3_template"
+            android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+            android:textColor="@color/on_surface"
+            android:visibility="visible" />
+
+        <RadioButton
+            android:id="@+id/radio_answer_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/shape_radio"
+            android:button="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/radio_answer_4_template"
+            android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+            android:textColor="@color/on_surface" />
+
+        <RadioButton
+            android:id="@+id/radio_answer_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/shape_radio"
+            android:button="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/radio_answer_5_template"
+            android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+            android:textColor="@color/on_surface" />
+    </RadioGroup>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:max="1000"
+        android:min="0"
+        android:progress="20"
+        android:progressBackgroundTint="@color/primary_dark"
+        android:progressTintMode="src_atop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/text_questions_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+        app:layout_constraintBottom_toTopOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="5 /  40" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_undo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:visibility="gone"
+        app:backgroundTint="@color/primary"
+
+        app:elevation="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/progress_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_undo"
+        app:tint="@color/on_primary" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

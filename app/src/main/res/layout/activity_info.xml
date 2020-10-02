@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.InfoActivity">
+
+    <ScrollView
+        android:id="@+id/scroll_info"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_for_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/title_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/info_title"
+                android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_ideology_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MyApp.Headline6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_3"
+                tools:text="Либерализм" />
+
+            <ImageView
+                android:id="@+id/image_main_compass_3"
+                android:layout_width="364dp"
+                android:layout_height="364dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_ideology_selected"
+                app:srcCompat="@drawable/img_compass_with_zones" />
+
+            <FrameLayout
+                android:id="@+id/frame_3"
+                android:layout_width="320dp"
+                android:layout_height="320dp"
+                android:layout_marginTop="22dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_ideology_selected">
+
+                <ImageView
+                    android:id="@+id/image_for_canvas"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="0dp"
+                    android:visibility="invisible"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/frame_4"
+                android:layout_width="320dp"
+                android:layout_height="320dp"
+                android:layout_marginTop="22dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_ideology_selected">
+
+                <!--            app:srcCompat="@drawable/img_compass_1_autho_left2"-->
+
+
+                <ImageView
+                    android:id="@+id/image_autho_left_hover"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="-1dp"
+                    android:layout_marginTop="0dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_1_autho_left" />
+
+                <ImageView
+                    android:id="@+id/image_nation_hover"
+                    android:layout_width="160dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginTop="-1dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_2_nation" />
+
+                <ImageView
+                    android:id="@+id/image_soc_hover"
+                    android:layout_width="20dp"
+                    android:layout_height="160dp"
+                    android:layout_marginLeft="-2dp"
+                    android:layout_marginTop="80dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_5_soc" />
+
+                <ImageView
+                    android:id="@+id/image_gov_hover"
+                    android:layout_width="140dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="19dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_3_gov" />
+
+                <ImageView
+                    android:id="@+id/image_soc_demo_hover"
+                    android:layout_width="140dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="80dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_4_soc_demo" />
+
+                <ImageView
+                    android:id="@+id/image_autho_right_hover"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="240dp"
+                    android:layout_marginTop="0dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_6_autho_right" />
+
+                <ImageView
+                    android:id="@+id/image_radical_cap_hover"
+                    android:layout_width="20dp"
+                    android:layout_height="160dp"
+                    android:layout_marginLeft="300dp"
+                    android:layout_marginTop="80dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_7_radical_cap" />
+
+                <ImageView
+                    android:id="@+id/image_right_anar_hover"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="240dp"
+                    android:layout_marginTop="240dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_10_right_anar" />
+
+                <ImageView
+                    android:id="@+id/image_anar_hover"
+                    android:layout_width="160dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginTop="300dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_11_anar" />
+
+                <ImageView
+                    android:id="@+id/image_left_anar_hover"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="-1dp"
+                    android:layout_marginTop="240dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_14_left_anarh" />
+
+                <ImageView
+                    android:id="@+id/image_cons_hover"
+                    android:layout_width="140dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="160dp"
+                    android:layout_marginTop="20dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_8_cons" />
+
+                <ImageView
+                    android:id="@+id/image_prog_hover"
+                    android:layout_width="140dp"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="160dp"
+                    android:layout_marginTop="80dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_9_prog" />
+
+                <ImageView
+                    android:id="@+id/image_lib_hover"
+                    android:layout_width="280dp"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginTop="160dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_12_lib" />
+
+                <ImageView
+                    android:id="@+id/image_lib_soc"
+                    android:layout_width="140dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="240dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_15_lib_soc" />
+
+                <ImageView
+                    android:id="@+id/image_libertar_hover"
+                    android:layout_width="140dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="158dp"
+                    android:layout_marginTop="240dp"
+                    android:alpha="0"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/img_compass_13_libertar" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/title_desc_compass_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/info_subtitle_1"
+                android:textAppearance="@style/TextAppearance.MyApp.Subtitle2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_main_compass_3" />
+
+            <ImageView
+                android:id="@+id/image_compass_info_all"
+                android:layout_width="114dp"
+                android:layout_height="114dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_desc_compass_1"
+                app:srcCompat="@drawable/img_compass_info_all" />
+
+            <TextView
+                android:id="@+id/text_desc_compass_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="Политический компас — система координат, на которой различные политические течения можно распределить в зависимости от отношения к личной и экономической свободе человека"
+                android:textAppearance="@style/TextAppearance.MyApp.Body2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/image_compass_info_all"
+                app:layout_constraintTop_toBottomOf="@+id/title_desc_compass_1" />
+
+            <TextView
+                android:id="@+id/title_desc_compass_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/info_subtitle_2"
+                android:textAppearance="@style/TextAppearance.MyApp.Subtitle2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_compass_info_all" />
+
+            <ImageView
+                android:id="@+id/image_compass_info_horisontal"
+                android:layout_width="183dp"
+                android:layout_height="128dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_desc_compass_2"
+                app:srcCompat="@drawable/img_compass_info_horizontal" />
+
+            <TextView
+                android:id="@+id/text_desc_compass_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/info_txt_description_template"
+                android:textAppearance="@style/TextAppearance.MyApp.Body2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_compass_info_horisontal" />
+
+            <TextView
+                android:id="@+id/title_desc_compass_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/info_subtitle_3"
+                android:textAppearance="@style/TextAppearance.MyApp.Subtitle2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_desc_compass_2" />
+
+            <ImageView
+                android:id="@+id/image_compass_info_vertical"
+                android:layout_width="135dp"
+                android:layout_height="156dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_desc_compass_3"
+                app:srcCompat="@drawable/img_compass_info_vertical" />
+
+            <TextView
+                android:id="@+id/text_desc_compass_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/info_txt_description_template"
+                android:textAppearance="@style/TextAppearance.MyApp.Body2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_compass_info_vertical" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

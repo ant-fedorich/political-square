@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AboutActivity">
+
+    <ScrollView
+        android:id="@+id/scroll_1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_containter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_about_desc_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/about_desc_1"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title_about_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/about_title_1"
+                android:textAppearance="@style/TextAppearance.MyApp.Headline6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_about_desc_1" />
+
+            <ImageView
+                android:id="@+id/image_voxukraine_logo"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:layout_constraintBottom_toBottomOf="@+id/text_voxukraine_link"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_voxukraine_title"
+                app:srcCompat="@drawable/img_voxukraine_logo" />
+
+            <TextView
+                android:id="@+id/text_voxukraine_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/about_voxukraine_title"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintStart_toEndOf="@+id/image_voxukraine_logo"
+                app:layout_constraintTop_toBottomOf="@+id/title_about_1" />
+
+            <TextView
+                android:id="@+id/text_voxukraine_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="@string/about_voxukraine_link"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintStart_toEndOf="@+id/image_voxukraine_logo"
+                app:layout_constraintStart_toStartOf="@+id/text_politicalcompass_title"
+                app:layout_constraintTop_toBottomOf="@+id/text_voxukraine_title" />
+
+            <ImageView
+                android:id="@+id/image_politicalcompass_logo"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:layout_constraintBottom_toBottomOf="@+id/text_politicalcompass_link"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_politicalcompass_title"
+                app:srcCompat="@drawable/img_politicalcompass_logo" />
+
+            <TextView
+                android:id="@+id/text_politicalcompass_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/about_politicalcompass_title"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintStart_toEndOf="@+id/image_politicalcompass_logo"
+                app:layout_constraintTop_toBottomOf="@+id/text_voxukraine_link" />
+
+            <TextView
+                android:id="@+id/text_politicalcompass_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="@string/about_politicalcompass_link"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintStart_toEndOf="@+id/image_politicalcompass_logo"
+                app:layout_constraintStart_toStartOf="@+id/text_politicalcompass_title"
+                app:layout_constraintTop_toBottomOf="@+id/text_politicalcompass_title" />
+
+            <TextView
+                android:id="@+id/text_about_desc_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/about_desc_2"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_politicalcompass_link" />
+
+            <TextView
+                android:id="@+id/title_about_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/about_title_2"
+                android:textAppearance="@style/TextAppearance.MyApp.Headline6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_about_desc_2" />
+
+            <TextView
+                android:id="@+id/text_about_desc_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/about_desc_3"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_about_2" />
+
+            <TextView
+                android:id="@+id/title_about_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/about_title_3"
+                android:textAppearance="@style/TextAppearance.MyApp.Headline6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_about_desc_3" />
+
+            <TextView
+                android:id="@+id/text_about_desc_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/about_desc_4"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_about_3" />
+
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/on_surface"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_about_desc_4" />
+
+            <TextView
+                android:id="@+id/text_about_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/about_version"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_line" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

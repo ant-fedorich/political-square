@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="eltonio.projects.politicalcompassquiz">
+
+    <application
+        android:name="eltonio.projects.politicalcompassquiz.other.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyApp">
+        <activity android:name="eltonio.projects.politicalcompassquiz.activities.IntroActivity"
+            android:theme="@style/Theme.MyApp.NoActionBar"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.SplashActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApp.SplashStyle" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.AboutActivity"
+            android:label="@string/about_title_actionbar"
+            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.SettingsActivity"
+            android:label="@string/settings_title_actionbar"
+            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.SavedResultDetailActivity"
+            android:label="@string/savedresultdetail_title_actionbar"
+            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.SavedResultsActivity"
+            android:label="@string/saved_title_actionbar"
+            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.InfoActivity"
+            android:label="@string/info_title_actionbar"
+            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.ViewInfoActivity"
+            android:label="@string/info_title_actionbar"
+            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApp.NoActionBar" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.ResultActivity"
+            android:label="@string/result_title_actionbar"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApp.NoActionBar" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.QuizActivity"
+            android:label="@string/quiz_title_actionbar"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApp.NoActionBar" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.ChooseViewActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApp.NoActionBar" />
+        <activity
+            android:name="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:label="@string/main_title_actionbar"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApp.NoActionBar">
+
+        </activity>
+        <activity android:name="eltonio.projects.politicalcompassquiz.activities.BaseActivity" />
+    </application>
+
+</manifest>

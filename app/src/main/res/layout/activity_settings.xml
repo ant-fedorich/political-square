@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SettingsActivity"
+
+    >
+
+    <TextView
+        android:id="@+id/title_settings_change_quiz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/settings_title_change_quiz"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.MyApp.Subtitle2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_eng" />
+
+    <TextView
+        android:id="@+id/title_settings_change_lang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/settings_title_change_lang"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.MyApp.Subtitle2"
+        android:textColor="@color/on_surface_bright"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_ukr"
+        android:layout_width="62dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_lang_radio_ukr"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_settings_change_lang" />
+
+    <ImageView
+        android:id="@+id/image_rus"
+        android:layout_width="62dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_lang_radio_rus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_ukr" />
+
+    <ImageView
+        android:id="@+id/image_eng"
+        android:layout_width="62dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_lang_radio_eng"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_rus" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_lang"
+        android:layout_width="130dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/image_ukr"
+        app:layout_constraintTop_toBottomOf="@+id/title_settings_change_lang">
+
+        <RadioButton
+            android:id="@+id/radio_ukr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_radio_lang_normal"
+            android:button="@null"
+            android:text="@string/settings_radio_ukr"
+            android:textAppearance="@style/TextAppearance.MyApp.Subtitle1" />
+
+        <RadioButton
+            android:id="@+id/radio_rus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+
+            android:background="@drawable/shape_radio_lang_normal"
+            android:button="@null"
+            android:text="@string/settings_radio_rus"
+            android:textAppearance="@style/TextAppearance.MyApp.Subtitle1" />
+
+
+        <RadioButton
+            android:id="@+id/radio_eng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/shape_radio_lang_normal"
+            android:button="@null"
+            android:text="@string/settings_radio_eng"
+            android:textAppearance="@style/TextAppearance.MyApp.Subtitle1" />
+    </RadioGroup>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_quiz_option_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_settings_change_quiz">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_quiz_option_1"
+            android:background="@drawable/shape_quiz_option_button_default"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/title_quiz_option_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/all_title_quiz_option_1"
+                android:textColor="@color/material_on_surface_disabled"
+                android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+                app:layout_constraintStart_toEndOf="@+id/image_quiz_option_1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_quiz_option_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/roboto_regular"
+                android:text="@string/all_desc_quiz_option_1"
+                android:textColor="@color/material_on_surface_disabled"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/title_quiz_option_1"
+                app:layout_constraintTop_toBottomOf="@+id/title_quiz_option_1" />
+
+            <ImageView
+                android:id="@+id/image_quiz_option_1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/img_world_quiz" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_quiz_option_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_quiz_option_1"
+        app:cardElevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_quiz_option_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_quiz_option_button_default">
+
+            <TextView
+                android:id="@+id/title_quiz_option_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/all_title_quiz_option_2"
+                android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+                app:layout_constraintStart_toEndOf="@+id/image_quiz_option_2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_quiz_option_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/roboto_regular"
+                android:text="@string/all_desc_quiz_option_2"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/title_quiz_option_2"
+                app:layout_constraintTop_toBottomOf="@+id/title_quiz_option_2" />
+
+            <ImageView
+                android:id="@+id/image_quiz_option_2"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/img_ukraine_quiz" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

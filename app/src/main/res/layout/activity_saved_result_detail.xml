@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_saved_result_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SavedResultDetailActivity">
+
+    <TextView
+        android:id="@+id/title_result_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="49dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MyApp.Headline5"
+        android:transitionName="transition_result"
+        app:layout_constraintBottom_toTopOf="@+id/image_main_compass_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.10"
+        tools:text="Либерализм" />
+
+    <Button
+        android:id="@+id/button_compass_info_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/savedresultdetail_btn_compass_info"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_who_you_are"
+        app:layout_constraintVertical_bias="0.90" />
+
+    <ImageView
+        android:id="@+id/image_main_compass_2"
+        android:layout_width="354dp"
+        android:layout_height="354dp"
+        android:layout_marginTop="64dp"
+
+        android:transitionName="transition_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.10"
+        app:srcCompat="@drawable/img_compass" />
+
+    <FrameLayout
+        android:id="@+id/frame_saved_result_detail"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_marginStart="-1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/image_main_compass_2">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text_who_you_was"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/savedresultdetail_txt_who_you_was"
+        android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+        app:layout_constraintStart_toEndOf="@+id/image_circle_light"
+        app:layout_constraintTop_toBottomOf="@+id/image_main_compass_2" />
+
+    <ImageView
+        android:id="@+id/image_circle_dark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/image_circle_light"
+        app:layout_constraintStart_toStartOf="@+id/image_circle_light"
+        app:layout_constraintTop_toTopOf="@+id/text_who_you_are"
+        app:srcCompat="@drawable/shape_circle_dark" />
+
+    <TextView
+        android:id="@+id/text_who_you_are"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/savedresultdetail_txt_you_are"
+        android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+        app:layout_constraintStart_toEndOf="@+id/image_circle_dark"
+        app:layout_constraintTop_toBottomOf="@+id/text_who_you_was" />
+
+    <ImageView
+        android:id="@+id/image_circle_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_who_you_was"
+        app:srcCompat="@drawable/shape_circle_light" />
+
+    <TextView
+        android:id="@+id/text_result_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+        android:transitionName="transition_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_result_detail"
+        tools:text="2020-05-01 20:25:35" />
+
+    <TextView
+        android:id="@+id/text_result_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(тест: politicalcompass.org)"
+        android:textAppearance="@style/TextAppearance.MyApp.Subtitle1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_result_date" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2F80BD</color>
+    <color name="primary_dark">#23609B</color>
+    <color name="primary_light">#6CCAF4</color>
+    <color name="primary_super_light">#BBE8FA</color>
+    <color name="on_primary">#BDFFFFFF</color>
+    <color name="on_primary_bright">#FFFFFF</color>
+    <color name="on_primary_fade">#61FFFFFF</color>
+
+    <color name="surface">#ffffff</color>
+    <color name="on_surface">#99000000</color>
+    <color name="on_surface_bright">#CC000000</color>
+    <color name="on_surface_fade">#61FFFFFF</color>
+
+    <color name="collapsing_image_сollapsed">#D92F80BD</color>
+    <color name="collapsing_image_expanded">#662F80BD</color>
+    <color name="deleting">#FF5E5E</color>
+
+    <color name="quiz_answer_selection">#802F80BD</color>
+    <color name="quiz_answer_old_selected">#80AAAAAA</color>
+</resources>

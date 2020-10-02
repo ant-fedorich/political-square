@@ -1,0 +1,440 @@
+<resources>
+    <string name="app_name" translatable="false">Political Compass Quiz</string>
+
+    <string name="navigation_drawer_open" translatable="false">Open menu</string>
+    <string name="navigation_drawer_close" translatable="false">Close menu</string>
+
+    <string name="intro_title_1">Who you think you are?</string>
+    <string name="intro_title_2">Pass Quiz</string>
+    <string name="intro_title_3">Who you really are</string>
+    <string name="intro_button_next">Next</string>
+    <string name="intro_button_get_started">Get Started</string>
+
+    <string name="main_title_actionbar" translatable="false">Political Compass Quiz</string>
+    <string name="main_btn_start">Start</string>
+    <string name="main_btn_google_login" translatable="false">Google</string>
+    <string name="main_btn_facebook_login" translatable="false">Facebook</string>
+    <string name="main_btn_microsoft_login" translatable="false">Microsoft</string>
+    <string name="main_txt_register_with">Register via</string>
+    <string name="main_link_why_to_register">Why to register?</string>
+
+    <string name="chooseview_title">Choose your political view</string>
+    <string name="chooseview_btn_start">Start test</string>
+    <string name="chooseview_btn_compass_info">Details about compass</string>
+
+    <string name="txt_question_template" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris</string>
+
+    <string name="radio_answer_1_template">Rather no</string>
+    <string name="radio_answer_2_template">No</string>
+    <string name="radio_answer_3_template">Hard to answer</string>
+    <string name="radio_answer_4_template">Rather yes</string>
+    <string name="radio_answer_5_template">Yes</string>
+
+    <string name="quiz_title_actionbar">Test</string>
+    <string name="quiz_btn_next">Next</string>
+
+    <string name="result_title_actionbar">Result</string>
+    <string name="result_subtitle_you_thought">you thought</string>
+
+    <string name="result_title_template">You are communist</string>
+    <string name="result_btn_compass_info">More about result</string>
+    <string name="result_txt_who_you_was">- who you considered yourself</string>
+    <string name="result_txt_you_are">- who you really are</string>
+
+    <string name="saved_title_actionbar">Saved results</string>
+
+    <string name="savedresultdetail_title_actionbar">Saved result</string>
+    <string name="savedresultdetail_title_quiz">Quiz</string>
+    <string name="savedresultdetail_title_template">You are communist</string>
+    <string name="savedresultdetail_btn_compass_info">More about result</string>
+    <string name="savedresultdetail_txt_who_you_was">- who you considered yourself</string>
+    <string name="savedresultdetail_txt_you_are">- who you really are</string>
+
+    <string name="settings_title_actionbar">Settings</string>
+    <string name="settings_title_change_lang">Language of Interface:</string>
+    <string name="settings_radio_ukr" translatable="false">Українська</string>
+    <string name="settings_radio_rus" translatable="false">Русский</string>
+    <string name="settings_radio_eng" translatable="false">English</string>
+
+    <string name="settings_title_change_quiz">Quiz option</string>
+
+    <string name="navheader_title">Menu</string>
+    <string name="all_dialog_do_you_want_to_end">End the quiz?</string>
+    <string name="all_dialog_yes">Yes</string>
+    <string name="all_dialog_no">No</string>
+
+    <string name="all_title_quiz_option_1">For World</string>
+    <string name="all_title_quiz_option_2">For Ukraine</string>
+    <string name="all_owner_quiz_option_1" translatable="false">politicalcompass.org</string>
+    <string name="all_owner_quiz_option_2" translatable="false">VoxUkraine</string>
+    <string name="all_desc_quiz_option_1">Owner: politicalcompass.org</string>
+    <string name="all_desc_quiz_option_2">Owner: VoxUkraine</string>
+
+    <string name="navmenu_main">Main</string>
+    <string name="navmenu_saved">Saved</string>
+    <string name="navmenu_info">Info</string>
+    <string name="navmenu_settings">Settings</string>
+    <string name="navmenu_about">About</string>
+
+    <string name="about_title_actionbar">About the app</string>
+    <string name="about_title_1">Sources of information</string>
+    <string name="about_title_2">Thanks</string>
+    <string name="about_title_3">Warning</string>
+    <string name="about_desc_1">
+        Political compass (aka spectrum, square) is a system of coordinates on which various political movements
+         can be distributed depending on the attitude to personal and economic freedom of a person. \n
+         \n
+         The quiz shows where you are in this system.
+    </string>
+    <string name="about_desc_2">
+        For the Ukrainian and Russian languages, several politicalcompass.org questions were adapted to the realities of the post-Soviet countries.
+         Descriptions for ideologies were taken from wikipedia.org and other open sources.
+    </string>
+    <string name="about_desc_3">
+        Thanks to VoxUkraine (Maxim Skubenko), politicalcompass.org (David Wayne) and
+         Timofey Brik for the resources and information support provided.
+    </string>
+    <string name="about_desc_4">
+        The quiz does not accurately determine your worldview, but shows your general way of thinking,
+         your personal attitude to certain things in the economy and society.
+         So if your result is "Socialism", this does not mean that you are a 100% socialist.
+    </string>
+
+    <string name="about_voxukraine_title">VoxUkraine</string>
+    <string name="about_voxukraine_link">voxukraine.org</string>
+    <string name="about_politicalcompass_title">The Political Compass</string>
+    <string name="about_politicalcompass_link">voxukraine.org</string>
+    <string name="about_version">Version 1.1.0</string>
+
+
+    <!--  Description for Compass  -->
+
+    <string name="info_title_actionbar">Info</string>
+    <string name="info_title">Choose an ideology for information</string>
+
+    <string name="info_subtitle_1">General info about compass</string>
+    <string name="info_subtitle_2">
+        Horizontal axis: \n
+        Economically Right / Economically Left
+    </string>
+    <string name="info_subtitle_3">
+        Vertical axis: \n
+        Libertarianism/Authoritarianism
+    </string>
+
+    <string name="info_txt_description_template">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </string>
+    <string name="text_desc_compass_1">
+         Political compass - coordinate system,
+         on which various political trends can be distributed in
+         depending on the attitude to personal and economic freedom of a person
+    </string>
+    <string name="text_desc_compass_2">
+        In the test, the Left-Right Axis measures economic views. \n
+        "Left" supports government intervention and economic regulation,
+        while the Right supports economic freedom and non-intervention.
+        This means that the “Left” is inclined to support the efforts of the state to limit the
+        which, in his opinion, is unfair or immoral phenomena of the free market,
+        while "Right" is inclined to believe that transactions between private parties should mainly
+        concluded without government intervention.
+    </string>
+    <string name="text_desc_compass_3">
+        All liberals come from the belief that upholding individual freedoms is more important,
+        than meeting the needs of society.
+        Left-wing liberals tend to believe that a person cannot use his freedoms without a certain level of education
+        and material comfort. In their view, this makes redistribution between rich and poor necessary.
+        On the contrary, the Right Liberals tend to believe that taxing a person against his will for
+        providing social benefits to others is an act of violence and, thus, violates individual freedom.
+        They support charity and help for the poor, provided that they are voluntary. \n
+        \n
+        All supporters of a more authoritarian type of government come from
+        that the welfare of society is above the desires of specific individuals.
+        Right-wing authoritarian hold so-called paternalistic political views.
+        They defend a hierarchical society and take a tough stance against threats,
+        - criminals are in prison, and foreign states are held back by strong defense. \n
+        \n
+    </string>
+
+    <string name="imagedesc_info_compass" translatable="false">Compass info</string>
+
+    <string name="title_result_view_info">Anarchy</string>
+    <string name="viewinfo_desc_template">
+        All liberals come from the belief that upholding freedoms
+        personality is more important than meeting the needs of society.
+        Left-wing liberals tend to believe that a person cannot use his freedoms without a certain level
+        education and material comfort. In their opinion, this makes redistribution between
+        rich and poor. On the contrary, Right-wing Liberals tend to believe that taxing a person against
+        his will to provide social benefits to others is an act of violence and thus violates
+        individual freedom. They support charity and help for the poor, provided that they are voluntary.
+
+        All supporters of a more authoritarian type of government come from
+        that the welfare of society is above the desires of specific individuals.
+        Right-wing authoritarianists hold so-called paternalistic political views.
+        They defend a hierarchical society and take a tough stance against threats,
+        - The criminals are in prison, and foreign states are held back by strong defense.
+    </string>
+
+    <!--  Titles for ideologies  -->
+
+    <string name="title_authoritarian_left">Authoritarian left</string>
+    <string name="title_nationalism">Radical nationalism</string>
+    <string name="title_powercentrism">Power-centrism</string>
+    <string name="title_social_democracy">Social democracy</string>
+    <string name="title_socialism">Socialism</string>
+    <string name="title_authoritarian_right">Authoritarian right</string>
+    <string name="title_radical_capitalism">Radical capitalism</string>
+    <string name="title_conservatism">Conservatism</string>
+    <string name="title_progressivism">Progressivism</string>
+    <string name="title_right_anarchy">Right anarchy</string>
+    <string name="title_anarchy">Anarchy</string>
+    <string name="title_liberalism">Liberalism</string>
+    <string name="title_libertarianism">Libertarianism</string>
+    <string name="title_left_anarchy">Left anarchy</string>
+    <string name="title_liberal_socialism">Liberal socialism</string>
+
+    <!--    Descriptions for ideologies -->
+
+    <string name="desc_authoritarian_left">
+        Authoritarianism (authoritarian regime) - the concentration of power within the same group of like-minded people or
+          in the hands of one person. Any serious opposition to the government is impossible or is decorative. \n
+        Under left-wing authoritarianism, private property is prohibited. \n
+        \n
+        Signs of authoritarianism: \n
+        1. Alienation of the people from power \n
+        2. Centralization of power in the management of society by a certain person or group of people: \n
+        3. The leadership and management of society in all spheres of life is carried out mainly by command-administrative, command methods \n
+        4. Dominance in the political system of one, ruling party \n
+        5. The legal nature of the activities of the authorities is largely \n
+        6. Infringement of the rights and freedoms of citizens \n
+        7. The army, police, security agencies are used to suppress opposition forces,
+            Opposing the regime, serve as an instrument and the main pillar of power. \n
+        \n
+        All media and their content are taken under strict state control
+    </string>
+    <string name="desc_nationalism">
+        An extreme form of nationalism can lead to ideas of national superiority and national exclusivity (chauvinism),
+             as well as cultural and religious intolerance (xenophobia). \n
+         In politics, the restriction of individual rights is possible. \n \n
+
+         ??? Conflict \n
+         The original compass says "nationalism." Is Nazism an extreme right ideology?
+    </string>
+    <string name="desc_powercentrism">
+        Power-centrism is the belief that the state should intervene in society and
+             to control its economic and social aspects.
+             Considering the state as the highest result and goal of social development (the state is better than the individual). \n
+         \n
+         In economics, it leads to state monopoly.
+    </string>
+    <string name="desc_social_democracy">
+        Социализм -  общественная система, при которой государство в значительной степени контролирует экономику
+            и средства производства, а своей целью провозглашает равенство и справедливое распределение благ. \n \n
+        Социал-демократизм - тот же социализм, с контрольем экономики государством, но с политической свободой. \n
+        Не настаивают на необходимости принуждению национализации способов производства.
+    </string>
+    <string name="desc_socialism">
+        Socialism is a social system in which the state largely controls the economy.
+            and means of production, and with its goal proclaims equality and equitable distribution of goods. \n
+        \n
+        Socialism is characteristic: \n
+            • Great influence and state control over the economy \n
+            • Planned economy \n
+            • Nationalization of production, banking, transport systems (state-owner) \n
+            • Free medicine and education \n
+            • Large allowances and assistance to the poor \n
+            • Large taxes \n
+        \ n
+        Core principles and values: \n
+        Equality, lack of exploitation, equitable distribution and public ownership. \n
+        \n
+        The role of the state in economic life \n
+        The state regulates economic life, allocates resources, and limits private property. \n
+        \n
+        Relation to social issues: \n
+        All people should have equal rights and obligations, the state is struggling with income inequality. \n
+        \n
+        Ways to solve social issues: \n
+        State control, ensuring social equality. \n
+
+    </string>
+    <string name="desc_authoritarian_right">
+        Authoritarianism (authoritarian regime) - the concentration of power within the same group of like-minded people
+        or in the hands of one person. Any serious opposition to the government is impossible or is decorative. \n
+        Under the right authoritarianism private property is allowed. \n
+        \n
+        Signs of authoritarianism: \n
+        1. Alienation of the people from power \n
+        2. Centralization of power in the management of society by a certain person or group of people: \n
+        3. The leadership and management of society in all spheres of life is carried out mainly by command-administrative,
+          command methods \n
+        4. Dominance in the political system of one, ruling party \n
+        5. The legal nature of the activities of the authorities is largely \n
+        6. Infringement of the rights and freedoms of citizens \n
+        7. The army, police, and security agencies are used to suppress opposition forces opposing the regime and serve as an instrument and the main support of the government. \n
+        \n
+        All media and their content are taken under strict state control
+    </string>
+    <string name="desc_radical_capitalism">
+        Capitalism - economic freedom from government intervention, private property,
+             legal equality and freedom of enterprise.
+             The main criterion for making economic decisions is the desire to increase capital, to make a profit. \ n
+         \ n
+         With a radical version of Capitalism, there can be strong class inequality, exploitation of labor (child labor, a 16-hour working day, etc.), an oligarchy.
+    </string>
+    <string name="desc_conservatism">
+        Conservatism advocates the preservation and strengthening of traditional public institutions
+            - the state, churches, families,
+            private property. Conservatives, unlike socialists, recognize social inequality as natural
+            and oppose active government intervention in the economy. \n
+        \n
+        Core principles and values: \n
+        Traditional institutions: state, family, church, private property. \n
+        The role of the state in economic life: \n
+        The state protects private property as the basis of the economy. \n
+        Relation to social issues: \n
+        People are not equal, some of them may have privileges. \n
+        Ways to solve social issues: \n
+        Strengthening the traditional foundations and institutions of society. \n
+    </string>
+    <string name="desc_progressivism">
+        Progressivism is the support or promotion of social progress in society through reform,
+            often opposed to conservatism, traditionalism and obscurantism. Like a philosophy
+            it is based on the idea of ​​progress, which claims that advances in science, technology,
+            economic development and social organization are vital to improving the human condition. \n
+        \n
+        ??? Conflict \n
+        In other sources they write that this is a left movement, not a right \n
+        They also write that Liberals and progressives are centrists \n
+        Proponents of progressivism \n
+        (close to capitalism?) \n
+    </string>
+    <string name="desc_right_anarchy">
+        (aka anarcho-capitalism) \n
+        \n
+        Anarchists advocate human freedom and deny the need for forced control \n
+            and man’s power over man. \n
+        \n
+        Anarchists advocate the elimination of statehood and self-government, \n
+        that is, for a system of independent meetings of citizens who independently manage their life \n
+        and labor in the workplace, in the area of ​​residence, etc. \n
+        \n
+        Right-wing anarchism is based on the conviction of the need for free possession
+        private property, denial of any form of government or [its] interference,
+        and supporting a competitive free market as the main mechanism for social interaction. ”
+        Welcome the existence of private property, which was acquired through labor,
+        trade or was received as a gift. \n
+        \n
+        In this sense, the term right-wing anarchism
+        (anarcho-capitalism) is often a synonym for "libertarianism."
+    </string>
+    <string name="desc_anarchy">
+        Anarchists advocate human freedom and deny the need for forced \n
+        management and power of man over man. \n
+        \n
+        Anarchists advocate self-government, that is, a system of independent assembly of citizens, \n
+        independently managing their life and work at the workplace, in the area of ​​residence, etc. \n
+        \n
+        Anarchist society is a voluntary confederation of such assemblies. \n
+        \n
+        The basic principles of anarchism \n
+        Core principles and values: \n
+        The lack of power of some people over others, freedom from coercion \n
+        The role of the state in economic life: \n
+        The state is not needed, it should not interfere in the economy: \n
+        Relation to social issues: \n
+        Refusal of private property will ensure equality of people \n
+        Ways to solve social issues: \n
+        In the absence of a state, people themselves will solve their problems \n
+    </string>
+    <string name="desc_liberalism">
+        Liberalism proclaims the rights and freedom of every person as the highest value
+            and establishes them as the legal basis of public and economic order. \n
+        Liberalism in general - the desire for freedom of the human spirit from constraint,
+            imposed by state, religion, tradition, etc. \n
+        \n
+        The most important freedoms in modern liberalism are the freedom to speak out publicly,
+            freedom of choice of religion, freedom to choose representatives in fair and free elections \n
+        \n
+        Core principles and values: \n
+        Freedom of personality, human rights, private property, democracy \n
+        \n
+        The role of the state in economic life: \n
+        The state minimally intervenes in the free market, does not interfere with competition. \n
+        \n
+        Relation to social issues: \n
+        People are equal before the law, otherwise the inequality is normal \n
+        \n
+        Ways to solve social issues: \n
+        Reforms, gradual changes in society.
+    </string>
+    <string name="desc_libertarianism">
+        Maximum freedom of the economy and the individual. Maximum personality autonomy.
+        Libertarians believe that a person has full rights (sovereignty) to his body,
+        own life and property obtained as a result of her own efforts or voluntary exchange \n
+
+        What libertarians want to undo: \n
+            • Taxes (or at least drastically reduce the amount and reduce the remaining, because,
+        from their point of view, this is legalized robbery by the state) \n
+            • Conscription \n
+            • Punishment for crimes without a victim
+                (e.g. drug use, prostitution, arms smuggling, driving in a seat belt) \n
+            • Antitrust bans \n
+        What libertarians want to legitimize \n
+            • Same-sex marriage \n
+            • Free carrying weapons \n
+            • Euthanasia \n
+        What libertarians argue about \n
+            • Legalization of all types of immigration \n
+            • Abortion - part of the libertarians believe that from an early period of development, the fetus has the same rights,
+                as a born person; their opponents believe the abortion ban violates the mother’s right to choose \n
+            • Age of sexual consent - some libertarians believe that it should be abolished altogether, \n
+            since it is introduced arbitrarily by the authorities and, accordingly, can be considered violent. \n
+            • Deprivation of rights due to incapacitation - some libertarians believe that this is also an “attack” on personal autonomy \n
+            • International politics - some libertarians reject the right of countries to intervene; another thinks \n
+                that they are possible if basic human rights are systematically violated somewhere \n
+        \n
+        They advocate the so-called minimum state, or a state that acts as a “night watchman”.
+        Its functions should be reduced to ensuring national defense, law and order and judicial procedures.
+        \n
+        Unlike libertarianism, supporters of anarchism against any hierarchies and power, demand the complete elimination of the state.
+
+    </string>
+    <string name="desc_left_anarchy">
+        (aka anarcho-communism) \n
+        \n
+        Anarchists advocate human freedom and deny the need for forced
+            management and power of man over man. \n
+        \n
+        Anarchists advocate the elimination of statehood and self-government,
+        that is, for a system of independent meetings of citizens who independently manage their lives and
+        labor in the workplace, in the area of ​​residence, etc. \n
+        \n
+        Under left-wing anarchism, money will have to cease to exist,
+        people will not receive direct compensation for labor (through the separation of profits and wages),
+        but will have to have free access to all resources and surpluses produced by the commune.
+        That is, instead of private, there will be collective, public property.
+
+    </string>
+    <string name="desc_liberal_socialism">
+        (closer to anarcho-communism) \n
+        \n
+        In socialism, the state largely controls the economy and means
+        production, and its goal proclaims equality and fair distribution of goods. \n
+        \n
+        But libertarian socialists advocate the abolition of private property
+        on the means of production and the state as an unnecessary and harmful institution.
+        They are anti-capitalists and opponents of a market economy. In the end
+        most Marxists agree with this, but for libertarian socialists
+        anti-authoritarianism and anti-parliamentarism. \n
+    </string>
+    <string name="settings_owner_quiz_option_2">Owner: VoxUkraine</string>
+    <string name="settings_owner_quiz_option_1">Owner: politicalcompass.org</string>
+    <string name="settings_title_quiz_option_2">For Ukraine</string>
+    <string name="settings_title_quiz_option_1">For World</string>
+
+</resources>
