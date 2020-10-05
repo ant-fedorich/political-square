@@ -14,7 +14,6 @@
         android:scaleType="centerInside"
         android:scaleX="5"
         android:scaleY="5"
-        android:src="@drawable/img_compass_only_strokes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "eltonio.projects.politicalcompassquiz",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "properties": [],
+      "versionCode": 3,
+      "versionName": "0.9.0.3",
+      "enabled": true,
+      "outputFile": "app-release.apk"
+    }
+  ]
+}

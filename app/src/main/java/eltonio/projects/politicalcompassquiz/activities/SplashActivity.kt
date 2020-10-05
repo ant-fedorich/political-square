@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.*
+import com.bumptech.glide.Glide
 import eltonio.projects.politicalcompassquiz.R
 import eltonio.projects.politicalcompassquiz.other.*
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -20,11 +21,16 @@ class SplashActivity : AppCompatActivity() {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        Log.e(eltonio.projects.politicalcompassquiz.other.TAG, "loadIsIntroOpened(): " + loadIsIntroOpened())
+        Log.e(TAG, "loadIsIntroOpened(): " + loadIsIntroOpened())
+
+        Glide.with(this)
+            .load(R.drawable.img_compass_only_strokes)
+            .into(image_compass_only_strokes)
 
             //== Fading ==
         // Create fading animation
 /*        splashAnimationTime = 600L // For Test without Into*/
+
 
         val compassAnimation1 = AnimationUtils.loadAnimation(this, R.anim.splash_fading)
         compassAnimation1.apply {

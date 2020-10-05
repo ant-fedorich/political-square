@@ -10,7 +10,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp"
-        android:hardwareAccelerated="false"
         android:largeHeap="true">
         <meta-data
             android:name="firebase_performance_logcat_enabled"
