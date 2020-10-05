@@ -32,6 +32,13 @@ class QuizDbHelper(private val context: Context) : SQLiteOpenHelper(context,
         //toast("QuizDbHelper:onCreate")
     }
 
+    override fun onOpen(db: SQLiteDatabase?) {
+        // Needs to prevent an error:  no such table: Questions (code 1 SQLITE_ERROR)
+        // Bug in Android 8+
+        db?.disableWriteAheadLogging()
+        super.onOpen(db)
+    }
+
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         Log.i(TAG,"QuizDbHelper:onUpgrade")
         if (newVersion > oldVersion) {
