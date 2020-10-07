@@ -20,7 +20,7 @@
             android:screenOrientation="portrait">
 
         </activity>
-
+        
         <activity
             android:name="eltonio.projects.politicalcompassquiz.activities.SplashActivity"
             android:noHistory="true"
