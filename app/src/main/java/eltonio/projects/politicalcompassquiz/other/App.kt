@@ -2,7 +2,10 @@ package eltonio.projects.politicalcompassquiz.other
 
 import android.app.Application
 import android.content.Context
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.ktx.Firebase
 
 class App : Application() {
 
@@ -11,12 +14,17 @@ class App : Application() {
             private set
         lateinit var crashlytics: FirebaseCrashlytics
             private set
+        lateinit var analytics: FirebaseAnalytics
+            private set
     }
 
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
         crashlytics = FirebaseCrashlytics.getInstance()
+        analytics = Firebase.analytics
+
+        analytics.logEvent(EVENT_QUIZ_SESSION_START, null)
 
         // Reset splash appearance on starting the app
         val prefs = getSharedPreferences(PREF_SETTINGS, MODE_PRIVATE).edit()
@@ -24,8 +32,8 @@ class App : Application() {
         prefs.apply()
 
         // We have to set a lang before loading UI, cause it will take a lang by system default
-        var loadedLang = LocaleHelper.loadLocate(this)
-        LocaleHelper.setLocate(this, loadedLang)
+        var loadedLang = LocaleHelper.loadLang(this)
+        LocaleHelper.setLang(this, loadedLang)
 
     }
 }

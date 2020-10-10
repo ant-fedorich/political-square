@@ -58,7 +58,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         }
 
         // Load language for Settings
-        when(LocaleHelper.loadLocate(this)) {
+        when(LocaleHelper.loadLang(this)) {
             "uk" -> {
                 radio_ukr.isChecked = true
                 changeLangRadioImage(langBorderShapeUkr)
@@ -77,7 +77,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         }
 
         // Load Quiz option
-        when(QuizOptionHelper.loadQuizOption()) {
+        when(QuizOptionHelper.loadQuizOption(this)) {
             QuizOptions.WORLD.id -> {
                 setQuizOptionToSelected(layout_quiz_option_1)
                 title_quiz_option_1.setTypeface(null, Typeface.BOLD)
@@ -203,7 +203,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         when (checkedId) {
             R.id.radio_ukr -> {
                 radio_ukr.isChecked
-                LocaleHelper.setLocate(this, "uk")
+                LocaleHelper.setLang(this, "uk")
                 Ideologies.refreshAll(this)
                 QuizOptions.refreshAll(this)
 
@@ -212,7 +212,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
             }
             R.id.radio_rus -> {
                 radio_rus.isChecked
-                LocaleHelper.setLocate(this,"ru")
+                LocaleHelper.setLang(this,"ru")
                 Ideologies.refreshAll(this)
                 QuizOptions.refreshAll(this)
 
@@ -221,7 +221,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
             }
             R.id.radio_eng -> {
                 radio_eng.isChecked
-                LocaleHelper.setLocate(this,"en")
+                LocaleHelper.setLang(this,"en")
                 Ideologies.refreshAll(this)
                 QuizOptions.refreshAll(this)
 

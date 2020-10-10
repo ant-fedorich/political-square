@@ -9,11 +9,13 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.analytics.FirebaseAnalytics
 import eltonio.projects.politicalcompassquiz.R
 import eltonio.projects.politicalcompassquiz.models.ScreenItem
 import eltonio.projects.politicalcompassquiz.other.IntroViewPagerAdapter
 import eltonio.projects.politicalcompassquiz.other.fadeIn
 import eltonio.projects.politicalcompassquiz.other.*
+import eltonio.projects.politicalcompassquiz.other.App.Companion.analytics
 import kotlinx.android.synthetic.main.activity_intro.*
 
 class IntroActivity : AppCompatActivity() {
@@ -31,8 +33,8 @@ class IntroActivity : AppCompatActivity() {
         if (loadIsIntroOpened()) {
             Log.d(TAG, "Intro was already opened")
             // Load language
-            var loadedLang = LocaleHelper.loadLocate(this)
-            LocaleHelper.setLocate(this, loadedLang)
+            var loadedLang = LocaleHelper.loadLang(this)
+            LocaleHelper.setLang(this, loadedLang)
 
             // Set short animation without Intro
             splashAnimationTime = 600L
@@ -46,8 +48,8 @@ class IntroActivity : AppCompatActivity() {
         }
 
         // Load language
-        var loadedLang = LocaleHelper.loadLocate(this)
-        LocaleHelper.setLocate(this, loadedLang)
+        var loadedLang = LocaleHelper.loadLang(this)
+        LocaleHelper.setLang(this, loadedLang)
 
         setContentView(R.layout.activity_intro)
 

@@ -19,10 +19,14 @@ import android.view.View
 import android.view.animation.*
 import android.widget.RadioButton
 import androidx.core.content.ContextCompat
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.type.DateTime
 
 import eltonio.projects.politicalcompassquiz.*
 import eltonio.projects.politicalcompassquiz.other.*
 import eltonio.projects.politicalcompassquiz.models.*
+import eltonio.projects.politicalcompassquiz.other.App.Companion.analytics
 
 import kotlinx.android.synthetic.main.activity_quiz.*
 import java.util.*
@@ -62,6 +66,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         setContentView(R.layout.activity_quiz)
 
         this.title = getString(R.string.quiz_title_actionbar)
+        analytics.logEvent(EVENT_QUIZ_BEGIN) {
+            param(FirebaseAnalytics.Param.START_DATE, System.currentTimeMillis())
+        }
 
         // Language
         Locale.getDefault().language
@@ -70,7 +77,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         val dbHelper = QuizDbHelper(this)
         dbHelper.openDB()
 
-        when(QuizOptionHelper.loadQuizOption()) {
+        when(QuizOptionHelper.loadQuizOption(this)) {
             QuizOptions.UKRAINE.id ->
             {
                 quizId = QuizOptions.UKRAINE.id

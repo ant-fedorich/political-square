@@ -3,11 +3,14 @@ package eltonio.projects.politicalcompassquiz.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Telephony.Mms.Part.CONTENT_ID
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.AdapterView
 import android.widget.Spinner
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -17,9 +20,11 @@ import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalcompassquiz.R
 import eltonio.projects.politicalcompassquiz.models.*
 import eltonio.projects.politicalcompassquiz.other.*
+import eltonio.projects.politicalcompassquiz.other.App.Companion.analytics
 import eltonio.projects.politicalcompassquiz.other.App.Companion.crashlytics
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,7 +50,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         var loadedLang = LocaleHelper.loadLocate(this)
         LocaleHelper.setLocate(this, loadedLang)
         */
+        var loadedLang = LocaleHelper.loadLang(this)
+        analytics.setUserProperty(EVENT_PREFERRED_LANG, loadedLang)
 
+        Log.i(TAG, "Lang: $loadedLang")
 
         val prefs = getSharedPreferences(PREF_SETTINGS, MODE_PRIVATE)
         val splashAppeared = prefs.getBoolean(PREF_SPLASH_APPEARED, false)
@@ -75,32 +83,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
 
         //== Set Quiz Options Spinner ==
-//        val quizOptionList = mutableListOf(
-//            QuizOption(QUIZ_OPTION_WORLD, getString(R.string.settings_title_quiz_option_1), getString(R.string.settings_owner_quiz_option_1), R.drawable.img_world_quiz),
-//            QuizOption(QUIZ_OPTION_UKRAINE, getString(R.string.settings_title_quiz_option_2), getString(R.string.settings_owner_quiz_option_2), R.drawable.img_ukraine_quiz)
-//        )
-
-//        val quizOptionList = mutableListOf(
-//            QuizOptions.World,
-//            QuizOptions.Ukraine
-//        )
-
-//        QuizContract.AnswersEntry.COLUMN_ANSWER_EN
-//        Ideologies.LIBERTARIAN_SOCIALISM.title
-//        QuizOptions_2.WORLD.title
-//        val quizArray = QuizOptions_2.values()
-//        quizArray[0].
-        //enumValueOf<QuizOptions_2>
-//        QuizOptions.World.title
-//        QuizOptions.Ukraine.title
-//        QuizOptions.option[1].stringId
-//
 
         val spinnerAdapter = QuizOptionAdapter(this, QuizOptions.values())
         spinner_quiz_options.adapter = spinnerAdapter
         spinnerView = spinner_quiz_options
 
-        when(QuizOptionHelper.loadQuizOption()) {
+        when(QuizOptionHelper.loadQuizOption(this)) {
             QuizOptions.WORLD.id -> spinner_quiz_options.setSelection(0)
             QuizOptions.UKRAINE.id -> spinner_quiz_options.setSelection(1)
         }
@@ -119,7 +107,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.exists()) {
                     userExists = false
-                    crashlytics.log("FirebaseDatabase: OnDataChange: User does not exest")
+                    crashlytics.log("FirebaseDatabase: OnDataChange: User does not exist")
                     //toast("The user does not exist")
                     val currentDate = Date()
                     userCreationDate = formatter.format(currentDate)
@@ -156,6 +144,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                         usersRef.child(userId).child("creationDate").setValue(userCreationDate)
                     }
 
+                    analytics.setUserId(userId)
+
+                    analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
+                        param(FirebaseAnalytics.Param.METHOD, "anonymously")
+                        param(PARAM_LOGIN_DATE, lastLogInDate)
+                    }
+
                     usersRef.child(userId).apply {
                         child("name").setValue("Name1")
                         child("email").setValue("User1@mail.com")
@@ -179,10 +174,19 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 when (clickedItem.id) {
                     QuizOptions.WORLD.id -> {
                         QuizOptionHelper.saveQuizOption(QuizOptions.WORLD.id)
-                        QuizOptionHelper.saveQuizOption(QuizOptions.WORLD.id)
+                        val bundle = Bundle().apply {
+                            putInt(FirebaseAnalytics.Param.CONTENT, 1)
+                            putString(FirebaseAnalytics.Param.CONTENT_TYPE, "change_quiz_option")
+                        }
+                        analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     }
                     QuizOptions.UKRAINE.id -> {
                         QuizOptionHelper.saveQuizOption(QuizOptions.UKRAINE.id)
+                        val bundle = Bundle().apply {
+                            putInt(FirebaseAnalytics.Param.CONTENT, 2)
+                            putString(FirebaseAnalytics.Param.CONTENT_TYPE, "change_quiz_option")
+                        }
+                        analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     }
                 }
             }
@@ -207,7 +211,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     /** INTERFACE METHODS */
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.button_start -> onStartClicked()
+            R.id.button_start -> {
+                onStartClicked()
+            }
         }
     }
 

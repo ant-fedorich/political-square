@@ -8,16 +8,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.*
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.type.DateTime
 
 import eltonio.projects.politicalcompassquiz.R
 import eltonio.projects.politicalcompassquiz.models.QuizResult
 import eltonio.projects.politicalcompassquiz.other.*
+import eltonio.projects.politicalcompassquiz.other.App.Companion.analytics
 import eltonio.projects.politicalcompassquiz.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
@@ -48,6 +52,9 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_result)
 
         title = getString(R.string.result_title_actionbar)
+        analytics.logEvent(EVENT_QUIZ_COMPLETE) {
+            param(FirebaseAnalytics.Param.END_DATE, System.currentTimeMillis())
+        }
 
         database = Firebase.database
 
@@ -180,8 +187,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
 
 
-
-
         // For debug
         Log.d(TAG, "Datetime duration: $duration, endedAt: $endedAt")
 
@@ -227,6 +232,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_compass_info_2 -> {
+                analytics.logEvent(EVENT_DETAILED_INFO, null)
+
                 val intent = Intent(this, ViewInfoActivity::class.java)
                 intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)
                 startActivity(intent)

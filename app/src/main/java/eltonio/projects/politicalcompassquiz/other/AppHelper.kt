@@ -53,6 +53,14 @@ const val EXTRA_DATE_TRANSITION_NAME = "EXTRA_DATE_TRANSITION_NAME"
 const val EXTRA_IMAGE_TRANSITION_NAME = "EXTRA_IMAGE_TRANSITION_NAME"
 const val EXTRA_ITEM_CONTAINER_TRANSITION_NAME = "EXTRA_ITEM_CONTAINER_TRANSITION_NAME"
 
+const val EVENT_PREFERRED_LANG = "preferred_lang"
+const val EVENT_QUIZ_SESSION_START = "quiz_session_start"
+const val EVENT_QUIZ_BEGIN = "quiz_begin"
+const val EVENT_QUIZ_COMPLETE = "quiz_complete"
+const val EVENT_DETAILED_INFO = "quiz_detailed_info"
+const val PARAM_LOGIN_DATE = "login_date"
+
+
 /** Variables **/
 var appContext = App.appContext
 var mainActivityIsInFront = false
