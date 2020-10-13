@@ -41,9 +41,11 @@ enum class QuizOptions(
         // We have to refresh all these parameters after changing a lang to get proper strings
         fun refreshAll(context: Context){
             WORLD.title = context.getString(R.string.all_title_quiz_option_1)
+            WORLD.owner = context.getString(R.string.all_owner_quiz_option_1)
             WORLD.desc = context.getString(R.string.all_desc_quiz_option_1)
             //
             UKRAINE.title = context.getString(R.string.all_title_quiz_option_2)
+            UKRAINE.owner = context.getString(R.string.all_owner_quiz_option_2)
             UKRAINE.desc = context.getString(R.string.all_desc_quiz_option_2)
         }
     }

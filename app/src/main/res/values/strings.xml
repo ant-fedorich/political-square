@@ -46,7 +46,7 @@
     <string name="saved_title_actionbar">Saved results</string>
 
     <string name="savedresultdetail_title_actionbar">Saved result</string>
-    <string name="savedresultdetail_title_quiz">Quiz</string>
+    <string name="savedresultdetail_title_quiz">Quiz option</string>
     <string name="savedresultdetail_title_template">You are communist</string>
     <string name="savedresultdetail_btn_compass_info">More about result</string>
     <string name="savedresultdetail_txt_who_you_was">- who you considered yourself</string>
@@ -67,9 +67,9 @@
 
     <string name="all_title_quiz_option_1">For World</string>
     <string name="all_title_quiz_option_2">For Ukraine</string>
-    <string name="all_owner_quiz_option_1" translatable="false">politicalcompass.org</string>
-    <string name="all_owner_quiz_option_2" translatable="false">VoxUkraine</string>
-    <string name="all_desc_quiz_option_1">Owner: politicalcompass.org</string>
+    <string name="all_owner_quiz_option_1">for World</string>
+    <string name="all_owner_quiz_option_2">for Ukraine</string>
+    <string name="all_desc_quiz_option_1">Owner: Political Square</string>
     <string name="all_desc_quiz_option_2">Owner: VoxUkraine</string>
 
     <string name="navmenu_main">Main</string>

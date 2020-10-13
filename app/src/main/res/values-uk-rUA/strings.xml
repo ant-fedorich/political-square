@@ -409,8 +409,10 @@
     <string name="settings_owner_quiz_option_2">Власник: VoxUkraine</string>
     <string name="all_title_quiz_option_1">Для всіх</string>
     <string name="all_title_quiz_option_2">Для України</string>
-    <string name="all_desc_quiz_option_1">Власник: politicalcompass.org</string>
+    <string name="all_desc_quiz_option_1">Власник: Political Square</string>
     <string name="all_desc_quiz_option_2">Власник: VoxUkraine</string>
-    <string name="savedresultdetail_title_quiz">Тест</string>
+    <string name="savedresultdetail_title_quiz">Варіант теста:</string>
+    <string name="all_owner_quiz_option_1">для Всіх</string>
+    <string name="all_owner_quiz_option_2">для України</string>
 
 </resources>

@@ -73,51 +73,20 @@
                 android:autoLink="web"
                 android:text="@string/about_voxukraine_link"
                 android:textAppearance="@style/TextAppearance.MyApp.Body1"
-                app:layout_constraintStart_toEndOf="@+id/image_voxukraine_logo"
-                app:layout_constraintStart_toStartOf="@+id/text_politicalcompass_title"
+                app:layout_constraintStart_toStartOf="@+id/text_voxukraine_title"
                 app:layout_constraintTop_toBottomOf="@+id/text_voxukraine_title" />
-
-            <ImageView
-                android:id="@+id/image_politicalcompass_logo"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                app:layout_constraintBottom_toBottomOf="@+id/text_politicalcompass_link"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/text_politicalcompass_title"
-                app:srcCompat="@drawable/img_politicalcompass_logo" />
-
-            <TextView
-                android:id="@+id/text_politicalcompass_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/about_politicalcompass_title"
-                android:textAppearance="@style/TextAppearance.MyApp.Body1"
-                app:layout_constraintStart_toEndOf="@+id/image_politicalcompass_logo"
-                app:layout_constraintTop_toBottomOf="@+id/text_voxukraine_link" />
-
-            <TextView
-                android:id="@+id/text_politicalcompass_link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autoLink="web"
-                android:text="@string/about_politicalcompass_link"
-                android:textAppearance="@style/TextAppearance.MyApp.Body1"
-                app:layout_constraintStart_toEndOf="@+id/image_politicalcompass_logo"
-                app:layout_constraintStart_toStartOf="@+id/text_politicalcompass_title"
-                app:layout_constraintTop_toBottomOf="@+id/text_politicalcompass_title" />
 
             <TextView
                 android:id="@+id/text_about_desc_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/about_desc_2"
                 android:textAppearance="@style/TextAppearance.MyApp.Body1"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_politicalcompass_link" />
+                app:layout_constraintTop_toBottomOf="@+id/text_voxukraine_link" />
 
             <TextView
                 android:id="@+id/title_about_2"

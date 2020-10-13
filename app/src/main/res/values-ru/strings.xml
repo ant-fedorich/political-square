@@ -64,7 +64,6 @@
     </string>
     <string name="about_desc_2">
         "Для украинского и русского языков были адаптированы несколько вопросов politicalcompass.org под реалии постсоветских стран.
-        \n
         Описание для идеологий было взято с wikipedia.org и других открытых источников."
     </string>
     <string name="about_desc_3">
@@ -418,8 +417,10 @@
     <string name="settings_owner_quiz_option_2">Владелец: VoxUkraine</string>
     <string name="all_title_quiz_option_1">Для всех</string>
     <string name="all_title_quiz_option_2">Для Украины</string>
-    <string name="all_desc_quiz_option_1">Владелец: politicalcompass.org</string>
+    <string name="all_desc_quiz_option_1">Владелец: Political Square</string>
     <string name="all_desc_quiz_option_2">Владелец: VoxUkraine</string>
-    <string name="savedresultdetail_title_quiz">Тест</string>
+    <string name="savedresultdetail_title_quiz">Вариант теста</string>
+    <string name="all_owner_quiz_option_1">для Всех</string>
+    <string name="all_owner_quiz_option_2">для Украины</string>
 
 </resources>
