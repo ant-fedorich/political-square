@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Political Compass Quiz</string>
+    <string name="app_name" translatable="false">Political Square</string>
 
     <string name="navigation_drawer_open" translatable="false">Open menu</string>
     <string name="navigation_drawer_close" translatable="false">Close menu</string>
@@ -10,7 +10,7 @@
     <string name="intro_button_next">Next</string>
     <string name="intro_button_get_started">Get Started</string>
 
-    <string name="main_title_actionbar" translatable="false">Political Compass Quiz</string>
+    <string name="main_title_actionbar" translatable="false">Political Square</string>
     <string name="main_btn_start">Start</string>
     <string name="main_btn_google_login" translatable="false">Google</string>
     <string name="main_btn_facebook_login" translatable="false">Facebook</string>
@@ -20,7 +20,7 @@
 
     <string name="chooseview_title">Choose your political view</string>
     <string name="chooseview_btn_start">Start test</string>
-    <string name="chooseview_btn_compass_info">Details about compass</string>
+    <string name="chooseview_btn_compass_info">Details about Square</string>
 
     <string name="txt_question_template" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

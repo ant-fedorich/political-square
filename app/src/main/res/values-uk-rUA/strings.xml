@@ -7,7 +7,7 @@
 
     <string name="chooseview_title">Виберіть ваш політичний погляд</string>
     <string name="chooseview_btn_start">Почати тест</string>
-    <string name="chooseview_btn_compass_info">Детальніше про Компас</string>
+    <string name="chooseview_btn_compass_info">Детальніше про Квадрат</string>
 
     <string name="radio_answer_1_template">Скоріше не згоден</string>
     <string name="radio_answer_2_template">Не згоден</string>
@@ -73,7 +73,7 @@
 
     <string name="about_voxukraine_title">VoxUkraine</string>
     <string name="about_voxukraine_link">voxukraine.org</string>
-    <string name="about_politicalcompass_title">Political Compass Quiz</string>
+    <string name="about_politicalcompass_title">Political Square</string>
     <string name="about_politicalcompass_link">voxukraine.org</string>
     <string name="about_version">Version 1.1.0</string>
 

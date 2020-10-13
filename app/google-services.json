@@ -52,6 +52,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "285621923308-7r7m1imcaekabgkuq3ptb6rqhue46a6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eltonio.projects.politicalcompassquiz",
+            "certificate_hash": "2582889d6302bce458321fbf629531197fbc874d"
+          }
+        },
+        {
+          "client_id": "285621923308-tmbuu20m9gf2hbn4s8osu1br1720c2oo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC0NH8AWbbhzsOq4cn6r_aL9QpYV6WUqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285621923308-tmbuu20m9gf2hbn4s8osu1br1720c2oo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285621923308:android:82b60e8aef71fc7386a4c9",
+        "android_client_info": {
+          "package_name": "eltonio.projects.politicalsquare"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "285621923308-tmbuu20m9gf2hbn4s8osu1br1720c2oo.apps.googleusercontent.com",
           "client_type": 3
         }

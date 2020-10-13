@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "eltonio.projects.politicalcompassquiz",
+  "applicationId": "eltonio.projects.politicalsquare",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "properties": [],
-      "versionCode": 3,
-      "versionName": "0.9.0.3",
+      "versionCode": 1,
+      "versionName": "0.9.0",
       "enabled": true,
       "outputFile": "app-release.apk"
     }

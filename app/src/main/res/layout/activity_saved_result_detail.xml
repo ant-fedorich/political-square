@@ -53,6 +53,8 @@
         android:layout_width="320dp"
         android:layout_height="320dp"
         android:layout_marginStart="-1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/image_main_compass_2">

@@ -10,11 +10,11 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "eltonio.projects.politicalcompassquiz"
+        applicationId "eltonio.projects.politicalsquare"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 3
-        versionName "0.9.0.3"
+        versionCode 1
+        versionName "0.9.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

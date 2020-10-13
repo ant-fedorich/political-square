@@ -22,19 +22,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.432" />
 
-    <ImageView
-        android:id="@+id/image_main_compass_1"
-        android:layout_width="364dp"
-        android:layout_height="364dp"
-        android:layout_marginTop="16dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.10"
-        app:srcCompat="@drawable/img_compass" />
-
     <Button
         android:id="@+id/button_start_quiz"
         android:layout_width="224dp"
@@ -57,12 +44,25 @@
         app:layout_constraintTop_toBottomOf="@+id/button_start_quiz"
         app:layout_constraintVertical_bias="0.90" />
 
+    <ImageView
+        android:id="@+id/image_main_compass_1"
+        android:layout_width="364dp"
+        android:layout_height="364dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.10"
+        app:srcCompat="@drawable/img_compass" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frame_1"
         android:layout_width="320dp"
         android:layout_height="320dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="1dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="2dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,8 +83,7 @@
         android:id="@+id/frame_2"
         android:layout_width="320dp"
         android:layout_height="320dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="1dp"
+        android:layout_marginTop="22dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -106,7 +105,7 @@
 
         <ImageView
             android:id="@+id/image_autho_left_hover"
-            android:layout_width="80dp"
+            android:layout_width="81dp"
             android:layout_height="80dp"
             android:layout_marginTop="0dp"
             android:alpha="0"
@@ -119,7 +118,7 @@
             android:layout_width="160dp"
             android:layout_height="20dp"
             android:layout_marginLeft="80dp"
-            android:layout_marginTop="-1dp"
+            android:layout_marginTop="0dp"
             android:alpha="0"
             android:clickable="false"
             android:visibility="visible"
@@ -129,8 +128,8 @@
             android:id="@+id/image_gov_hover"
             android:layout_width="140dp"
             android:layout_height="60dp"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="19dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             android:alpha="0"
             android:clickable="false"
             android:visibility="visible"
@@ -140,7 +139,7 @@
             android:id="@+id/image_soc_demo_hover"
             android:layout_width="140dp"
             android:layout_height="80dp"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="80dp"
             android:alpha="0"
             android:clickable="false"
@@ -193,8 +192,9 @@
 
         <ImageView
             android:id="@+id/image_left_anar_hover"
-            android:layout_width="80dp"
+            android:layout_width="81dp"
             android:layout_height="80dp"
+            android:layout_marginStart="0dp"
             android:layout_marginTop="240dp"
             android:alpha="0"
             android:clickable="false"
@@ -227,7 +227,7 @@
             android:id="@+id/image_lib_hover"
             android:layout_width="280dp"
             android:layout_height="80dp"
-            android:layout_marginLeft="19dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="160dp"
             android:alpha="0"
             android:visibility="visible"
@@ -237,7 +237,7 @@
             android:id="@+id/image_lib_soc"
             android:layout_width="140dp"
             android:layout_height="60dp"
-            android:layout_marginLeft="18dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="240dp"
             android:alpha="0"
             android:clickable="false"
@@ -246,9 +246,9 @@
 
         <ImageView
             android:id="@+id/image_libertar_hover"
-            android:layout_width="140dp"
+            android:layout_width="141dp"
             android:layout_height="60dp"
-            android:layout_marginStart="158dp"
+            android:layout_marginStart="160dp"
             android:layout_marginTop="240dp"
             android:alpha="0"
             android:clickable="false"

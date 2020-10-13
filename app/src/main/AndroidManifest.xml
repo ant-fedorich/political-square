@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="eltonio.projects.politicalcompassquiz">
+    package="eltonio.projects.politicalsquare">
 
     <application
-        android:name="eltonio.projects.politicalcompassquiz.other.App"
+        android:name="eltonio.projects.politicalsquare.other.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,66 +15,65 @@
             android:name="firebase_performance_logcat_enabled"
             android:value="true" />
 
-        <activity android:name="eltonio.projects.politicalcompassquiz.activities.IntroActivity"
+        <activity android:name="eltonio.projects.politicalsquare.activities.IntroActivity"
             android:theme="@style/Theme.MyApp.NoActionBar"
             android:screenOrientation="portrait">
-
         </activity>
         
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.SplashActivity"
+            android:name="eltonio.projects.politicalsquare.activities.SplashActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.SplashStyle" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.AboutActivity"
+            android:name="eltonio.projects.politicalsquare.activities.AboutActivity"
             android:label="@string/about_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.SettingsActivity"
+            android:name="eltonio.projects.politicalsquare.activities.SettingsActivity"
             android:label="@string/settings_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"/>
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.SavedResultDetailActivity"
+            android:name="eltonio.projects.politicalsquare.activities.SavedResultDetailActivity"
             android:label="@string/savedresultdetail_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.SavedResultsActivity"
+            android:name="eltonio.projects.politicalsquare.activities.SavedResultsActivity"
             android:label="@string/saved_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.InfoActivity"
+            android:name="eltonio.projects.politicalsquare.activities.InfoActivity"
             android:label="@string/info_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.ViewInfoActivity"
+            android:name="eltonio.projects.politicalsquare.activities.ViewInfoActivity"
             android:label="@string/info_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.ResultActivity"
+            android:name="eltonio.projects.politicalsquare.activities.ResultActivity"
             android:label="@string/result_title_actionbar"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.QuizActivity"
+            android:name="eltonio.projects.politicalsquare.activities.QuizActivity"
             android:label="@string/quiz_title_actionbar"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.ChooseViewActivity"
+            android:name="eltonio.projects.politicalsquare.activities.ChooseViewActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar" />
         <activity
-            android:name="eltonio.projects.politicalcompassquiz.activities.MainActivity"
+            android:name="eltonio.projects.politicalsquare.activities.MainActivity"
             android:label="@string/main_title_actionbar"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar">
@@ -83,7 +82,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="eltonio.projects.politicalcompassquiz.activities.BaseActivity" />
+        <activity android:name="eltonio.projects.politicalsquare.activities.BaseActivity" />
     </application>
 
 </manifest>
