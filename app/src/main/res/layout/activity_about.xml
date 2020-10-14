@@ -19,8 +19,8 @@
             android:id="@+id/layout_containter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
                 android:text="@string/about_voxukraine_title"
                 android:textAppearance="@style/TextAppearance.MyApp.Body1"
                 app:layout_constraintStart_toEndOf="@+id/image_voxukraine_logo"
-                app:layout_constraintTop_toBottomOf="@+id/title_about_1" />
+                app:layout_constraintTop_toBottomOf="@+id/text_about_desc_2" />
 
             <TextView
                 android:id="@+id/text_voxukraine_link"
@@ -80,13 +80,13 @@
                 android:id="@+id/text_about_desc_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/about_desc_2"
                 android:textAppearance="@style/TextAppearance.MyApp.Body1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_voxukraine_link" />
+                app:layout_constraintTop_toBottomOf="@+id/title_about_1" />
 
             <TextView
                 android:id="@+id/title_about_2"
@@ -96,7 +96,7 @@
                 android:text="@string/about_title_2"
                 android:textAppearance="@style/TextAppearance.MyApp.Headline6"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_about_desc_2" />
+                app:layout_constraintTop_toBottomOf="@+id/text_voxukraine_link" />
 
             <TextView
                 android:id="@+id/text_about_desc_3"

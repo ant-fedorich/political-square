@@ -263,7 +263,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:text="Политический компас — система координат, на которой различные политические течения можно распределить в зависимости от отношения к личной и экономической свободе человека"
                 android:textAppearance="@style/TextAppearance.MyApp.Body2"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -276,11 +276,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/info_subtitle_2"
                 android:textAppearance="@style/TextAppearance.MyApp.Subtitle2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_compass_info_all" />
+                app:layout_constraintTop_toBottomOf="@+id/text_desc_compass_1" />
 
             <ImageView
                 android:id="@+id/image_compass_info_horisontal"
@@ -298,7 +298,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:text="@string/info_txt_description_template"
                 android:textAppearance="@style/TextAppearance.MyApp.Body2"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -333,7 +333,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:text="@string/info_txt_description_template"
                 android:textAppearance="@style/TextAppearance.MyApp.Body2"
                 app:layout_constraintEnd_toEndOf="parent"

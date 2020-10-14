@@ -83,17 +83,18 @@
     <string name="about_title_2">Thanks</string>
     <string name="about_title_3">Warning</string>
     <string name="about_desc_1">
-        Political compass (aka spectrum, square) is a system of coordinates on which various political movements
-         can be distributed depending on the attitude to personal and economic freedom of a person. \n
-         \n
-         The quiz shows where you are in this system.
+        Political square (aka compass, spectrum) is a system of coordinates on which various political movements
+         can be distributed depending on the attitude to personal and economic freedom of a person.
+        \n
+        \nThe quiz shows where you are in this system.
     </string>
     <string name="about_desc_2">
-        For the Ukrainian and Russian languages, several politicalcompass.org questions were adapted to the realities of the post-Soviet countries.
+        The quiz for Ukraine was provided by VoxUkraine.
+         The quiz for the World was made by the developer of this application.
          Descriptions for ideologies were taken from wikipedia.org and other open sources.
     </string>
     <string name="about_desc_3">
-        Thanks to VoxUkraine (Maxim Skubenko), politicalcompass.org (David Wayne) and
+        Thanks to VoxUkraine (Maxim Skubenko) and
          Timofey Brik for the resources and information support provided.
     </string>
     <string name="about_desc_4">
@@ -116,8 +117,8 @@
 
     <string name="info_subtitle_1">General info about compass</string>
     <string name="info_subtitle_2">
-        Horizontal axis: \n
-        Economically Right / Economically Left
+        Horizontal axis:
+        \nEconomically Right / Economically Left
     </string>
     <string name="info_subtitle_3">
         Vertical axis: \n
@@ -130,34 +131,28 @@
         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     </string>
     <string name="text_desc_compass_1">
-         Political compass - coordinate system,
+         Political square (compass) - coordinate system,
          on which various political trends can be distributed in
          depending on the attitude to personal and economic freedom of a person
     </string>
     <string name="text_desc_compass_2">
-        In the test, the Left-Right Axis measures economic views. \n
-        "Left" supports government intervention and economic regulation,
-        while the Right supports economic freedom and non-intervention.
-        This means that the “Left” is inclined to support the efforts of the state to limit the
-        which, in his opinion, is unfair or immoral phenomena of the free market,
-        while "Right" is inclined to believe that transactions between private parties should mainly
-        concluded without government intervention.
+        Leftists are for government control of the economy.
+        \nThis case is characterized by economic interference and high taxes. This all provides social benefits, free medical services and education.
+        Here the government distributes resources between the poor and the rich, and the well-being of each person depends on the state.
+        \n
+        \nRightists - for maximum freedom of the market and non-interference of the government in the economy.
+        \nThe government relies on competition and \"Invisible hand of the market\", tries not to burden businesses with taxes, to control the economy as little as possible.
+        \nThe \"right\" is characterized by the idea of ​​voluntary charity and helping the poor instead of social benefits.
+        \nTherefore, there is a natural distribution between rich and poor, and well-being of each person depends on themselves.
     </string>
     <string name="text_desc_compass_3">
-        All liberals come from the belief that upholding individual freedoms is more important,
-        than meeting the needs of society.
-        Left-wing liberals tend to believe that a person cannot use his freedoms without a certain level of education
-        and material comfort. In their view, this makes redistribution between rich and poor necessary.
-        On the contrary, the Right Liberals tend to believe that taxing a person against his will for
-        providing social benefits to others is an act of violence and, thus, violates individual freedom.
-        They support charity and help for the poor, provided that they are voluntary. \n
+        The authoritarians are for a strong, traditional state, where the interests of society are higher than personal interests.
+        \nPaternalism, the care of the state and the ruler (leader, leader) are inherent in authoritarianism,
+        providing the people with security, justice, the protection of a hierarchical society and the preservation of traditions.
         \n
-        All supporters of a more authoritarian type of government come from
-        that the welfare of society is above the desires of specific individuals.
-        Right-wing authoritarian hold so-called paternalistic political views.
-        They defend a hierarchical society and take a tough stance against threats,
-        - criminals are in prison, and foreign states are held back by strong defense. \n
-        \n
+        \nLiberals support the state, where the interests of the individual are higher than the interests of the whole society.
+        \nFor liberalism, the idea is that absolutely all people are equal and have equal rights.
+        \nThis is why they stand more for democracy, freedom of speech and for maximum non-interference in personal freedom by the state.
     </string>
 
     <string name="imagedesc_info_compass" translatable="false">Compass info</string>
@@ -201,236 +196,243 @@
 
     <string name="desc_authoritarian_left">
         Authoritarianism (authoritarian regime) - the concentration of power within the same group of like-minded people or
-          in the hands of one person. Any serious opposition to the government is impossible or is decorative. \n
-        Under left-wing authoritarianism, private property is prohibited. \n
+          in the hands of one person. Any serious opposition to the government is impossible or is decorative.
+        \nUnder left-wing authoritarianism, private property is prohibited.
         \n
-        Signs of authoritarianism: \n
-        1. Alienation of the people from power \n
-        2. Centralization of power in the management of society by a certain person or group of people: \n
-        3. The leadership and management of society in all spheres of life is carried out mainly by command-administrative, command methods \n
-        4. Dominance in the political system of one, ruling party \n
-        5. The legal nature of the activities of the authorities is largely \n
-        6. Infringement of the rights and freedoms of citizens \n
-        7. The army, police, security agencies are used to suppress opposition forces,
-            Opposing the regime, serve as an instrument and the main pillar of power. \n
+        \nSigns of authoritarianism:
+        \n1. Alienation of the people from power.
+        \n2. Centralization of power in the management of society by a certain person or group of people.
+        \n3. The leadership and management of society in all spheres of life is carried out mainly
+        by command-administrative, command methods.
+        \n4. Dominance in the political system of one, ruling party.
+        \n5. The legal nature of the activities of the authorities is largely.
+        \n6. Infringement of the rights and freedoms of citizens.
+        \n7. The army, police, security agencies are used to suppress opposition forces,
+            Opposing the regime, serve as an instrument and the main pillar of power.
+        \n8. All media and their content are taken under strict state control.
         \n
-        All media and their content are taken under strict state control
     </string>
     <string name="desc_nationalism">
         An extreme form of nationalism can lead to ideas of national superiority and national exclusivity (chauvinism),
-             as well as cultural and religious intolerance (xenophobia). \n
-         In politics, the restriction of individual rights is possible. \n \n
-
-         ??? Conflict \n
-         The original compass says "nationalism." Is Nazism an extreme right ideology?
+             as well as cultural and religious intolerance (xenophobia).
+        \nIn politics the restriction of individual rights and the use of violence are possible.
+        \n
+        \nAn example of extreme radical nationalism in history is the Nazi party of Adolf Hitler.
+        \n
+        \nIt should be borne in mind that not all nationalists are radical.
+        The mild form of nationalism (love for one\'s nation and culture) is often close to patriotism.
     </string>
     <string name="desc_powercentrism">
-        Power-centrism is the belief that the state should intervene in society and
+        Power-centrism is the belief that the government should intervene in society and
              to control its economic and social aspects.
-             Considering the state as the highest result and goal of social development (the state is better than the individual). \n
-         \n
-         In economics, it leads to state monopoly.
+             Considering the state as the highest result and goal of social development
+        (the state is better than the individual).
+        \n
+        \nIn economics, it leads to state monopoly.
     </string>
     <string name="desc_social_democracy">
-        Социализм -  общественная система, при которой государство в значительной степени контролирует экономику
-            и средства производства, а своей целью провозглашает равенство и справедливое распределение благ. \n \n
-        Социал-демократизм - тот же социализм, с контрольем экономики государством, но с политической свободой. \n
-        Не настаивают на необходимости принуждению национализации способов производства.
+        Socialism is a social system in which the government largely controls the economy
+             and means of production, and as its goal proclaims equality and fair distribution of goods.
+         \n
+         \nSocial Democracy is the same socialism, with control of the economy by the government, but with political freedom.
+         They do not insist on the need to enforce the nationalization of production methods.
+         \n
     </string>
     <string name="desc_socialism">
-        Socialism is a social system in which the state largely controls the economy.
-            and means of production, and with its goal proclaims equality and equitable distribution of goods. \n
+        Socialism is a social system in which the government largely controls the economy.
+            and means of production, and with its goal proclaims equality and equitable distribution of goods.
         \n
-        Socialism is characteristic: \n
-            • Great influence and state control over the economy \n
-            • Planned economy \n
-            • Nationalization of production, banking, transport systems (state-owner) \n
-            • Free medicine and education \n
-            • Large allowances and assistance to the poor \n
-            • Large taxes \n
-        \ n
-        Core principles and values: \n
-        Equality, lack of exploitation, equitable distribution and public ownership. \n
+        \nSocialism is characteristic:
+        \n\t• Great influence and state control over the economy.
+        \n\t• Planned economy.
+        \n\t• Nationalization of production, banking, transport systems (state-owner).
+        \n\t• Free medicine and education.
+        \n\t• Large allowances and assistance to the poor.
+        \n\t• Large taxes.
         \n
-        The role of the state in economic life \n
-        The state regulates economic life, allocates resources, and limits private property. \n
+        \nCore principles and values: equality, lack of exploitation, equitable distribution and public ownership.
         \n
-        Relation to social issues: \n
-        All people should have equal rights and obligations, the state is struggling with income inequality. \n
+        \nThe role of the state in economic life: the state regulates economic life, allocates resources,
+        and limits private property.
         \n
-        Ways to solve social issues: \n
-        State control, ensuring social equality. \n
+        \nRelation to social issues: all people should have equal rights and obligations,
+        the state is struggling with income inequality.
+        \n
+        \nWays to solve social issues: state control, ensuring social equality.
+        \n
 
     </string>
     <string name="desc_authoritarian_right">
         Authoritarianism (authoritarian regime) - the concentration of power within the same group of like-minded people
-        or in the hands of one person. Any serious opposition to the government is impossible or is decorative. \n
-        Under the right authoritarianism private property is allowed. \n
+        or in the hands of one person. Any serious opposition to the government is impossible or is decorative.
+        \nUnder the right authoritarianism private property is allowed.
         \n
-        Signs of authoritarianism: \n
-        1. Alienation of the people from power \n
-        2. Centralization of power in the management of society by a certain person or group of people: \n
-        3. The leadership and management of society in all spheres of life is carried out mainly by command-administrative,
-          command methods \n
-        4. Dominance in the political system of one, ruling party \n
-        5. The legal nature of the activities of the authorities is largely \n
-        6. Infringement of the rights and freedoms of citizens \n
-        7. The army, police, and security agencies are used to suppress opposition forces opposing the regime and serve as an instrument and the main support of the government. \n
+        \nSigns of authoritarianism:
+        \n1. Alienation of the people from power.
+        \n2. Centralization of power in the management of society by a certain person or group of people.
+        \n3. The leadership and management of society in all spheres of life is carried
+        out mainly by command-administrative, command methods.
+        \n4. Dominance in the political system of one, ruling party.
+        \n5. The legal nature of the activities of the authorities is largely.
+        \n6. Infringement of the rights and freedoms of citizens.
+        \n7. The army, police, and security agencies are used to suppress opposition forces
+        opposing the regime and serve as an instrument and the main support of the government.
+        \n8. All media and their content are taken under strict state control.
         \n
-        All media and their content are taken under strict state control
     </string>
     <string name="desc_radical_capitalism">
         Capitalism - economic freedom from government intervention, private property,
              legal equality and freedom of enterprise.
-             The main criterion for making economic decisions is the desire to increase capital, to make a profit. \ n
-         \ n
-         With a radical version of Capitalism, there can be strong class inequality, exploitation of labor (child labor, a 16-hour working day, etc.), an oligarchy.
+             The main criterion for making economic decisions is the desire to increase capital, to make a profit.
+        \n
+        \nWith a radical version of Capitalism, there can be strong class inequality,
+        exploitation of labor (child labor, a 16-hour working day, etc.), an oligarchy.
+        There are no social guarantees for citizens (for example, free medical services and education).
+        \n
+
     </string>
     <string name="desc_conservatism">
         Conservatism advocates the preservation and strengthening of traditional public institutions
             - the state, churches, families,
             private property. Conservatives, unlike socialists, recognize social inequality as natural
-            and oppose active government intervention in the economy. \n
+            and oppose active government intervention in the economy.
         \n
-        Core principles and values: \n
-        Traditional institutions: state, family, church, private property. \n
-        The role of the state in economic life: \n
-        The state protects private property as the basis of the economy. \n
-        Relation to social issues: \n
-        People are not equal, some of them may have privileges. \n
-        Ways to solve social issues: \n
-        Strengthening the traditional foundations and institutions of society. \n
+        \nCore principles and values: traditional institutions: state, family, church, private property.
+        \n
+        \nThe role of the state in economic life: the state protects private property as the basis of the economy.
+        \n
+        \nRelation to social issues: people are not equal, some of them may have privileges.
+        \n
+        \nWays to solve social issues: strengthening the traditional foundations and institutions of society.
+        \n
+
     </string>
     <string name="desc_progressivism">
         Progressivism is the support or promotion of social progress in society through reform,
             often opposed to conservatism, traditionalism and obscurantism. Like a philosophy
             it is based on the idea of ​​progress, which claims that advances in science, technology,
-            economic development and social organization are vital to improving the human condition. \n
-        \n
-        ??? Conflict \n
-        In other sources they write that this is a left movement, not a right \n
-        They also write that Liberals and progressives are centrists \n
-        Proponents of progressivism \n
-        (close to capitalism?) \n
+            economic development and social organization are vital to improving the human condition.
+        \n\n
+
     </string>
     <string name="desc_right_anarchy">
-        (aka anarcho-capitalism) \n
+        (aka anarcho-capitalism)
         \n
-        Anarchists advocate human freedom and deny the need for forced control \n
-            and man’s power over man. \n
+        \nAnarchists advocate human freedom and deny the need for forced control
+            and man’s power over man.
         \n
-        Anarchists advocate the elimination of statehood and self-government, \n
-        that is, for a system of independent meetings of citizens who independently manage their life \n
-        and labor in the workplace, in the area of ​​residence, etc. \n
+        \nAnarchists advocate the elimination of statehood and self-government,
+        that is, for a system of independent meetings of citizens who independently manage their life
+        and labor in the workplace, in the area of ​​residence, etc.
         \n
-        Right-wing anarchism is based on the conviction of the need for free possession
+        \nRight-wing anarchism is based on the conviction of the need for free possession
         private property, denial of any form of government or [its] interference,
-        and supporting a competitive free market as the main mechanism for social interaction. ”
-        Welcome the existence of private property, which was acquired through labor,
-        trade or was received as a gift. \n
+        and supporting a competitive free market as the main mechanism for social interaction.
+        It welcomes the existence of private property, which was acquired through labor,
+        trade or was received as a gift.
         \n
-        In this sense, the term right-wing anarchism
-        (anarcho-capitalism) is often a synonym for "libertarianism."
+        \nIn this sense, the term right-wing anarchism (anarcho-capitalism) is often a synonym for "libertarianism."
+        \n
     </string>
     <string name="desc_anarchy">
-        Anarchists advocate human freedom and deny the need for forced \n
-        management and power of man over man. \n
+        Anarchists advocate human freedom and deny the need for forced
+        management and power of man over man.
         \n
-        Anarchists advocate self-government, that is, a system of independent assembly of citizens, \n
-        independently managing their life and work at the workplace, in the area of ​​residence, etc. \n
+        \nAnarchists advocate self-government, that is, a system of independent assembly of citizens,
+        independently managing their life and work at the workplace, in the area of ​​residence, etc.
+        \nAnarchist society is a voluntary confederation of such assemblies.
         \n
-        Anarchist society is a voluntary confederation of such assemblies. \n
+        \nCore principles and values: the lack of power of some people over others, freedom from coercion.
         \n
-        The basic principles of anarchism \n
-        Core principles and values: \n
-        The lack of power of some people over others, freedom from coercion \n
-        The role of the state in economic life: \n
-        The state is not needed, it should not interfere in the economy: \n
-        Relation to social issues: \n
-        Refusal of private property will ensure equality of people \n
-        Ways to solve social issues: \n
-        In the absence of a state, people themselves will solve their problems \n
+        \nThe role of the state in economic life: the state is not needed, it should not interfere in the economy.
+        \n
+        \nRelation to social issues: refusal of private property will ensure equality of people.
+        \n
+        \nWays to solve social issues: in the absence of a state, people themselves will solve their problems.
+        \n
     </string>
     <string name="desc_liberalism">
         Liberalism proclaims the rights and freedom of every person as the highest value
-            and establishes them as the legal basis of public and economic order. \n
-        Liberalism in general - the desire for freedom of the human spirit from constraint,
-            imposed by state, religion, tradition, etc. \n
+            and establishes them as the legal basis of public and economic order.
+        \nLiberalism in general - the desire for freedom of the human spirit from constraint,
+            imposed by state, religion, tradition, etc.
         \n
-        The most important freedoms in modern liberalism are the freedom to speak out publicly,
-            freedom of choice of religion, freedom to choose representatives in fair and free elections \n
+        \nThe most important freedoms in modern liberalism are the freedom to speak out publicly,
+            freedom of choice of religion, freedom to choose representatives in fair and free elections.
         \n
-        Core principles and values: \n
-        Freedom of personality, human rights, private property, democracy \n
+        \nCore principles and values: freedom of personality, human rights, private property, democracy.
         \n
-        The role of the state in economic life: \n
-        The state minimally intervenes in the free market, does not interfere with competition. \n
+        \nThe role of the state in economic life: the state minimally intervenes in the free market,
+                does not interfere with competition.
         \n
-        Relation to social issues: \n
-        People are equal before the law, otherwise the inequality is normal \n
+        \nRelation to social issues: people are equal before the law, otherwise the inequality is normal.
         \n
-        Ways to solve social issues: \n
-        Reforms, gradual changes in society.
+        \nWays to solve social issues: reforms, gradual changes in society.
+        \n
     </string>
     <string name="desc_libertarianism">
         Maximum freedom of the economy and the individual. Maximum personality autonomy.
         Libertarians believe that a person has full rights (sovereignty) to his body,
-        own life and property obtained as a result of her own efforts or voluntary exchange \n
-
-        What libertarians want to undo: \n
-            • Taxes (or at least drastically reduce the amount and reduce the remaining, because,
-        from their point of view, this is legalized robbery by the state) \n
-            • Conscription \n
-            • Punishment for crimes without a victim
-                (e.g. drug use, prostitution, arms smuggling, driving in a seat belt) \n
-            • Antitrust bans \n
-        What libertarians want to legitimize \n
-            • Same-sex marriage \n
-            • Free carrying weapons \n
-            • Euthanasia \n
-        What libertarians argue about \n
-            • Legalization of all types of immigration \n
-            • Abortion - part of the libertarians believe that from an early period of development, the fetus has the same rights,
-                as a born person; their opponents believe the abortion ban violates the mother’s right to choose \n
-            • Age of sexual consent - some libertarians believe that it should be abolished altogether, \n
-            since it is introduced arbitrarily by the authorities and, accordingly, can be considered violent. \n
-            • Deprivation of rights due to incapacitation - some libertarians believe that this is also an “attack” on personal autonomy \n
-            • International politics - some libertarians reject the right of countries to intervene; another thinks \n
-                that they are possible if basic human rights are systematically violated somewhere \n
+        own life and property obtained as a result of her own efforts or voluntary exchange.
         \n
-        They advocate the so-called minimum state, or a state that acts as a “night watchman”.
+        \nWhat libertarians want to undo:
+        \n\t• Taxes (or at least drastically reduce the amount and reduce the remaining, because,
+        from their point of view, this is legalized robbery by the state).
+        \n\t• Conscription.
+        \n\t• Punishment for crimes without a victim
+                (e.g. drug use, prostitution, arms smuggling, driving in a seat belt).
+        \n\t• Antitrust bans.
+        \nWhat libertarians want to legitimize.
+        \n\t• Same-sex marriage.
+        \n\t• Free carrying weapons.
+        \n\t• Euthanasia.
+        \nWhat libertarians argue about.
+        \n\t• Legalization of all types of immigration.
+        \n\t• Abortion - part of the libertarians believe that from an early period of development,
+                the fetus has the same rights,
+                as a born person; their opponents believe the abortion ban violates the mother’s right to choose.
+        \n\t• Age of sexual consent - some libertarians believe that it should be abolished altogether,
+            since it is introduced arbitrarily by the authorities and, accordingly, can be considered violent.
+        \n\t• Deprivation of rights due to incapacitation - some libertarians believe that this is also an “attack”
+            on personal autonomy.
+        \n\t• International politics - some libertarians reject the right of countries to intervene; another thinks
+                that they are possible if basic human rights are systematically violated somewhere.
+        \nThey advocate the so-called minimum state, or a state that acts as a “night watchman”.
         Its functions should be reduced to ensuring national defense, law and order and judicial procedures.
+        \nUnlike libertarianism, supporters of anarchism against any hierarchies and power,
+            demand the complete elimination of the state.
         \n
-        Unlike libertarianism, supporters of anarchism against any hierarchies and power, demand the complete elimination of the state.
 
     </string>
     <string name="desc_left_anarchy">
-        (aka anarcho-communism) \n
+        (aka anarcho-communism)
         \n
-        Anarchists advocate human freedom and deny the need for forced
-            management and power of man over man. \n
+        \nAnarchists advocate human freedom and deny the need for forced
+            management and power of man over man.
         \n
-        Anarchists advocate the elimination of statehood and self-government,
+        \nAnarchists advocate the elimination of statehood and self-government,
         that is, for a system of independent meetings of citizens who independently manage their lives and
-        labor in the workplace, in the area of ​​residence, etc. \n
+        labor in the workplace, in the area of ​​residence, etc.
         \n
-        Under left-wing anarchism, money will have to cease to exist,
+        \nUnder left-wing anarchism, money will have to cease to exist,
         people will not receive direct compensation for labor (through the separation of profits and wages),
         but will have to have free access to all resources and surpluses produced by the commune.
         That is, instead of private, there will be collective, public property.
+        \n
 
     </string>
     <string name="desc_liberal_socialism">
-        (closer to anarcho-communism) \n
+        (closer to anarcho-communism)
         \n
-        In socialism, the state largely controls the economy and means
-        production, and its goal proclaims equality and fair distribution of goods. \n
+        \nIn socialism, the state largely controls the economy and means
+        production, and its goal proclaims equality and fair distribution of goods.
         \n
-        But libertarian socialists advocate the abolition of private property
+        \nBut libertarian socialists advocate the abolition of private property
         on the means of production and the state as an unnecessary and harmful institution.
         They are anti-capitalists and opponents of a market economy. In the end
         most Marxists agree with this, but for libertarian socialists
-        anti-authoritarianism and anti-parliamentarism. \n
+        anti-authoritarianism and anti-parliamentarism.
+        \n
     </string>
     <string name="settings_owner_quiz_option_2">Owner: VoxUkraine</string>
     <string name="settings_owner_quiz_option_1">Owner: politicalcompass.org</string>
