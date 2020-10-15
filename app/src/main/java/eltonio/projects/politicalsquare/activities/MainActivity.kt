@@ -150,8 +150,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     }
 
                     usersRef.child(userId).apply {
-                        child("name").setValue("Name1")
-                        child("email").setValue("User1@mail.com")
+                        child("name").setValue("None")
+                        child("email").setValue("none@mail.com")
                         child("lastLogInDate").setValue(lastLogInDate)
                     }
 

@@ -18,6 +18,10 @@
         <activity android:name="eltonio.projects.politicalsquare.activities.IntroActivity"
             android:theme="@style/Theme.MyApp.NoActionBar"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         
         <activity
@@ -77,10 +81,6 @@
             android:label="@string/main_title_actionbar"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name="eltonio.projects.politicalsquare.activities.BaseActivity" />
     </application>
