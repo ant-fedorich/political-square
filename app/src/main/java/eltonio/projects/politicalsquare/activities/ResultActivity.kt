@@ -105,9 +105,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val endDate = Date()
         val startedAtParsed = formatter.parse(startedAt)
-//        val diffInMillies = endDate.time - startedAtParsed.time
-//        duration = TimeUnit.MILLISECONDS.convert(diffInMillies, TimeUnit.DAYS).toInt()
-        duration = (endDate.time - startedAtParsed.time).toInt()
+        val diffInMillies = endDate.time - startedAtParsed.time
+        duration = TimeUnit.MILLISECONDS.convert(diffInMillies, TimeUnit.DAYS).toInt()
         endedAt = formatter.format(endDate)
 
         /* Add Result Points with animations */

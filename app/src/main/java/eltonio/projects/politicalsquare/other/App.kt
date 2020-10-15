@@ -2,7 +2,6 @@ package eltonio.projects.politicalsquare.other
 
 import android.app.Application
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -22,7 +21,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
-
         crashlytics = FirebaseCrashlytics.getInstance()
         analytics = Firebase.analytics
 
@@ -36,9 +34,6 @@ class App : Application() {
         // We have to set a lang before loading UI, cause it will take a lang by system default
         var loadedLang = LocaleHelper.loadLang(this)
         LocaleHelper.setLang(this, loadedLang)
-
-        // Disable Night mode
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
     }
 }
