@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.*
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.database.ChildEventListener
@@ -18,6 +19,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.QuizResultViewModel
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
@@ -45,6 +47,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     private lateinit var database: FirebaseDatabase
     private var userId = ""
     private var quizId = -1
+
+    private lateinit var quizResultViewModel: QuizResultViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -215,6 +219,23 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         dbHelper.addQuizResult(quizResult)
         // Adding data to Firebase
         database.getReference("QuizResults").push().setValue(quizResult)
+
+        // Adding data to Room DB
+        quizResultViewModel = ViewModelProvider(this).get(QuizResultViewModel::class.java)
+        val quizResultRoom = eltonio.projects.politicalsquare.data.QuizResult(
+            id = 0, //id is autoincrement
+            quizId = quizId,
+            ideologyStringId = ideologyId,
+            horStartScore = horStartScore,
+            verStartScore = verStartScore,
+            horResultScore = horScore,
+            verResultScore = verScore,
+            startedAt = startedAt,
+            endedAt = endedAt,
+            duration = duration,
+            avgAnswerTime = avgAnswerTime
+        )
+        quizResultViewModel.addQuizResult(quizResultRoom)
 
         compassX = horScore.plus(40)
         compassY = verScore.plus(40)
