@@ -19,21 +19,26 @@ import android.view.View
 import android.view.animation.*
 import android.widget.RadioButton
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 
 import eltonio.projects.politicalsquare.*
+import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
 
 import kotlinx.android.synthetic.main.activity_quiz.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import java.util.Collections.shuffle
 
 class QuizActivity : BaseActivity(), View.OnTouchListener {
 
     private var questionList = listOf<Question>()
+    private var questionList2 = listOf<eltonio.projects.politicalsquare.data.Question>()
     private var quizId = -1
     private var previousStep: Step? = null
     private var isPreviousStep = false
@@ -57,7 +62,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
     private lateinit var radioShapeHoverList: MutableList<GradientDrawable>
     private var rbSelectedIndex = -1
 
-
+    lateinit var appViewModel: AppViewModel
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +76,14 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
         // Language
         Locale.getDefault().language
+
+        // Room DB
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        GlobalScope.launch {
+            appViewModel.getAllQuestions()
+        }
+
+        val quesList = questionList2
 
         // DB
         val dbHelper = QuizDbHelper(this)
@@ -139,6 +152,21 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         }
 
         showNextQuestion()
+
+        // Room DB
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+
+        Log.i(TAG, "------ From Callback --------")
+        var allQuestions: List<eltonio.projects.politicalsquare.data.Question>
+        Log.i(TAG, "----------------------------------")
+/*        Log.i(TAG, "------ Blocking UI --------")
+        val allQues = appViewModel.getAllQuestionsWithBlock()
+        allQues?.forEach {
+            Log.i(TAG, "Question ${it.id}: ${it.question_ru}, ${it.scale}")
+        }
+        Log.i(TAG, "------ Blocking UI --------")*/
+
+
     }
 
     /* for debugging

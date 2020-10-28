@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase
 @Database(entities = [QuizResult::class, Question::class, Answer::class, Quiz::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun quizResultDao(): QuizResultDao
+    abstract fun questionDao(): QuestionDao
 
     companion object {
         @Volatile
@@ -33,7 +34,6 @@ abstract class AppDatabase : RoomDatabase() {
                 INSTANCE = instance
                 return instance
             }
-            
         }
     }
 }

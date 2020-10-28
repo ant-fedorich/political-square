@@ -19,7 +19,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.QuizResultViewModel
+import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
@@ -48,7 +48,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     private var userId = ""
     private var quizId = -1
 
-    private lateinit var quizResultViewModel: QuizResultViewModel
+    private lateinit var appViewModel: AppViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -221,7 +221,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         database.getReference("QuizResults").push().setValue(quizResult)
 
         // Adding data to Room DB
-        quizResultViewModel = ViewModelProvider(this).get(QuizResultViewModel::class.java)
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         val quizResultRoom = eltonio.projects.politicalsquare.data.QuizResult(
             id = 0, //id is autoincrement
             quizId = quizId,
@@ -235,7 +235,14 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             duration = duration,
             avgAnswerTime = avgAnswerTime
         )
-        quizResultViewModel.addQuizResult(quizResultRoom)
+        appViewModel.addQuizResult(quizResultRoom)
+
+        Log.i(TAG, "------------------------")
+        val quizResultAll = appViewModel.getQuizResults
+        quizResultAll.forEach {
+            Log.i(TAG, "Result: ${it.id}, ${it.ideologyStringId}, ${it.startedAt}")
+        }
+        Log.i(TAG, "------------------------")
 
         compassX = horScore.plus(40)
         compassY = verScore.plus(40)
