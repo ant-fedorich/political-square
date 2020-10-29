@@ -22,8 +22,10 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.layout_result_item.view.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.*
+import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import kotlinx.coroutines.CoroutineScope
 
 //import com.google.android.material
 
@@ -33,6 +35,9 @@ class SavedResultsActivity : AppCompatActivity() {
     private lateinit var dbHelper: QuizDbHelper
     private var resultList = mutableListOf<QuizResult>()
     private lateinit var quizAdapter: QuizRecycleAdapter
+
+    private lateinit var appViewModel: AppViewModel
+    private lateinit var scope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -45,6 +50,8 @@ class SavedResultsActivity : AppCompatActivity() {
 
         dbHelper = QuizDbHelper(this)
         resultList = dbHelper.getQuizResults()
+
+
 
         // For debugging
         for (item in resultList) Log.d(TAG, "Item: $item")

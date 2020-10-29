@@ -2,6 +2,7 @@ package eltonio.projects.politicalsquare.other
 
 import android.app.Application
 import android.content.Context
+import androidx.room.Room
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -39,8 +40,6 @@ class App : Application() {
         // We have to set a lang before loading UI, cause it will take a lang by system default
         var loadedLang = LocaleHelper.loadLang(this)
         LocaleHelper.setLang(this, loadedLang)
-
-
     }
 
 }

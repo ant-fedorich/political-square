@@ -19,6 +19,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.*
@@ -26,6 +27,8 @@ import eltonio.projects.politicalsquare.other.App.Companion.analytics
 import eltonio.projects.politicalsquare.other.App.Companion.crashlytics
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -196,7 +199,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        QuizDbHelper(this).initDB()
+        // FIXME: DISABLED QuizDbHelper(this).initDB()
+        // ROOM DB
+        val dbExists = AppDatabase.checkDBExists()
+        Log.e(TAG, "Checking Room DB - Main: $dbExists")
+
 
 
     }

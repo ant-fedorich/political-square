@@ -3,6 +3,7 @@ package eltonio.projects.politicalsquare.data
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.room.Query
+import eltonio.projects.politicalsquare.other.defaultLang
 
 @DatabaseView("SELECT qa.id, qa.questionId, a.answer_uk, a.answer_ru, a.answer_en, qa.point " +
         "FROM QuestionsAnswers as qa JOIN Answers as a " +

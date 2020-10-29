@@ -2,6 +2,7 @@ package eltonio.projects.politicalsquare.data
 
 import androidx.room.Dao
 import androidx.room.Query
+import eltonio.projects.politicalsquare.other.defaultLang
 
 @Dao
 interface QuestionDao {

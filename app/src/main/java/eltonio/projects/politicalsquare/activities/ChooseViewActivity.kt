@@ -22,10 +22,11 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.App.Companion.appQuestionAnswerDetail
 import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
 import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
 import eltonio.projects.politicalsquare.views.ChoosePointView
@@ -114,6 +115,9 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         frame_1.setOnTouchListener(this)
 
         // ROOM DB
+        var dbExists = AppDatabase.checkDBExists()
+        Log.e(TAG, "Checking Room DB - ChooseView, Before init: $dbExists")
+
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
 
@@ -124,7 +128,31 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
             appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(2)
         }
 
+        dbExists = AppDatabase.checkDBExists()
+        Log.e(TAG, "Checking Room DB - ChooseView, After init: $dbExists")
 
+
+        /** Get questions*/
+        val dbIsExist = AppDatabase.checkDBExists()
+        Log.e(TAG, "Checking Room DB - Quiz, After init: $dbExists")
+
+        when(QuizOptionHelper.loadQuizOption(this)) {
+            QuizOptions.UKRAINE.id ->
+            {
+                quizId = QuizOptions.UKRAINE.id
+                scope.launch {
+                    appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
+                }
+            }
+            QuizOptions.WORLD.id -> {
+                quizId = QuizOptions.WORLD.id
+                scope.launch {
+                    appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
+                }
+            }
+        }
+//        questionCountTotal = appQuestionsWithAnswers.size
+        Collections.shuffle(appQuestionsWithAnswers)
     }
 
     override fun onBackPressed() {
