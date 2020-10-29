@@ -14,6 +14,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,10 +22,17 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestionAnswerDetail
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,6 +74,10 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private var containerHeight = -1
     private var containerWidth = -1
 
+    private lateinit var appViewModel: AppViewModel
+    private lateinit var scope: CoroutineScope
+
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +112,19 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         button_compass_info.setOnClickListener(this)
 
         frame_1.setOnTouchListener(this)
+
+        // ROOM DB
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.IO)
+
+        scope.launch(Dispatchers.IO) {
+            appQuestions = appViewModel.getAllQuestions()
+        }
+        scope.launch(Dispatchers.IO) {
+            appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(2)
+        }
+
+
     }
 
     override fun onBackPressed() {

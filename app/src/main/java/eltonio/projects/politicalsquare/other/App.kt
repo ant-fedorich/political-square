@@ -6,6 +6,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
+import eltonio.projects.politicalsquare.data.*
 
 class App : Application() {
 
@@ -16,6 +17,10 @@ class App : Application() {
             private set
         lateinit var analytics: FirebaseAnalytics
             private set
+        var appQuestions: List<Question> = emptyList()
+        var appQuestionsWithAnswers: List<QuestionWithAnswers> = emptyList()
+        var appQuestionAnswerDetail: List<QuestionAnswerDetail> = emptyList()
+        var appQuizResults: List<QuizResult> = emptyList()
     }
 
     override fun onCreate() {
@@ -35,5 +40,7 @@ class App : Application() {
         var loadedLang = LocaleHelper.loadLang(this)
         LocaleHelper.setLang(this, loadedLang)
 
+
     }
+
 }

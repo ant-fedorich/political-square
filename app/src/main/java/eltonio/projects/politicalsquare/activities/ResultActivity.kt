@@ -237,12 +237,15 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         )
         appViewModel.addQuizResult(quizResultRoom)
 
+//        appViewModel.getAllQuestions().observe(this, androidx.lifecycle.Observer {
+//
+//        })
         Log.i(TAG, "------------------------")
-        val quizResultAll = appViewModel.getQuizResults
+/*        val quizResultAll = appViewModel.getQuizResults
         quizResultAll.forEach {
             Log.i(TAG, "Result: ${it.id}, ${it.ideologyStringId}, ${it.startedAt}")
         }
-        Log.i(TAG, "------------------------")
+        Log.i(TAG, "------------------------")*/
 
         compassX = horScore.plus(40)
         compassY = verScore.plus(40)

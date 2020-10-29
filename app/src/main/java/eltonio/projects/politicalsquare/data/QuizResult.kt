@@ -6,12 +6,13 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "QuizResult",
-    foreignKeys = arrayOf(ForeignKey(
-        entity = Quiz::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("quizId"),
-        onDelete = ForeignKey.NO_ACTION
-    )))
+    foreignKeys = [ForeignKey(
+            entity = Quiz::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("quizId"),
+            onDelete = ForeignKey.NO_ACTION
+        )]
+)
 data class QuizResult(
     @PrimaryKey(autoGenerate = true)
     val id: Int,

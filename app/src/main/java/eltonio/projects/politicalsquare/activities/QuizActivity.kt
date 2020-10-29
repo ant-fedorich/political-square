@@ -28,10 +28,11 @@ import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestionAnswerDetail
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
 
 import kotlinx.android.synthetic.main.activity_quiz.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 import java.util.Collections.shuffle
 
@@ -77,13 +78,36 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         // Language
         Locale.getDefault().language
 
-        // Room DB
-        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
-        GlobalScope.launch {
-            appViewModel.getAllQuestions()
+//        var quesList: List<Question>
+        // ROOM DB
+        Log.w(TAG, "--- appQuestList ----------------")
+        appQuestions.forEach { Log.w(TAG, "$it") }
+        Log.w(TAG, "--- QuestionsWithAnswers ------------")
+        appQuestionsWithAnswers.forEach { question ->
+            Log.w(TAG, "${question.id}, ${question.questionRu}, ${question.scale}")
+            question.answerList.forEach { Log.w(TAG, "Answers: $it") }
         }
 
-        val quesList = questionList2
+//        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+//        appViewModel.getAllQuestions().observe(this, androidx.lifecycle.Observer { list ->
+//            questionList2 = list
+//            Log.w(TAG, "questionList2 Inner: $questionList2")
+//        })
+//        Log.w(TAG, "questionList2 Outer: $questionList2")
+/*        GlobalScope.launch(Dispatchers.IO) {
+            var quesListInner = appViewModel.getAllQuestions()
+            questList = quesListInner
+            Log.w(TAG, "QuesList: $questList")
+
+//            questionList = quesListInner
+//            withContext(Dispatchers.Main) {
+//                quesList = quesListInner
+//            }
+        }
+        val localQuesList = questList*/
+//        Log.w(TAG, "LocalQuesList: $localQuesList")
+
+
 
         // DB
         val dbHelper = QuizDbHelper(this)
