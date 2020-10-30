@@ -5,7 +5,7 @@ import androidx.room.*
 
 @Dao
 interface QuizResultDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert
     suspend fun addQuizResult(quizResult: QuizResult)
 
     @Delete

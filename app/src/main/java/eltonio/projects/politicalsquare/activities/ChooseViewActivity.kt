@@ -140,12 +140,14 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
             QuizOptions.UKRAINE.id ->
             {
                 quizId = QuizOptions.UKRAINE.id
+                chosenQuizId = QuizOptions.UKRAINE.id // todo: Repeating
                 scope.launch {
                     appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
                 }
             }
             QuizOptions.WORLD.id -> {
                 quizId = QuizOptions.WORLD.id
+                chosenQuizId = QuizOptions.WORLD.id
                 scope.launch {
                     appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
                 }

@@ -21,6 +21,12 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun deleteQuizResult(quizResult: QuizResult) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteQuizResult(quizResult)
+        }
+    }
+
     suspend fun getQuizResults(): List<QuizResult> {
         return repository.getQuizResults()
     }

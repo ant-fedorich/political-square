@@ -17,6 +17,7 @@ import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.R
 import kotlinx.android.synthetic.main.activity_saved_results.*
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.layout_result_item.view.*
@@ -25,7 +26,7 @@ import com.google.android.material.transition.platform.*
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 
 //import com.google.android.material
 
@@ -34,6 +35,8 @@ class SavedResultsActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: QuizDbHelper
     private var resultList = mutableListOf<QuizResult>()
+    private lateinit var resultList2: List<eltonio.projects.politicalsquare.data.QuizResult>
+
     private lateinit var quizAdapter: QuizRecycleAdapter
 
     private lateinit var appViewModel: AppViewModel
@@ -48,24 +51,36 @@ class SavedResultsActivity : AppCompatActivity() {
 
         title = getString(R.string.saved_title_actionbar)
 
-        dbHelper = QuizDbHelper(this)
-        resultList = dbHelper.getQuizResults()
+//        dbHelper = QuizDbHelper(this)
+//        resultList = dbHelper.getQuizResults()
 
+
+        // ROOM DB
+        resultList2 = emptyList()
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.IO)
+        runBlocking {
+            resultList2 = appViewModel.getQuizResults()
+            Log.w(TAG, "QuizResults in Coroutine:")
+            for (item in resultList2) Log.i(TAG, "Item: $item")
+        }
 
 
         // For debugging
-        for (item in resultList) Log.d(TAG, "Item: $item")
+        Log.w(TAG, "QuizResults out of Coroutine:")
+        for (item in resultList2) Log.i(TAG, "Item: $item")
 
-        quizAdapter = QuizRecycleAdapter(resultList)
+        quizAdapter = QuizRecycleAdapter()
         recycler_results_list.apply {
             adapter = quizAdapter
             layoutManager = LinearLayoutManager(this.context)
             setHasFixedSize(true)
         }
+        quizAdapter.setQuizResults(resultList2)
         quizAdapter.setOnItemClickListener(object:
             QuizRecycleAdapter.OnQuizItemClickListener {
             override fun onItemClick(position: Int) = goToResultDetail(position)
-            override fun onDeleteClick(position: Int) = removeItem(position)
+            override fun onDeleteClick(position: Int) {} //= removeItem(position)
         })
 
         // Add swiping actions
@@ -76,25 +91,52 @@ class SavedResultsActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val deletedResultItem: QuizResult
+//                appViewModel.deleteQuizResult(quizAdapter.getQuizResultAt(position))
+                val deletedResultItem: eltonio.projects.politicalsquare.data.QuizResult
                 var ideologyTitle = "NONE"
 
                 if (direction == ItemTouchHelper.LEFT) {
-                    deletedResultItem = resultList[position]
+                    deletedResultItem = quizAdapter.getQuizResultAt(position)
+                    appViewModel.deleteQuizResult(deletedResultItem)
+                    runBlocking{
+                        delay(200)
+                        resultList2 = appViewModel.getQuizResults()
+                    }
+                    quizAdapter.setQuizResults(resultList2)
+                    //quizAdapter.notifyItemRemoved(position)
+
+
+                    //deletedResultItem = resultList2[position]
 
                     for (ideo in Ideologies.values()) {
-                        if (ideo.stringId == deletedResultItem.ideologyId) {
+                        if (ideo.stringId == deletedResultItem.ideologyStringId) {
                             ideologyTitle = ideo.title
                         }
                     }
-                    resultList.removeAt(position)
+                    // TODO: Make remove
+/*                    appViewModel.deleteQuizResult(resultList2[position])
+                    runBlocking{
+                        resultList2 = appViewModel.getQuizResults()
+                    }
+                    quizAdapter.notifyItemRemoved(position)
+                    Thread.sleep(1000)
+                    quizAdapter = QuizRecycleAdapter(resultList2)
+                    Thread.sleep(1000)
+                    //resultList.removeAt(position)*/
 
                     // Add Snackbar
-                    quizAdapter.notifyItemRemoved(position)
                     Snackbar.make(recycler_results_list, "$ideologyTitle удален", Snackbar.LENGTH_LONG)
                         .setAction("Undo") {
-                            resultList.add(position, deletedResultItem)
-                            quizAdapter.notifyItemInserted(position)
+                            // TODO: Make Undo
+                            appViewModel.addQuizResult(deletedResultItem)
+                            runBlocking {
+                                delay(200)
+                                resultList2 = appViewModel.getQuizResults()
+                            }
+                            quizAdapter.setQuizResults(resultList2)
+//                            // TODO: How to put at position
+//                            resultList.add(position, deletedResultItem)
+//                            quizAdapter.notifyItemInserted(position)
                         }
                         .show()
                 }
@@ -149,13 +191,13 @@ class SavedResultsActivity : AppCompatActivity() {
 //        val id = itemView.title_result_detail as TextView
 
         var intent = Intent(this, SavedResultDetailActivity::class.java).apply {
-            putExtra(EXTRA_IDEOLOGY_ID, resultList[position].ideologyId)
-            putExtra(EXTRA_QUIZ_ID, resultList[position].quizId)
-            putExtra(EXTRA_ENDED_AT, resultList[position].endedAt)
-            putExtra(EXTRA_HOR_START_SCORE, resultList[position].horStartScore)
-            putExtra(EXTRA_VER_START_SCORE, resultList[position].verStartScore)
-            putExtra(EXTRA_HOR_RESULT_SCORE, resultList[position].horResultScore)
-            putExtra(EXTRA_VER_RESULT_SCORE, resultList[position].verResultScore)
+            putExtra(EXTRA_IDEOLOGY_ID, resultList2[position].ideologyStringId)
+            putExtra(EXTRA_QUIZ_ID, resultList2[position].quizId)
+            putExtra(EXTRA_ENDED_AT, resultList2[position].endedAt)
+            putExtra(EXTRA_HOR_START_SCORE, resultList2[position].horStartScore)
+            putExtra(EXTRA_VER_START_SCORE, resultList2[position].verStartScore)
+            putExtra(EXTRA_HOR_RESULT_SCORE, resultList2[position].horResultScore)
+            putExtra(EXTRA_VER_RESULT_SCORE, resultList2[position].verResultScore)
             putExtra(EXTRA_TITLE_TRANSITION_NAME, titleTransitionName)
             putExtra(EXTRA_DATE_TRANSITION_NAME, dateTransitionName)
             putExtra(EXTRA_IMAGE_TRANSITION_NAME, imageTransitionName)
@@ -170,8 +212,13 @@ class SavedResultsActivity : AppCompatActivity() {
     }
 
     private fun removeItem(position: Int) {
-        dbHelper.deleteQuizResult(resultList[position].id)
-        resultList.removeAt(position)
+//        dbHelper.deleteQuizResult(resultList2[position].id)
+
+        appViewModel.deleteQuizResult(resultList2[position])
+        runBlocking {
+            resultList2 = appViewModel.getQuizResults()
+        }
+//        resultList2.removeAt(position)
         quizAdapter.notifyItemRemoved(position)
     }
 

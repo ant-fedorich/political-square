@@ -23,9 +23,13 @@ import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
+import eltonio.projects.politicalsquare.other.App.Companion.appQuizResults
 import eltonio.projects.politicalsquare.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -49,6 +53,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     private var quizId = -1
 
     private lateinit var appViewModel: AppViewModel
+    private lateinit var scope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -222,9 +227,11 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         // Adding data to Room DB
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.IO)
+
         val quizResultRoom = eltonio.projects.politicalsquare.data.QuizResult(
             id = 0, //id is autoincrement
-            quizId = quizId,
+            quizId = chosenQuizId,
             ideologyStringId = ideologyId,
             horStartScore = horStartScore,
             verStartScore = verStartScore,
@@ -236,6 +243,11 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             avgAnswerTime = avgAnswerTime
         )
         appViewModel.addQuizResult(quizResultRoom)
+        scope.launch {
+            appQuizResults = appViewModel.getQuizResults()
+            Log.w(TAG, "QuizResults in ResultActivity inside Coroutine:")
+            for (item in appQuizResults) Log.w(TAG, "Item: $item")
+        }
 
 //        appViewModel.getAllQuestions().observe(this, androidx.lifecycle.Observer {
 //

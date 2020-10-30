@@ -191,8 +191,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
         showNextQuestion()
 
-
-
         Log.i(TAG, "------ From Callback --------")
         var allQuestions: List<eltonio.projects.politicalsquare.data.Question>
         Log.i(TAG, "----------------------------------")

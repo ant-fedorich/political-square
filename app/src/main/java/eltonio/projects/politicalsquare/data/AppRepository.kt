@@ -8,6 +8,10 @@ class AppRepository(
         quizResultDao.addQuizResult(quizResult)
     }
 
+    suspend fun deleteQuizResult(quizResult: QuizResult) {
+        quizResultDao.deleteQuizResult(quizResult)
+    }
+
     suspend fun getQuizResults(): List<QuizResult> {
         return quizResultDao.getQuizResults()
     }
