@@ -10,3 +10,6 @@ Descriptions for ideologies were taken from wikipedia.org and other open sources
 
 ### Website
 http://eltonio.tilda.ws/political-compass
+
+### Download
+[Google Play](https://play.google.com/store/apps/details?id=eltonio.projects.politicalsquare)
