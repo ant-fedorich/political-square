@@ -15,6 +15,5 @@ data class QuestionWithAnswers(
     val questionEn: String,
     val scale: String,
     @Relation(parentColumn = "id", entityColumn = "questionId", entity = QuestionAnswerDetail::class)
-//    val answerList: List<QuestionAnswer>
     val answerList: List<QuestionAnswerDetail>
 )

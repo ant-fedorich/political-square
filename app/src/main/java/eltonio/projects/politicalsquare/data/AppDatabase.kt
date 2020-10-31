@@ -22,7 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
-        private const val DB_NAME = "PoliticalSquareRoom.db"
+        private const val DB_NAME = "PoliticalSquare.db"
         private const val DB_PATH = "/data/data/eltonio.projects.politicalsquare/databases/"
         private var dbFullPath = ""
 

@@ -12,9 +12,9 @@ import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.views.ResultListPointView
 import kotlinx.android.synthetic.main.layout_result_item.view.*
 
-class QuizRecycleAdapter() : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleViewHolder>() {
+class QuizRecycleAdapter : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleViewHolder>() {
 
-    private var resultList3: List<QuizResult> = emptyList()
+    private var resultList: List<QuizResult> = emptyList()
     private lateinit var itemClickListener: OnQuizItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizRecycleViewHolder {
@@ -28,7 +28,7 @@ class QuizRecycleAdapter() : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycle
     }
 
     override fun onBindViewHolder(holder: QuizRecycleViewHolder, position: Int) {
-        val currentItem = resultList3[position]
+        val currentItem = resultList[position]
 
         holder.textSavedResultDate.text = currentItem.endedAt
 
@@ -60,14 +60,14 @@ class QuizRecycleAdapter() : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycle
         holder.frameQuizResultImage.addView(myView)
     }
 
-    override fun getItemCount() = resultList3.size
+    override fun getItemCount() = resultList.size
 
-    fun setQuizResults(resultList2: List<QuizResult>) {
-        this.resultList3 = resultList2
+    fun setQuizResults(resultList: List<QuizResult>) {
+        this.resultList = resultList
         notifyDataSetChanged()
     }
 
-    fun getQuizResultAt(position: Int) = resultList3[position]
+    fun getQuizResultAt(position: Int) = resultList[position]
 
     class QuizRecycleViewHolder(itemView: View, listener: OnQuizItemClickListener): RecyclerView.ViewHolder(itemView) {
         val textSavedResultDate: TextView = itemView.text_saved_result_date

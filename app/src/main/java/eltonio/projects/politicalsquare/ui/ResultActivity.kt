@@ -36,8 +36,6 @@ import java.util.concurrent.TimeUnit
 
 class ResultActivity : BaseActivity(), View.OnClickListener {
 
-    private var doubleBackPressed: Long = 0
-
     private var chosenIdeology = ""
     private var resultIdeology = ""
     private var startedAt = ""
@@ -118,6 +116,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         duration = TimeUnit.MILLISECONDS.convert(diffInMillies, TimeUnit.DAYS).toInt()
         endedAt = formatter.format(endDate)
 
+        // TODO: Refactor animation
         /* Add Result Points with animations */
     /* ValueAnimator variant
        ValueAnimator.ofFloat(4f, 100f).apply {
@@ -204,26 +203,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         val ideologyId = getIdeologyStringId(resultIdeology)
 
-/*        // Adding data to SQL
-        val dbHelper = QuizDbHelper(this)
-        val quizResult = QuizResult(
-            userId = userId,
-            quizId = quizId,
-            ideologyId = ideologyId,
-            horStartScore = horStartScore,
-            verStartScore = verStartScore,
-            horResultScore = horScore,
-            verResultScore = verScore,
-            startedAt = startedAt,
-            endedAt = endedAt,
-            duration = duration,
-            zeroAnswerCnt = zeroAnswerCnt,
-            avgAnswerTime = avgAnswerTime
-        )*/
-/*        // Adding data to SQL
-        dbHelper.addQuizResult(quizResult)*/
-
-
         // Adding data to Room DB
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
@@ -250,16 +229,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         // Adding data to Firebase
         database.getReference("QuizResults").push().setValue(quizResult)
-
-//        appViewModel.getAllQuestions().observe(this, androidx.lifecycle.Observer {
-//
-//        })
-        Log.i(TAG, "------------------------")
-/*        val quizResultAll = appViewModel.getQuizResults
-        quizResultAll.forEach {
-            Log.i(TAG, "Result: ${it.id}, ${it.ideologyStringId}, ${it.startedAt}")
-        }
-        Log.i(TAG, "------------------------")*/
 
         compassX = horScore.plus(40)
         compassY = verScore.plus(40)

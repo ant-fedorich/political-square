@@ -62,6 +62,9 @@ const val PARAM_LOGIN_DATE = "login_date"
 
 
 /** Variables **/
+// TODO: Is this secure, Not to use Intent to Pass Vars
+// TODO: Should I user App for Global Vars?
+
 var appContext = App.appContext
 var mainActivityIsInFront = false
 var defaultLang = ""

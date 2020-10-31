@@ -33,8 +33,4 @@ object LocaleHelper {
         return language ?: defLang
     }
 
-    fun loadCountry(context: Context): String {
-        return ConfigurationCompat.getLocales(context.resources.configuration)[0].toString()
-    }
-
 }

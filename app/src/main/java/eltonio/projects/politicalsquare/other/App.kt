@@ -22,7 +22,6 @@ class App : Application() {
             private set
         var appQuestions: List<Question> = emptyList()
         var appQuestionsWithAnswers: List<QuestionWithAnswers> = emptyList()
-        var appQuestionAnswerDetail: List<QuestionAnswerDetail> = emptyList()
         var appQuizResults: List<QuizResult> = emptyList()
     }
 

@@ -40,8 +40,6 @@ import java.util.*
 
 class QuizActivity : BaseActivity(), View.OnTouchListener {
 
-    private var questionList = listOf<QuestionWithAnswers>()
-    private var questionList2 = listOf<Question>()
     private var quizId = -1
     private var previousStep: Step? = null
     private var isPreviousStep = false
@@ -81,70 +79,17 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         // Language
         Locale.getDefault().language
 
-//        var quesList: List<Question>
         // ROOM DB
-        Log.w(TAG, "--- appQuestList ----------------")
-        appQuestions.forEach { Log.w(TAG, "$it") }
-        Log.w(TAG, "--- QuestionsWithAnswers ------------")
+        // Debug
+/*        Log.w(TAG, "--- QuestionsWithAnswers ------------")
         appQuestionsWithAnswers.forEach { question ->
             Log.w(TAG, "${question.id}, ${question.questionRu}, ${question.scale}")
             question.answerList.forEach { Log.w(TAG, "Answers: $it") }
-        }
-
-//        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
-//        appViewModel.getAllQuestions().observe(this, androidx.lifecycle.Observer { list ->
-//            questionList2 = list
-//            Log.w(TAG, "questionList2 Inner: $questionList2")
-//        })
-//        Log.w(TAG, "questionList2 Outer: $questionList2")
-/*        GlobalScope.launch(Dispatchers.IO) {
-            var quesListInner = appViewModel.getAllQuestions()
-            questList = quesListInner
-            Log.w(TAG, "QuesList: $questList")
-
-//            questionList = quesListInner
-//            withContext(Dispatchers.Main) {
-//                quesList = quesListInner
-//            }
-        }
-        val localQuesList = questList*/
-//        Log.w(TAG, "LocalQuesList: $localQuesList")
-
-
-
-//        // DB
-//        val dbHelper = QuizDbHelper(this)
-//        dbHelper.initDB()
-//        dbHelper.openDB()
-
-        // Room DB
-        var dbExists = AppDatabase.checkDBExists()
-        Log.e(TAG, "Checking Room DB - Quiz, Before init: $dbExists")
+        }*/
 
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
 
-
-/*        val dbIsExist = AppDatabase.checkDBExists()
-        Log.e(TAG, "Checking Room DB - Quiz, After init: $dbExists")
-
-        when(QuizOptionHelper.loadQuizOption(this)) {
-            QuizOptions.UKRAINE.id ->
-            {
-                quizId = QuizOptions.UKRAINE.id
-                scope.launch {
-                    questionList = appViewModel.getQuestionsWithAnswers(quizId)
-                }
-            }
-            QuizOptions.WORLD.id -> {
-                quizId = QuizOptions.WORLD.id
-                scope.launch {
-                    questionList = appViewModel.getQuestionsWithAnswers(quizId)
-                }
-            }
-        }
-        questionCountTotal = questionList.size
-        shuffle(questionList)*/
         questionCountTotal = appQuestionsWithAnswers.size
 
         // DISABLE "Hard to answer" radio
@@ -187,18 +132,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         }
 
         showNextQuestion()
-
-        Log.i(TAG, "------ From Callback --------")
-        var allQuestions: List<Question>
-        Log.i(TAG, "----------------------------------")
-/*        Log.i(TAG, "------ Blocking UI --------")
-        val allQues = appViewModel.getAllQuestionsWithBlock()
-        allQues?.forEach {
-            Log.i(TAG, "Question ${it.id}: ${it.question_ru}, ${it.scale}")
-        }
-        Log.i(TAG, "------ Blocking UI --------")*/
-
-
     }
 
     /* for debugging

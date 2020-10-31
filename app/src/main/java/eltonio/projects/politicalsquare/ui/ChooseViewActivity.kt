@@ -75,9 +75,9 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private var containerHeight = -1
     private var containerWidth = -1
 
+    // TODO: Should I use a global var of view model and a scope
     private lateinit var appViewModel: AppViewModel
     private lateinit var scope: CoroutineScope
-
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,9 +115,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         frame_1.setOnTouchListener(this)
 
         // ROOM DB
-        var dbExists = AppDatabase.checkDBExists()
-        Log.e(TAG, "Checking Room DB - ChooseView, Before init: $dbExists")
-
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
 
@@ -128,13 +125,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
             appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(2)
         }
 
-        dbExists = AppDatabase.checkDBExists()
-        Log.e(TAG, "Checking Room DB - ChooseView, After init: $dbExists")
-
-
         /** Get questions*/
-        val dbIsExist = AppDatabase.checkDBExists()
-        Log.e(TAG, "Checking Room DB - Quiz, After init: $dbExists")
 
         when(QuizOptionHelper.loadQuizOption(this)) {
             QuizOptions.UKRAINE.id ->
@@ -177,7 +168,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
                 if (oldPointExists) {
                     oldPointFrame = ConstraintLayout(this)
- //                   oldPointFrame?.background = getDrawable(R.drawable.shape_point_background)
                     oldLayoutFrameParams?.leftMargin = oldLeftMargin
                     oldLayoutFrameParams?.topMargin = oldTopMargin
                     oldLayoutFrameParams?.rightMargin = oldRightMargin
@@ -202,7 +192,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 layoutFrameParams?.topMargin = event.y.toInt() - diameterInPx
                 layoutFrameParams?.rightMargin = containerWidth - event.x.toInt() - diameterInPx
                 layoutFrameParams?.bottomMargin = containerHeight - event.y.toInt() - diameterInPx
-//                pointFrame?.background = getDrawable(R.drawable.shape_point_background)
                 pointFrame?.layoutParams = layoutFrameParams
                 frame_1.removeView(pointFrame)
                 frame_1.addView(pointFrame)
@@ -392,30 +381,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 alpha(0f)
             }
         }
-/*   old style
- val listOfIdeologyHover = listOf<ImageView>(
-            image_autho_left_hover,
-            image_nation_hover,
-            image_gov_hover,
-            image_soc_demo_hover,
-            image_soc_hover,
-            image_autho_right_hover,
-            image_radical_cap_hover,
-            image_cons_hover,
-            image_prog_hover,
-            image_right_anar_hover,
-            image_soc_hover,
-            image_anar_hover,
-            image_lib_hover,
-            image_libertar_hover,
-            image_left_anar_hover,
-            image_lib_soc
-        )
-        listOfIdeologyHover.forEach {
-            it.alpha = 0.5f
-            it.animate().alpha(0f).setDuration(1000)
-//            it.visibility = View.INVISIBLE
-        }*/
         // show this ideology
         ideologyHover?.visibility = View.VISIBLE
         ideologyHover?.alpha = 0f

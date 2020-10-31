@@ -1,5 +1,6 @@
 package eltonio.projects.politicalsquare.models
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.jetbrains.annotations.NotNull
@@ -9,7 +10,10 @@ data class Answer(
     @PrimaryKey(autoGenerate = true)
     @NotNull
     val id: Int,
-    val answer_uk: String,
-    val answer_ru: String,
-    val answer_en: String
+    @ColumnInfo(name = "answer_uk")
+    val answerUk: String,
+    @ColumnInfo(name = "answer_ru")
+    val answerRu: String,
+    @ColumnInfo(name = "answer_en")
+    val answerEn: String
 )

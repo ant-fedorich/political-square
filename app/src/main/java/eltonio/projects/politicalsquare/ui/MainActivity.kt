@@ -193,14 +193,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-
-        // FIXME: DISABLED QuizDbHelper(this).initDB()
-        // ROOM DB
-        val dbExists = AppDatabase.checkDBExists()
-        Log.e(TAG, "Checking Room DB - Main: $dbExists")
-
-
-
     }
 
     override fun onResume() {
@@ -227,10 +219,4 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         startActivity(Intent(this, ChooseViewActivity::class.java))
         slideLeft(this)
     }
-
-    /** CUSTOM METHODS */
-    fun setQuizOption(i: Int) {
-        spinner_quiz_options.setSelection(i)
-    }
-
 }
