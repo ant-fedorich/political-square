@@ -3,6 +3,9 @@ package eltonio.projects.politicalsquare.data
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import eltonio.projects.politicalsquare.models.Question
+import eltonio.projects.politicalsquare.models.QuestionWithAnswers
+import eltonio.projects.politicalsquare.models.QuizResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

@@ -5,7 +5,7 @@
     android:id="@+id/layout_saved_result"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SavedResultsActivity">
+    tools:context=".ui.SavedResultsActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_results_list"

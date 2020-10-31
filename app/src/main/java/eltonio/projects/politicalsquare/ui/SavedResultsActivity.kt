@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.content.Intent
 import android.graphics.Canvas
@@ -11,9 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.QuizDbHelper
 import eltonio.projects.politicalsquare.other.QuizRecycleAdapter
-import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.R
 import kotlinx.android.synthetic.main.activity_saved_results.*
 import androidx.core.content.ContextCompat
@@ -25,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.*
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.QuizResult
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.*
 
@@ -33,9 +32,9 @@ import kotlinx.coroutines.*
 
 class SavedResultsActivity : AppCompatActivity() {
 
-    private lateinit var dbHelper: QuizDbHelper
+//    private lateinit var dbHelper: QuizDbHelper
     private var resultList = mutableListOf<QuizResult>()
-    private lateinit var resultList2: List<eltonio.projects.politicalsquare.data.QuizResult>
+    private lateinit var resultList2: List<QuizResult>
 
     private lateinit var quizAdapter: QuizRecycleAdapter
 
@@ -92,7 +91,7 @@ class SavedResultsActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
 //                appViewModel.deleteQuizResult(quizAdapter.getQuizResultAt(position))
-                val deletedResultItem: eltonio.projects.politicalsquare.data.QuizResult
+                val deletedResultItem: QuizResult
                 var ideologyTitle = "NONE"
 
                 if (direction == ItemTouchHelper.LEFT) {

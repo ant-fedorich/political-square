@@ -6,8 +6,8 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.App
-import eltonio.projects.politicalsquare.other.QuizDbHelper
 import eltonio.projects.politicalsquare.other.TAG
 import java.lang.Exception
 

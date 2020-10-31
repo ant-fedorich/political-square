@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.layout_result_item.view.*
 
 class QuizRecycleAdapter() : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleViewHolder>() {
 
-    private var resultList3: List<eltonio.projects.politicalsquare.data.QuizResult> = emptyList()
+    private var resultList3: List<QuizResult> = emptyList()
     private lateinit var itemClickListener: OnQuizItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizRecycleViewHolder {
@@ -62,7 +62,7 @@ class QuizRecycleAdapter() : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycle
 
     override fun getItemCount() = resultList3.size
 
-    fun setQuizResults(resultList2: List<eltonio.projects.politicalsquare.data.QuizResult>) {
+    fun setQuizResults(resultList2: List<QuizResult>) {
         this.resultList3 = resultList2
         notifyDataSetChanged()
     }

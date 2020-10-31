@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.content.Context
 import android.content.Intent
@@ -8,8 +8,6 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.AdapterView
 import android.widget.Spinner
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
@@ -20,15 +18,12 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.AppDatabase
-import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
 import eltonio.projects.politicalsquare.other.App.Companion.crashlytics
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 

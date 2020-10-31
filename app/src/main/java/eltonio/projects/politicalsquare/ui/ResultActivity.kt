@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -204,7 +204,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         val ideologyId = getIdeologyStringId(resultIdeology)
 
-        // Adding data to SQL
+/*        // Adding data to SQL
         val dbHelper = QuizDbHelper(this)
         val quizResult = QuizResult(
             userId = userId,
@@ -219,17 +219,16 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             duration = duration,
             zeroAnswerCnt = zeroAnswerCnt,
             avgAnswerTime = avgAnswerTime
-        )
-        // Adding data to SQL
-        dbHelper.addQuizResult(quizResult)
-        // Adding data to Firebase
-        database.getReference("QuizResults").push().setValue(quizResult)
+        )*/
+/*        // Adding data to SQL
+        dbHelper.addQuizResult(quizResult)*/
+
 
         // Adding data to Room DB
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
 
-        val quizResultRoom = eltonio.projects.politicalsquare.data.QuizResult(
+        val quizResult = QuizResult(
             id = 0, //id is autoincrement
             quizId = chosenQuizId,
             ideologyStringId = ideologyId,
@@ -242,12 +241,15 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             duration = duration,
             avgAnswerTime = avgAnswerTime
         )
-        appViewModel.addQuizResult(quizResultRoom)
+        appViewModel.addQuizResult(quizResult)
         scope.launch {
             appQuizResults = appViewModel.getQuizResults()
             Log.w(TAG, "QuizResults in ResultActivity inside Coroutine:")
             for (item in appQuizResults) Log.w(TAG, "Item: $item")
         }
+
+        // Adding data to Firebase
+        database.getReference("QuizResults").push().setValue(quizResult)
 
 //        appViewModel.getAllQuestions().observe(this, androidx.lifecycle.Observer {
 //

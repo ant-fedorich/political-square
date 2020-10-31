@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    tools:context=".activities.IntroActivity">
+    tools:context=".ui.IntroActivity">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager_intro"

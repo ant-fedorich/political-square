@@ -5,7 +5,7 @@
     android:id="@+id/layout_saved_result_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SavedResultDetailActivity">
+    tools:context=".ui.SavedResultDetailActivity">
 
     <TextView
         android:id="@+id/title_result_detail"

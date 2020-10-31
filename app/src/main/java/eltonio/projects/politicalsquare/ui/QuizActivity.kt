@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -26,25 +26,22 @@ import com.google.firebase.analytics.ktx.logEvent
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppViewModel
-import eltonio.projects.politicalsquare.data.QuestionWithAnswers
+import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
-import eltonio.projects.politicalsquare.other.App.Companion.appQuestionAnswerDetail
 import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
 import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
 
 import kotlinx.android.synthetic.main.activity_quiz.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
-import java.util.Collections.shuffle
 
 class QuizActivity : BaseActivity(), View.OnTouchListener {
 
     private var questionList = listOf<QuestionWithAnswers>()
-    private var questionList2 = listOf<eltonio.projects.politicalsquare.data.Question>()
+    private var questionList2 = listOf<Question>()
     private var quizId = -1
     private var previousStep: Step? = null
     private var isPreviousStep = false
@@ -115,10 +112,10 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
 
 
-        // DB
-        val dbHelper = QuizDbHelper(this)
-        dbHelper.initDB()
-        dbHelper.openDB()
+//        // DB
+//        val dbHelper = QuizDbHelper(this)
+//        dbHelper.initDB()
+//        dbHelper.openDB()
 
         // Room DB
         var dbExists = AppDatabase.checkDBExists()
@@ -192,7 +189,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         showNextQuestion()
 
         Log.i(TAG, "------ From Callback --------")
-        var allQuestions: List<eltonio.projects.politicalsquare.data.Question>
+        var allQuestions: List<Question>
         Log.i(TAG, "----------------------------------")
 /*        Log.i(TAG, "------ Blocking UI --------")
         val allQues = appViewModel.getAllQuestionsWithBlock()

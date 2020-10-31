@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -15,65 +15,65 @@
             android:name="firebase_performance_logcat_enabled"
             android:value="true" />
 
-        <activity android:name="eltonio.projects.politicalsquare.activities.IntroActivity"
+        <activity android:name="eltonio.projects.politicalsquare.ui.IntroActivity"
             android:theme="@style/Theme.MyApp.NoActionBar"
             android:screenOrientation="portrait">
         </activity>
         
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.SplashActivity"
+            android:name="eltonio.projects.politicalsquare.ui.SplashActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.SplashStyle" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.AboutActivity"
+            android:name="eltonio.projects.politicalsquare.ui.AboutActivity"
             android:label="@string/about_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.ui.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.SettingsActivity"
+            android:name="eltonio.projects.politicalsquare.ui.SettingsActivity"
             android:label="@string/settings_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.ui.MainActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"/>
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.SavedResultDetailActivity"
+            android:name="eltonio.projects.politicalsquare.ui.SavedResultDetailActivity"
             android:label="@string/savedresultdetail_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.ui.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.SavedResultsActivity"
+            android:name="eltonio.projects.politicalsquare.ui.SavedResultsActivity"
             android:label="@string/saved_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.ui.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.InfoActivity"
+            android:name="eltonio.projects.politicalsquare.ui.InfoActivity"
             android:label="@string/info_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.ui.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.ViewInfoActivity"
+            android:name="eltonio.projects.politicalsquare.ui.ViewInfoActivity"
             android:label="@string/info_title_actionbar"
-            android:parentActivityName="eltonio.projects.politicalsquare.activities.MainActivity"
+            android:parentActivityName="eltonio.projects.politicalsquare.ui.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.ResultActivity"
+            android:name="eltonio.projects.politicalsquare.ui.ResultActivity"
             android:label="@string/result_title_actionbar"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.QuizActivity"
+            android:name="eltonio.projects.politicalsquare.ui.QuizActivity"
             android:label="@string/quiz_title_actionbar"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.ChooseViewActivity"
+            android:name="eltonio.projects.politicalsquare.ui.ChooseViewActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar" />
         <activity
-            android:name="eltonio.projects.politicalsquare.activities.MainActivity"
+            android:name="eltonio.projects.politicalsquare.ui.MainActivity"
             android:label="@string/main_title_actionbar"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApp.NoActionBar">
@@ -82,7 +82,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="eltonio.projects.politicalsquare.activities.BaseActivity" />
+        <activity android:name="eltonio.projects.politicalsquare.ui.BaseActivity" />
     </application>
 
 </manifest>

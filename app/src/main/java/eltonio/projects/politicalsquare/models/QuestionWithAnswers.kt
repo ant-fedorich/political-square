@@ -1,7 +1,8 @@
-package eltonio.projects.politicalsquare.data
+package eltonio.projects.politicalsquare.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Relation
+import eltonio.projects.politicalsquare.models.QuestionAnswerDetail
 
 data class QuestionWithAnswers(
     val id: Int,
