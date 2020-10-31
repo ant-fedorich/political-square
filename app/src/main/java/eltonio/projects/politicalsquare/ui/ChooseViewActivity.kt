@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -14,6 +14,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,10 +22,18 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.AppDatabase
+import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,6 +75,10 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private var containerHeight = -1
     private var containerWidth = -1
 
+    // TODO: Should I use a global var of view model and a scope
+    private lateinit var appViewModel: AppViewModel
+    private lateinit var scope: CoroutineScope
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +113,39 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         button_compass_info.setOnClickListener(this)
 
         frame_1.setOnTouchListener(this)
+
+        // ROOM DB
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.IO)
+
+        scope.launch(Dispatchers.IO) {
+            appQuestions = appViewModel.getAllQuestions()
+        }
+        scope.launch(Dispatchers.IO) {
+            appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(2)
+        }
+
+        /** Get questions*/
+
+        when(QuizOptionHelper.loadQuizOption(this)) {
+            QuizOptions.UKRAINE.id ->
+            {
+                quizId = QuizOptions.UKRAINE.id
+                chosenQuizId = QuizOptions.UKRAINE.id // todo: Repeating
+                scope.launch {
+                    appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
+                }
+            }
+            QuizOptions.WORLD.id -> {
+                quizId = QuizOptions.WORLD.id
+                chosenQuizId = QuizOptions.WORLD.id
+                scope.launch {
+                    appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
+                }
+            }
+        }
+//        questionCountTotal = appQuestionsWithAnswers.size
+        Collections.shuffle(appQuestionsWithAnswers)
     }
 
     override fun onBackPressed() {
@@ -122,7 +168,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
                 if (oldPointExists) {
                     oldPointFrame = ConstraintLayout(this)
- //                   oldPointFrame?.background = getDrawable(R.drawable.shape_point_background)
                     oldLayoutFrameParams?.leftMargin = oldLeftMargin
                     oldLayoutFrameParams?.topMargin = oldTopMargin
                     oldLayoutFrameParams?.rightMargin = oldRightMargin
@@ -147,7 +192,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 layoutFrameParams?.topMargin = event.y.toInt() - diameterInPx
                 layoutFrameParams?.rightMargin = containerWidth - event.x.toInt() - diameterInPx
                 layoutFrameParams?.bottomMargin = containerHeight - event.y.toInt() - diameterInPx
-//                pointFrame?.background = getDrawable(R.drawable.shape_point_background)
                 pointFrame?.layoutParams = layoutFrameParams
                 frame_1.removeView(pointFrame)
                 frame_1.addView(pointFrame)
@@ -337,30 +381,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 alpha(0f)
             }
         }
-/*   old style
- val listOfIdeologyHover = listOf<ImageView>(
-            image_autho_left_hover,
-            image_nation_hover,
-            image_gov_hover,
-            image_soc_demo_hover,
-            image_soc_hover,
-            image_autho_right_hover,
-            image_radical_cap_hover,
-            image_cons_hover,
-            image_prog_hover,
-            image_right_anar_hover,
-            image_soc_hover,
-            image_anar_hover,
-            image_lib_hover,
-            image_libertar_hover,
-            image_left_anar_hover,
-            image_lib_soc
-        )
-        listOfIdeologyHover.forEach {
-            it.alpha = 0.5f
-            it.animate().alpha(0f).setDuration(1000)
-//            it.visibility = View.INVISIBLE
-        }*/
         // show this ideology
         ideologyHover?.visibility = View.VISIBLE
         ideologyHover?.alpha = 0f

@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.content.Intent
 import android.graphics.Canvas
@@ -11,28 +11,33 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.QuizDbHelper
 import eltonio.projects.politicalsquare.other.QuizRecycleAdapter
-import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.R
 import kotlinx.android.synthetic.main.activity_saved_results.*
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.layout_result_item.view.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.*
+import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.QuizResult
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import kotlinx.coroutines.*
 
 //import com.google.android.material
 
 
 class SavedResultsActivity : AppCompatActivity() {
 
-    private lateinit var dbHelper: QuizDbHelper
-    private var resultList = mutableListOf<QuizResult>()
+    private lateinit var resultList: List<QuizResult>
+
     private lateinit var quizAdapter: QuizRecycleAdapter
+
+    private lateinit var appViewModel: AppViewModel
+    private lateinit var scope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -43,21 +48,32 @@ class SavedResultsActivity : AppCompatActivity() {
 
         title = getString(R.string.saved_title_actionbar)
 
-        dbHelper = QuizDbHelper(this)
-        resultList = dbHelper.getQuizResults()
+        // ROOM DB
+        resultList = emptyList()
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.IO)
+        runBlocking {
+            resultList = appViewModel.getQuizResults()
+            Log.w(TAG, "QuizResults in Coroutine:")
+            for (item in resultList) Log.i(TAG, "Item: $item")
+        }
+
 
         // For debugging
-        for (item in resultList) Log.d(TAG, "Item: $item")
+        Log.w(TAG, "QuizResults out of Coroutine:")
+        for (item in resultList) Log.i(TAG, "Item: $item")
 
-        quizAdapter = QuizRecycleAdapter(resultList)
+        quizAdapter = QuizRecycleAdapter()
         recycler_results_list.apply {
             adapter = quizAdapter
             layoutManager = LinearLayoutManager(this.context)
             setHasFixedSize(true)
         }
-        quizAdapter.setOnItemClickListener(object:
+        quizAdapter.setQuizResults(resultList)
+        quizAdapter.setOnItemClickListener(object :
             QuizRecycleAdapter.OnQuizItemClickListener {
             override fun onItemClick(position: Int) = goToResultDetail(position)
+            // TODO: Delete onDelete
             override fun onDeleteClick(position: Int) = removeItem(position)
         })
 
@@ -69,25 +85,38 @@ class SavedResultsActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
+//                appViewModel.deleteQuizResult(quizAdapter.getQuizResultAt(position))
                 val deletedResultItem: QuizResult
                 var ideologyTitle = "NONE"
 
                 if (direction == ItemTouchHelper.LEFT) {
-                    deletedResultItem = resultList[position]
+                    deletedResultItem = quizAdapter.getQuizResultAt(position)
+                    appViewModel.deleteQuizResult(deletedResultItem)
+                    runBlocking{
+                        delay(200)
+                        resultList = appViewModel.getQuizResults()
+                    }
+                    quizAdapter.setQuizResults(resultList)
+                    //quizAdapter.notifyItemRemoved(position)
+
+
+                    //deletedResultItem = resultList2[position]
 
                     for (ideo in Ideologies.values()) {
-                        if (ideo.stringId == deletedResultItem.ideologyId) {
+                        if (ideo.stringId == deletedResultItem.ideologyStringId) {
                             ideologyTitle = ideo.title
                         }
                     }
-                    resultList.removeAt(position)
 
                     // Add Snackbar
-                    quizAdapter.notifyItemRemoved(position)
                     Snackbar.make(recycler_results_list, "$ideologyTitle удален", Snackbar.LENGTH_LONG)
                         .setAction("Undo") {
-                            resultList.add(position, deletedResultItem)
-                            quizAdapter.notifyItemInserted(position)
+                            appViewModel.addQuizResult(deletedResultItem)
+                            runBlocking {
+                                delay(200)
+                                resultList = appViewModel.getQuizResults()
+                            }
+                            quizAdapter.setQuizResults(resultList)
                         }
                         .show()
                 }
@@ -139,10 +168,8 @@ class SavedResultsActivity : AppCompatActivity() {
         val dateTransitionName = itemView.text_saved_result_date.transitionName
         val imageTransitionName = itemView.image_compass_saved_result.transitionName
 
-//        val id = itemView.title_result_detail as TextView
-
         var intent = Intent(this, SavedResultDetailActivity::class.java).apply {
-            putExtra(EXTRA_IDEOLOGY_ID, resultList[position].ideologyId)
+            putExtra(EXTRA_IDEOLOGY_ID, resultList[position].ideologyStringId)
             putExtra(EXTRA_QUIZ_ID, resultList[position].quizId)
             putExtra(EXTRA_ENDED_AT, resultList[position].endedAt)
             putExtra(EXTRA_HOR_START_SCORE, resultList[position].horStartScore)
@@ -154,17 +181,17 @@ class SavedResultsActivity : AppCompatActivity() {
             putExtra(EXTRA_IMAGE_TRANSITION_NAME, imageTransitionName)
             putExtra(EXTRA_ITEM_CONTAINER_TRANSITION_NAME, itemContainerTransitionName)
         }
-//        val pair1: Pair<View, String> = Pair.create(itemView.text_saved_result_title, titleTransitionName)
 
         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, itemView.layout_item_container, itemContainerTransitionName)
 
         startActivity(intent, options.toBundle())
-        //pushLeft(this) // info in //
     }
 
     private fun removeItem(position: Int) {
-        dbHelper.deleteQuizResult(resultList[position].id)
-        resultList.removeAt(position)
+        appViewModel.deleteQuizResult(resultList[position])
+        runBlocking {
+            resultList = appViewModel.getQuizResults()
+        }
         quizAdapter.notifyItemRemoved(position)
     }
 

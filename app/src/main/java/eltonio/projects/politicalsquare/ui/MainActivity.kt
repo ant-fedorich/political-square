@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.content.Context
 import android.content.Intent
@@ -17,6 +17,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
@@ -36,6 +37,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private var currentUser: FirebaseUser? = null
     private var userExists = true
     private var userCreationDate = ""
+
 
     companion object {
         lateinit var spinnerView: Spinner // To use it in Settings
@@ -191,8 +193,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-
-        QuizDbHelper(this).initDB()
     }
 
     override fun onResume() {
@@ -219,10 +219,4 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         startActivity(Intent(this, ChooseViewActivity::class.java))
         slideLeft(this)
     }
-
-    /** CUSTOM METHODS */
-    fun setQuizOption(i: Int) {
-        spinner_quiz_options.setSelection(i)
-    }
-
 }

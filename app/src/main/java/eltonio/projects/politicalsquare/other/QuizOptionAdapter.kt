@@ -28,7 +28,6 @@ class QuizOptionAdapter(context: Context, quizOptionList: Array<QuizOptions>)
         }
         val title = itemView?.findViewById<TextView>(R.id.title_quiz_option)
         val desc = itemView?.findViewById<TextView>(R.id.text_quiz_option)
-//        if (position == 0) desc?.visibility = View.GONE
         val image = itemView?.findViewById<ImageView>(R.id.image_quiz_option)
 
         val currentItem = getItem(position)

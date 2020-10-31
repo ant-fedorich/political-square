@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -19,21 +19,27 @@ import android.view.View
 import android.view.animation.*
 import android.widget.RadioButton
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 
 import eltonio.projects.politicalsquare.*
+import eltonio.projects.politicalsquare.data.AppDatabase
+import eltonio.projects.politicalsquare.data.AppViewModel
+import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
+import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
 
 import kotlinx.android.synthetic.main.activity_quiz.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.util.*
-import java.util.Collections.shuffle
 
 class QuizActivity : BaseActivity(), View.OnTouchListener {
 
-    private var questionList = listOf<Question>()
     private var quizId = -1
     private var previousStep: Step? = null
     private var isPreviousStep = false
@@ -46,7 +52,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
     private var quizFinished = false
 
-    private lateinit var currentQuestion: Question
+    private lateinit var currentQuestion: QuestionWithAnswers
 
     private lateinit var radioShapeHover1: GradientDrawable
     private lateinit var radioShapeHover2: GradientDrawable
@@ -57,7 +63,8 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
     private lateinit var radioShapeHoverList: MutableList<GradientDrawable>
     private var rbSelectedIndex = -1
 
-
+    lateinit var appViewModel: AppViewModel
+    lateinit var scope: CoroutineScope
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,32 +79,18 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         // Language
         Locale.getDefault().language
 
-        // DB
-        val dbHelper = QuizDbHelper(this)
-        dbHelper.openDB()
+        // ROOM DB
+        // Debug
+/*        Log.w(TAG, "--- QuestionsWithAnswers ------------")
+        appQuestionsWithAnswers.forEach { question ->
+            Log.w(TAG, "${question.id}, ${question.questionRu}, ${question.scale}")
+            question.answerList.forEach { Log.w(TAG, "Answers: $it") }
+        }*/
 
-        when(QuizOptionHelper.loadQuizOption(this)) {
-            QuizOptions.UKRAINE.id ->
-            {
-                quizId = QuizOptions.UKRAINE.id
-                val dbIsExist = dbHelper.checkDB()
-                Log.e(TAG, "dbIsExist: $dbIsExist")
-                if (dbIsExist) {
-                    questionList = dbHelper.getAllQuestions(quizId)
-                }
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.IO)
 
-            }
-            QuizOptions.WORLD.id -> {
-                quizId = QuizOptions.WORLD.id
-                val dbIsExist = dbHelper.checkDB()
-                Log.e(TAG, "dbIsExist: $dbIsExist")
-                if (dbIsExist) {
-                    questionList = dbHelper.getAllQuestions(quizId)
-                }
-            }
-        }
-        questionCountTotal = questionList.size
-        shuffle(questionList)
+        questionCountTotal = appQuestionsWithAnswers.size
 
         // DISABLE "Hard to answer" radio
         radio_answer_3.visibility = View.GONE
@@ -290,20 +283,45 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
         if (questionCounter < questionCountTotal) {
             radio_group_answers.clearCheck()
-            currentQuestion = questionList[questionCounter]
+            currentQuestion = appQuestionsWithAnswers[questionCounter]
 
             text_question_new.visibility = View.VISIBLE
             text_question_old.visibility = View.VISIBLE
 
-            if (questionCounter > 0) text_question_old.text = questionList[questionCounter - 1].question
+            val ans = currentQuestion.answerList
+            when (defaultLang) {
+                "uk" -> {
+                    if (questionCounter > 0) text_question_old.text = appQuestionsWithAnswers[questionCounter - 1].questionUk
 
-            text_question_new.text = currentQuestion.question
+                    text_question_new.text = currentQuestion.questionUk
+                    radio_answer_1.text = ans[0].answerUk
+                    radio_answer_2.text = ans[1].answerUk
+                    radio_answer_3.text = ans[2].answerUk
+                    radio_answer_4.text = ans[3].answerUk
+                    radio_answer_5.text = ans[4].answerUk
+                }
+                "ru" -> {
+                    if (questionCounter > 0) text_question_old.text = appQuestionsWithAnswers[questionCounter - 1].questionRu
 
-            radio_answer_1.text = currentQuestion.answerList[0].answer
-            radio_answer_2.text = currentQuestion.answerList[1].answer
-            radio_answer_3.text = currentQuestion.answerList[2].answer
-            radio_answer_4.text = currentQuestion.answerList[3].answer
-            radio_answer_5.text = currentQuestion.answerList[4].answer
+                    text_question_new.text = currentQuestion.questionRu
+                    radio_answer_1.text = ans[0].answerRu
+                    radio_answer_2.text = ans[1].answerRu
+                    radio_answer_3.text = ans[2].answerRu
+                    radio_answer_4.text = ans[3].answerRu
+                    radio_answer_5.text = ans[4].answerRu
+                }
+                "en" -> {
+                    if (questionCounter > 0) text_question_old.text = appQuestionsWithAnswers[questionCounter - 1].questionEn
+
+                    text_question_new.text = currentQuestion.questionEn
+                    radio_answer_1.text = ans[0].answerEn
+                    radio_answer_2.text = ans[1].answerEn
+                    radio_answer_3.text = ans[2].answerEn
+                    radio_answer_4.text = ans[3].answerEn
+                    radio_answer_5.text = ans[4].answerEn
+                }
+            }
+
 
             // Get Screen Resolution
             val display = windowManager.defaultDisplay
@@ -371,18 +389,38 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         if (questionCounter > 1) {
             questionCounter-- // reset a next question to current
 
-            currentQuestion = questionList[questionCounter-1] // take the previous question
+            currentQuestion = appQuestionsWithAnswers[questionCounter-1] // take the previous question
 
             text_question_new.visibility = View.VISIBLE
             text_question_old.visibility = View.VISIBLE
-            text_question_old.text = currentQuestion.question
 
-            radio_answer_1.text = currentQuestion.answerList[0].answer
-            radio_answer_2.text = currentQuestion.answerList[1].answer
-            radio_answer_3.text = currentQuestion.answerList[2].answer
-            radio_answer_4.text = currentQuestion.answerList[3].answer
-            radio_answer_5.text = currentQuestion.answerList[4].answer
-
+            val ans = currentQuestion.answerList
+            when (defaultLang) {
+                "uk" -> {
+                    text_question_old.text = currentQuestion.questionUk
+                    radio_answer_1.text = ans[0].answerUk
+                    radio_answer_2.text = ans[1].answerUk
+                    radio_answer_3.text = ans[2].answerUk
+                    radio_answer_4.text = ans[3].answerUk
+                    radio_answer_5.text = ans[4].answerUk
+                }
+                "ru" -> {
+                    text_question_old.text = currentQuestion.questionRu
+                    radio_answer_1.text = ans[0].answerRu
+                    radio_answer_2.text = ans[1].answerRu
+                    radio_answer_3.text = ans[2].answerRu
+                    radio_answer_4.text = ans[3].answerRu
+                    radio_answer_5.text = ans[4].answerRu
+                }
+                "en" -> {
+                    text_question_old.text = currentQuestion.questionEn
+                    radio_answer_1.text = ans[0].answerEn
+                    radio_answer_2.text = ans[1].answerEn
+                    radio_answer_3.text = ans[2].answerEn
+                    radio_answer_4.text = ans[3].answerEn
+                    radio_answer_5.text = ans[4].answerEn
+                }
+            }
 
             // Animate an old question backward
             val quesOldAnimation = AnimationUtils.loadAnimation(this, R.anim.back_move_old_question)

@@ -10,11 +10,8 @@ object QuizOptionHelper {
         sharedPrefs.apply()
     }
     fun loadQuizOption(context: Context): Int {
-        //val currentCountry = LocaleHelper.loadCountry(context)
-        //Log.i(TAG, "Country is: $currentCountry")
         val defQuizOption: Int = QuizOptions.UKRAINE.id
         val sharedPrefs = appContext.getSharedPreferences(PREF_SETTINGS, Context.MODE_PRIVATE)
-        val quizOptionId = sharedPrefs.getInt(PREF_QUIZ_OPTION, defQuizOption)
-        return quizOptionId
+        return sharedPrefs.getInt(PREF_QUIZ_OPTION, defQuizOption)
     }
 }

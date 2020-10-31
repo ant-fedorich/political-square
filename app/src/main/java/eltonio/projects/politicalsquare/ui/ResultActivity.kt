@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.activities
+package eltonio.projects.politicalsquare.ui
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.*
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.database.ChildEventListener
@@ -18,19 +19,22 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.other.App.Companion.analytics
+import eltonio.projects.politicalsquare.other.App.Companion.appQuizResults
 import eltonio.projects.politicalsquare.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 class ResultActivity : BaseActivity(), View.OnClickListener {
-
-    private var doubleBackPressed: Long = 0
 
     private var chosenIdeology = ""
     private var resultIdeology = ""
@@ -45,6 +49,9 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     private lateinit var database: FirebaseDatabase
     private var userId = ""
     private var quizId = -1
+
+    private lateinit var appViewModel: AppViewModel
+    private lateinit var scope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +116,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         duration = TimeUnit.MILLISECONDS.convert(diffInMillies, TimeUnit.DAYS).toInt()
         endedAt = formatter.format(endDate)
 
+        // TODO: Refactor animation
         /* Add Result Points with animations */
     /* ValueAnimator variant
        ValueAnimator.ofFloat(4f, 100f).apply {
@@ -195,12 +203,14 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         val ideologyId = getIdeologyStringId(resultIdeology)
 
-        // Adding data to SQL
-        val dbHelper = QuizDbHelper(this)
+        // Adding data to Room DB
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.IO)
+
         val quizResult = QuizResult(
-            userId = userId,
-            quizId = quizId,
-            ideologyId = ideologyId,
+            id = 0, //id is autoincrement
+            quizId = chosenQuizId,
+            ideologyStringId = ideologyId,
             horStartScore = horStartScore,
             verStartScore = verStartScore,
             horResultScore = horScore,
@@ -208,11 +218,15 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             startedAt = startedAt,
             endedAt = endedAt,
             duration = duration,
-            zeroAnswerCnt = zeroAnswerCnt,
             avgAnswerTime = avgAnswerTime
         )
-        // Adding data to SQL
-        dbHelper.addQuizResult(quizResult)
+        appViewModel.addQuizResult(quizResult)
+        scope.launch {
+            appQuizResults = appViewModel.getQuizResults()
+            Log.w(TAG, "QuizResults in ResultActivity inside Coroutine:")
+            for (item in appQuizResults) Log.w(TAG, "Item: $item")
+        }
+
         // Adding data to Firebase
         database.getReference("QuizResults").push().setValue(quizResult)
 
