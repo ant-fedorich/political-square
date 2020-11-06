@@ -150,6 +150,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         """.trimIndent())
     }
 
+
      */
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
