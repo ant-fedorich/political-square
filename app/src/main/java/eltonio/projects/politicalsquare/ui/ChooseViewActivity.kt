@@ -28,6 +28,7 @@ import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.App.Companion.appQuestions
 import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
+import eltonio.projects.politicalsquare.data.SharedPrefRepository
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +40,9 @@ import java.util.*
 // TODO: Change image_for_canvas
 
 class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchListener {
+
+    //TEMP
+    private val prefRepository = SharedPrefRepository()
 
     var choosePointView: ChoosePointView? = null
 
@@ -271,7 +275,12 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
 
         // TODO: MVVM to Reposytory
-        val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val startedAt = formatter.format(Date())
+
+        prefRepository.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt)
+
+/*        val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
         sharedPref.apply {
             putFloat(PREF_CHOSEN_VIEW_X, x)
             putFloat(PREF_CHOSEN_VIEW_Y, y)
@@ -281,16 +290,15 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
             putInt(PREF_QUIZ_ID, quizId)
             apply()
-        }
+        }*/
         // end MVVM to Reposytory
 
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val startedAt = formatter.format(Date())
+
 
         // TODO: MVVM to Reposytory
         // for Debug
-        sharedPref.putString(PREF_STARTED_AT, startedAt)
-        sharedPref.apply()
+//        sharedPref.putString(PREF_STARTED_AT, startedAt)
+//        sharedPref.apply()
         // end MVVM to Reposytory
 
 

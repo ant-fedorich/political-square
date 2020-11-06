@@ -10,10 +10,15 @@ import android.view.WindowManager
 import android.view.animation.*
 import com.bumptech.glide.Glide
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.data.SharedPrefRepository
 import eltonio.projects.politicalsquare.other.*
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
+
+    // TEMP
+    private val prefRepository = SharedPrefRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,9 +71,12 @@ class SplashActivity : AppCompatActivity() {
         image_compass_only_strokes.startAnimation(animationSet)
         // Do action after moving
         Handler().postDelayed({
-            val prefs = getSharedPreferences(PREF_SETTINGS, Context.MODE_PRIVATE).edit()
+            // TODO:  MVVM to Repository
+/*            val prefs = getSharedPreferences(PREF_SETTINGS, Context.MODE_PRIVATE).edit()
             prefs.putBoolean(PREF_SPLASH_APPEARED, true)
-            prefs.apply()
+            prefs.apply()*/
+            // End:  MVVM to VM
+            prefRepository.setSplashAppeared()
 
             finish()
             overridePendingTransition(0, 0)

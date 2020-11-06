@@ -21,12 +21,16 @@ import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.App.Companion.analytics
 import eltonio.projects.politicalsquare.App.Companion.crashlytics
+import eltonio.projects.politicalsquare.data.SharedPrefRepository
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : BaseActivity(), View.OnClickListener {
+
+    // TEMP
+    private val prefRepository = SharedPrefRepository()
 
     val mainActivity = this
 
@@ -58,8 +62,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         Log.i(TAG, "Lang: $loadedLang")
 
         // todo: MVVM to Reposytory
-        val prefs = getSharedPreferences(PREF_SETTINGS, MODE_PRIVATE)
-        val splashAppeared = prefs.getBoolean(PREF_SPLASH_APPEARED, false)
+/*        val prefs = getSharedPreferences(PREF_SETTINGS, MODE_PRIVATE)
+        val splashAppeared = prefs.getBoolean(PREF_SPLASH_APPEARED, false)*/
+
+        val splashAppeared = prefRepository.getSplashAppeared()
         // end MVVM to Reposytory
 
         Log.d(TAG, "splashAppeared: $splashAppeared")
