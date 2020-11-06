@@ -7,7 +7,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import eltonio.projects.politicalsquare.models.*
-import eltonio.projects.politicalsquare.other.App
+import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.other.TAG
 import java.lang.Exception
 

@@ -17,11 +17,10 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.App.Companion.analytics
-import eltonio.projects.politicalsquare.other.App.Companion.crashlytics
+import eltonio.projects.politicalsquare.App.Companion.analytics
+import eltonio.projects.politicalsquare.App.Companion.crashlytics
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
@@ -50,13 +49,19 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         var loadedLang = LocaleHelper.loadLocate(this)
         LocaleHelper.setLocate(this, loadedLang)
         */
+
+        // TODO: mvvm, to vm
+        // MVVM Start
         var loadedLang = LocaleHelper.loadLang(this)
         analytics.setUserProperty(EVENT_PREFERRED_LANG, loadedLang)
 
         Log.i(TAG, "Lang: $loadedLang")
 
+        // todo: MVVM to Reposytory
         val prefs = getSharedPreferences(PREF_SETTINGS, MODE_PRIVATE)
         val splashAppeared = prefs.getBoolean(PREF_SPLASH_APPEARED, false)
+        // end MVVM to Reposytory
+
         Log.d(TAG, "splashAppeared: $splashAppeared")
 
         if (splashAppeared == false) {
@@ -66,6 +71,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         Thread.sleep(300) // Needs to load Splash Activity
 
+        // todo: MVVM to Reposytory???
         Ideologies.refreshAll(this)
         QuizOptions.refreshAll(this)
         this.title = getString(R.string.main_title_actionbar)
@@ -80,10 +86,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             alpha(1f)
             interpolator = AccelerateInterpolator(3f)
         }.start()
+        // MVVM End
 
 
         //== Set Quiz Options Spinner ==
 
+        // TODO: mvvm, to vm
         val spinnerAdapter = QuizOptionAdapter(this, QuizOptions.values())
         spinner_quiz_options.adapter = spinnerAdapter
         spinnerView = spinner_quiz_options
@@ -93,9 +101,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             QuizOptions.UKRAINE.id -> spinner_quiz_options.setSelection(1)
         }
 
+        // TODO: MVVM to Reposytory
         database = Firebase.database
         usersRef = database.getReference("Users")
 
+        // TODO: MVVM to Reposytory???
         auth = Firebase.auth
         currentUser = auth.currentUser
 
@@ -103,8 +113,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         val uid = currentUser?.uid ?: "none"
         val uidRef = usersRef.child(uid)
-        uidRef.addListenerForSingleValueEvent(object : ValueEventListener{
+        // end mvvm
+
+        uidRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                // TODO: mvvm, to vm
+                // MVVM Start
                 if (!snapshot.exists()) {
                     userExists = false
                     crashlytics.log("FirebaseDatabase: OnDataChange: User does not exist")
@@ -112,10 +126,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     val currentDate = Date()
                     userCreationDate = formatter.format(currentDate)
                 }
+                // MVVM End
             }
-            override fun onCancelled(error: DatabaseError) { }
+
+            override fun onCancelled(error: DatabaseError) {}
         })
 
+        // TODO: mvvm, to vm?
         usersRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(shapchot: DataSnapshot, p1: String?) {
                 //Log.i(TAG, "Users: onChildAdded")
@@ -151,6 +168,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                         param(PARAM_LOGIN_DATE, lastLogInDate)
                     }
 
+                    // TODO: MVVM to Reposytory
                     usersRef.child(userId).apply {
                         child("name").setValue("Name1")
                         child("email").setValue("User1@mail.com")
@@ -159,36 +177,49 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
                     getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
                         .putString(PREF_USER_ID, userId).apply()
+                    // end MVVM to Reposytory
+
                 }
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "signInAnonymously: FAILURE: $e")
             }
+        // end mvvm
 
         // Set onClick listeners
         button_start.setOnClickListener(this)
 
         spinner_quiz_options.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // TODO: mvvm, to vm
                 val clickedItem = parent?.getItemAtPosition(position) as QuizOptions
                 when (clickedItem.id) {
                     QuizOptions.WORLD.id -> {
                         QuizOptionHelper.saveQuizOption(QuizOptions.WORLD.id)
+
+                        // TODO: MVVM to Reposytory
                         val bundle = Bundle().apply {
                             putInt(FirebaseAnalytics.Param.CONTENT, 1)
                             putString(FirebaseAnalytics.Param.CONTENT_TYPE, "change_quiz_option")
                         }
                         analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                        // end: MVVM to Reposytory
+
                     }
                     QuizOptions.UKRAINE.id -> {
+
+                        // TODO: MVVM to Reposytory
                         QuizOptionHelper.saveQuizOption(QuizOptions.UKRAINE.id)
                         val bundle = Bundle().apply {
                             putInt(FirebaseAnalytics.Param.CONTENT, 2)
                             putString(FirebaseAnalytics.Param.CONTENT_TYPE, "change_quiz_option")
                         }
                         analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                        // end: MVVM to Reposytory
+
                     }
                 }
+                // end mvvm
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -197,11 +228,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        // TODO: mvvm, to vm
         mainActivityIsInFront = true
     }
 
     override fun onPause() {
         super.onPause()
+        // TODO: mvvm, to vm
         mainActivityIsInFront = false
     }
 

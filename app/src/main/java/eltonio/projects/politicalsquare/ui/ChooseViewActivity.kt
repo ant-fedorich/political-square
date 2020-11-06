@@ -22,13 +22,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
-import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
+import eltonio.projects.politicalsquare.App.Companion.appQuestions
+import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.CoroutineScope
@@ -43,6 +42,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     var choosePointView: ChoosePointView? = null
 
+    // TODO: mvvm to vm?
     private var horStartScore = 0
     private var verStartScore = 0
     private var ideology = ""
@@ -78,6 +78,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     // TODO: Should I use a global var of view model and a scope
     private lateinit var appViewModel: AppViewModel
     private lateinit var scope: CoroutineScope
+    // end to vm?
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +86,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         setContentView(R.layout.activity_choose_view)
 
         // debug
+        // TODO: mvvm to vm
         Locale.getDefault().language
 
         database = Firebase.database
@@ -107,6 +109,8 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
             child("title").setValue("Quiz1")
             child("description").setValue("This is a test quiz")
         }
+        // end vm
+
 
         // Init listeners
         button_start_quiz.setOnClickListener(this)
@@ -115,6 +119,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         frame_1.setOnTouchListener(this)
 
         // ROOM DB
+        // TODO: mvvm to VM
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
 
@@ -124,9 +129,12 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         scope.launch(Dispatchers.IO) {
             appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(2)
         }
+        // end MVVM
 
         /** Get questions*/
 
+
+        // TODO: mvvm to vm
         when(QuizOptionHelper.loadQuizOption(this)) {
             QuizOptions.UKRAINE.id ->
             {
@@ -146,6 +154,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         }
 //        questionCountTotal = appQuestionsWithAnswers.size
         Collections.shuffle(appQuestionsWithAnswers)
+        //end MVVM
     }
 
     override fun onBackPressed() {
@@ -155,6 +164,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
+        // TODO: mvvm to vm? animation
         containerHeight = frame_1.height
         containerWidth = frame_1.width
 
@@ -236,6 +246,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 ideologyIsChosen = true
                 v?.performClick()
             }
+            //end MVVM
         }
 
         return true
@@ -248,12 +259,18 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         }
     }
 
+
+
+    /** CUSTOM METHODS */
+    // TODO: MVVM to VM
     @SuppressLint("SimpleDateFormat")
     private fun onStartQuizClicked() {
         if (!ideologyIsChosen) return toast("Выберете политический взгляд сначало!")
 
         quizIsActive = true
 
+
+        // TODO: MVVM to Reposytory
         val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
         sharedPref.apply {
             putFloat(PREF_CHOSEN_VIEW_X, x)
@@ -265,13 +282,17 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
             putInt(PREF_QUIZ_ID, quizId)
             apply()
         }
+        // end MVVM to Reposytory
 
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val startedAt = formatter.format(Date())
 
+        // TODO: MVVM to Reposytory
         // for Debug
         sharedPref.putString(PREF_STARTED_AT, startedAt)
         sharedPref.apply()
+        // end MVVM to Reposytory
+
 
         startActivity(Intent(this, QuizActivity::class.java))
         slideLeft(this)
@@ -284,7 +305,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         startActivity(intent)
     }
 
-    /** CUSTOM METHODS */
     @SuppressLint("SetTextI18n")
     private fun drawHover(event: MotionEvent) {
         x = event.x
@@ -393,5 +413,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
         oldIdeologyHover = ideologyHover
     }
+    // end MVVM
 
 }

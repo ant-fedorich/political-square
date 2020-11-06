@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.other
+package eltonio.projects.politicalsquare
 
 import android.app.Application
 import android.content.Context
@@ -7,9 +7,12 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.models.Question
-import eltonio.projects.politicalsquare.models.QuestionAnswerDetail
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.other.EVENT_QUIZ_SESSION_START
+import eltonio.projects.politicalsquare.other.LocaleHelper
+import eltonio.projects.politicalsquare.other.PREF_SETTINGS
+import eltonio.projects.politicalsquare.other.PREF_SPLASH_APPEARED
 
 class App : Application() {
 

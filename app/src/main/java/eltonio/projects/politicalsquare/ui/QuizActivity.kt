@@ -24,14 +24,12 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 
 import eltonio.projects.politicalsquare.*
-import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.models.*
-import eltonio.projects.politicalsquare.other.App.Companion.analytics
-import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
-import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
+import eltonio.projects.politicalsquare.App.Companion.analytics
+import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
 
 import kotlinx.android.synthetic.main.activity_quiz.*
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +37,8 @@ import kotlinx.coroutines.Dispatchers
 import java.util.*
 
 class QuizActivity : BaseActivity(), View.OnTouchListener {
+
+    // TODO: MVVM to VM
 
     private var quizId = -1
     private var previousStep: Step? = null
@@ -66,15 +66,20 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
     lateinit var appViewModel: AppViewModel
     lateinit var scope: CoroutineScope
 
+    // end VM
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
         this.title = getString(R.string.quiz_title_actionbar)
+        // TODO: MVVM to Reposytory
         analytics.logEvent(EVENT_QUIZ_BEGIN) {
             param(FirebaseAnalytics.Param.START_DATE, System.currentTimeMillis())
         }
+        // end: MVVM to Reposytory
+
 
         // Language
         Locale.getDefault().language
@@ -370,9 +375,12 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
             // For debug
+            // TODO: MVVM to Reposytory
             val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
             sharedPref.putInt(PREF_ZERO_ANSWER_CNT, zeroAnswerCnt)
             sharedPref.apply()
+            // end: MVVM to Reposytory
+
 
             val intent = Intent(this, ResultActivity::class.java)
             intent.putExtra(EXTRA_HORIZONTAL_SCORE, horizontalScore.toInt())

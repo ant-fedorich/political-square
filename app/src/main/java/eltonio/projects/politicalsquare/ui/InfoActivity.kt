@@ -30,10 +30,12 @@ import kotlinx.android.synthetic.main.activity_info.image_soc_hover
 
 class InfoActivity : AppCompatActivity() {
 
+    // TODO: MVVM to VM, many vars?
     private var horScore = 0
     private var verScore = 0
     private var ideology = ""
     private var oldIdeologyHover: ImageView? = null
+    // end VM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,8 @@ class InfoActivity : AppCompatActivity() {
 
         // Set listeners
         frame_3.setOnTouchListener { v, event ->
+
+            // TODO: MVVM to VM
             var ideologyForInfo = ""
             ideologyForInfo = showIdeologyHover(event.x, event.y)
             text_ideology_selected.text = ideologyForInfo
@@ -63,6 +67,7 @@ class InfoActivity : AppCompatActivity() {
                 }, 80)
             }
             return@setOnTouchListener true
+            //end VM
         }
 
     }
@@ -79,6 +84,7 @@ class InfoActivity : AppCompatActivity() {
     }
 
     /** CUSTOM METHODS */
+    // TODO: MVVM to VM
     private fun showIdeologyHover(x: Float, y: Float): String {
         var step = convertDpToPx(4f)
         horScore = (x/step - 40).toInt()
@@ -163,6 +169,7 @@ class InfoActivity : AppCompatActivity() {
 
         oldIdeologyHover = ideologyHover
     }
+    // end VM
 
 }
 

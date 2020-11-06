@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
 

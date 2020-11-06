@@ -60,6 +60,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         // Load language for Settings
         when(LocaleHelper.loadLang(this)) {
             "uk" -> {
+                // TODO: Refactor, repeating
                 radio_ukr.isChecked = true
                 changeLangRadioImage(langBorderShapeUkr)
                 changeLangRadioTitle(radio_ukr)
@@ -202,6 +203,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     private fun checkRadioButton(checkedId: Int) {
         when (checkedId) {
             R.id.radio_ukr -> {
+                // TODO: Refactor, repeating
                 radio_ukr.isChecked
                 LocaleHelper.setLang(this, "uk")
                 Ideologies.refreshAll(this)
@@ -255,7 +257,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
 
     private fun changeLangRadioImage(langBorderShape: GradientDrawable) {
         langBorderShape.alpha = 0
-        langBorderShape?.setColor(ContextCompat.getColor(this, R.color.primary))
+        langBorderShape.setColor(ContextCompat.getColor(this, R.color.primary))
         ValueAnimator.ofInt(0, 255).apply {
             duration = 200
             addUpdateListener { langBorderShape.alpha = animatedValue as Int }

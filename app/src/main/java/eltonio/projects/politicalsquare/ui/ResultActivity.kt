@@ -22,8 +22,8 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.App.Companion.analytics
-import eltonio.projects.politicalsquare.other.App.Companion.appQuizResults
+import eltonio.projects.politicalsquare.App.Companion.analytics
+import eltonio.projects.politicalsquare.App.Companion.appQuizResults
 import eltonio.projects.politicalsquare.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
@@ -64,6 +64,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         database = Firebase.database
 
+
+        // TODO: MVVM to Reposytory
         val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         chosenViewX = sharedPref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
         chosenViewY = sharedPref.getFloat(PREF_CHOSEN_VIEW_Y, 0f)
@@ -74,6 +76,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         zeroAnswerCnt = sharedPref.getInt(PREF_ZERO_ANSWER_CNT, -1)
 
         userId = sharedPref.getString(PREF_USER_ID, "").toString()
+        // end MVVM to Reposytory
+
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
         title_2_2.text = "($youThoughtText: $chosenIdeology)"
@@ -81,9 +85,12 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         val intent = intent.extras
         if (intent != null) {
+            // TODO: MVVM to Reposytory
             horScore = intent.getInt(EXTRA_HORIZONTAL_SCORE, -100)
             verScore = intent.getInt(EXTRA_VERTICAL_SCORE, -100)
             quizId = intent.getInt(EXTRA_QUIZ_ID, -1)
+            // end: MVVM to Reposytory
+
         }
         // For debug
         Log.d(TAG, "zeroAnswerCnt Total: $zeroAnswerCnt")
@@ -228,7 +235,9 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         }
 
         // Adding data to Firebase
+        // TODO: MVVM to Reposytory
         database.getReference("QuizResults").push().setValue(quizResult)
+        // end: MVVM to Reposytory
 
         compassX = horScore.plus(40)
         compassY = verScore.plus(40)
