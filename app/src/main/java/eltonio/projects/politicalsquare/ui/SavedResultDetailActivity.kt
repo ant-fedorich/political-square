@@ -89,18 +89,6 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         // Init listeners
         button_compass_info_2.setOnClickListener(this)
-        database.getReference("QuizResults").addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(shapchot: DataSnapshot, p1: String?) {
-                Log.i(TAG, "QuizResults: onChildAdded")
-            }
-            override fun onCancelled(e: DatabaseError) {
-                Log.e(TAG, "QuizResults: onCancelled: $e")
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) { }
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) { }
-            override fun onChildRemoved(p0: DataSnapshot) { }
-        })
 
         for (ideology in Ideologies.values()) {
             if (ideology.stringId == ideologyId) {

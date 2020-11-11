@@ -25,6 +25,7 @@ import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
+import eltonio.projects.politicalsquare.data.FirebaseRepository
 import eltonio.projects.politicalsquare.data.SharedPrefRepository
 import eltonio.projects.politicalsquare.models.Quiz
 import eltonio.projects.politicalsquare.util.*
@@ -40,8 +41,8 @@ import java.util.*
 
 class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchListener {
 
-    //TEMP
-    private val prefRepository = SharedPrefRepository()
+    // TEMP
+    private val prefRepo = SharedPrefRepository()
 
     // TODO: mvvm to vm?
     private var horStartScore = 0
@@ -53,7 +54,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private var ideologyIsChosen = false
     private var oldIdeologyHover: ImageView? = null
 
-    private lateinit var database: FirebaseDatabase
     private var quizId = -1
 
     private var pointView: ChoosePointView? = null
@@ -79,37 +79,12 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     // TODO: Should I use a global var of view model and a scope
     private lateinit var appViewModel: AppViewModel
     private lateinit var scope: CoroutineScope
-    // end to vm?
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_view)
 
-        // debug
-        // TODO: mvvm to vm
-        Locale.getDefault().language
-
-        database = Firebase.database
-
-        database.getReference("Quizzes").addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(shapchot: DataSnapshot, p1: String?) {
-                Log.i(TAG, "Quizzes: onChildAdded")
-            }
-            override fun onCancelled(e: DatabaseError) {
-                Log.e(TAG, "Quizzes: onCancelled: $e")
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) { }
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) { }
-            override fun onChildRemoved(p0: DataSnapshot) { }
-        })
-
-/*        quizId = 1
-        database.getReference("Quizzes").child(quizId.toString()).apply {
-            child("title").setValue("Quiz1")
-            child("description").setValue("This is a test quiz")
-        }*/
         // end vm
         // Init listeners
         button_start_quiz.setOnClickListener(this)
@@ -124,11 +99,10 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
         /** Get questions*/
         // TODO: mvvm to vm
-        when(QuizOptionUtil.loadQuizOption(this)) {
+        when(prefRepo.loadQuizOption()) {
             QuizOptions.UKRAINE.id -> getQuestionsWithAnswers(QuizOptions.UKRAINE.id)
             QuizOptions.WORLD.id -> getQuestionsWithAnswers(QuizOptions.WORLD.id)
         }
-//        questionCountTotal = appQuestionsWithAnswers.size
         Collections.shuffle(appQuestionsWithAnswers)
         //end MVVM
     }
@@ -239,18 +213,15 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     /** CUSTOM METHODS */
     // TODO: MVVM to VM
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
     private fun onStartQuizClicked() {
-        if (!ideologyIsChosen) return toast("Выберете политический взгляд сначало!")
+        if (!ideologyIsChosen) return toast("Выберете политический взгляд сначало!") // TODO: Add text in Strings
 
         quizIsActive = true
 
-        // TODO: MVVM to settings repo?
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val startedAt = formatter.format(Date())
+        val startedAt = getDateTime()
 
-        // done: MVVM to Reposytory
-        prefRepository.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt)
+        prefRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt)
 
         startActivity(Intent(this, QuizActivity::class.java))
         slideLeft(this)
@@ -265,12 +236,13 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     private fun getQuestionsWithAnswers(quizId: Int) {
         this.quizId = quizId
-        chosenQuizId = quizId // todo: Repeating
+        chosenQuizId = quizId
         scope.launch {
             appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
         }
     }
 
+    // Graphic
     @SuppressLint("SetTextI18n")
     private fun drawHover(event: MotionEvent) {
         x = event.x
@@ -380,4 +352,5 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         oldIdeologyHover = ideologyHover
     }
     // end MVVM
+
 }

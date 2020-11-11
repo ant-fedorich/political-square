@@ -22,7 +22,6 @@ class ChoosePointView(context: Context, var inputX: Float, var inputY: Float, va
         val radius = convertDpToPx(radiusInDp) //10f
         val strokeWidthPx = convertDpToPx(2f)
 
-//        createCircle()
         paint.apply {
             style = Paint.Style.FILL
             color = Color.WHITE

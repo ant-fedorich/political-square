@@ -16,6 +16,9 @@ import com.bumptech.glide.request.target.Target
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.QuizOptions
+import java.text.SimpleDateFormat
+import java.util.*
 
 /** Constants **/
 const val TAG = "MyApp"
@@ -27,6 +30,8 @@ const val PREF_LANG = "PREF_LANG"
 const val PREF_QUIZ_OPTION = "PREF_QUIZ_OPTION"
 const val PREF_IS_INTRO_OPENED = "PREF_IS_INTRO_OPENED"
 const val PREF_SPLASH_APPEARED = "PREF_SPLASH_APPEARED"
+const val PREF_USER_LOGGED_IN = "PREF_USER_LOGGED_IN"
+const val PREF_SESSION_STARTED = "PREF_SESSION_STARTED"
 const val PREF_ZERO_ANSWER_CNT = "PREF_ZERO_ANSWER_CNT"
 const val PREF_CHOSEN_VIEW_X = "PREF_CHOSEN_VIEW_X"
 const val PREF_CHOSEN_VIEW_Y = "PREF_CHOSEN_VIEW_Y"
@@ -80,6 +85,8 @@ var splashAnimationTime = 600L
 fun toast(msg: String) = Toast.makeText(appContext, msg, Toast.LENGTH_SHORT).show()
 
 fun toastLong(msg: String) = Toast.makeText(appContext, msg, Toast.LENGTH_LONG).show()
+
+fun getDateTime(): String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
 
 // Transitions between activities
 fun slideLeft(context: Context) {
@@ -190,24 +197,6 @@ fun getIdeologyStringId(ideologyName: String): String {
     return stringId
 }
 
-fun saveIsIntroOpened() {
-    val prefs = appContext.getSharedPreferences(
-        PREF_SETTINGS,
-        AppCompatActivity.MODE_PRIVATE
-    ).edit()
-    prefs.putBoolean(PREF_IS_INTRO_OPENED, true)
-    prefs.apply()
-}
-
-fun loadIsIntroOpened(): Boolean {
-    val prefs = appContext.getSharedPreferences(
-        PREF_SETTINGS,
-        AppCompatActivity.MODE_PRIVATE
-    )
-    return prefs.getBoolean(PREF_IS_INTRO_OPENED, false)
-}
-
-
 fun playGif(screenImage: Int, containerImageView: ImageView) {
     Glide.with(appContext)
         .asGif()
@@ -233,4 +222,9 @@ fun playGif(screenImage: Int, containerImageView: ImageView) {
             }
         })
         .into(containerImageView)
+}
+
+fun refreshAllСatalogs(context: Context) {
+    Ideologies.refreshAll(context)
+    QuizOptions.refreshAll(context)
 }

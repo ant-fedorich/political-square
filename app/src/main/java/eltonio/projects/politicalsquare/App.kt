@@ -8,13 +8,8 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.data.FirebaseRepository
 import eltonio.projects.politicalsquare.data.SharedPrefRepository
-import eltonio.projects.politicalsquare.models.Question
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.QuizResult
-import eltonio.projects.politicalsquare.util.EVENT_QUIZ_SESSION_START
-import eltonio.projects.politicalsquare.util.LocaleUtil
-import eltonio.projects.politicalsquare.util.PREF_SETTINGS
-import eltonio.projects.politicalsquare.util.PREF_SPLASH_APPEARED
 
 class App : Application() {
 
@@ -37,19 +32,16 @@ class App : Application() {
         crashlytics = FirebaseCrashlytics.getInstance()
         analytics = Firebase.analytics
 
-        // done: MVVM to Analytic Repo
         FirebaseRepository().logSessionStartEvent()
-        // Clear SharedPreference QuizData
         SharedPrefRepository().clearPref()
-
-        // Reset splash appearance on starting the app
-        // done: MVVM to Repository
         SharedPrefRepository().setSplashIsNotAppeared()
 
         // We have to set a lang before loading UI, cause it will take a lang by system default
-        // TODO: MVVM to Settings Repo
-        var loadedLang = LocaleUtil.loadLang(this)
-        LocaleUtil.setLang(this, loadedLang)
+        var loadedLang = SharedPrefRepository().loadLang()
+        SharedPrefRepository().setLang(this, loadedLang)
     }
+
+
+
 
 }

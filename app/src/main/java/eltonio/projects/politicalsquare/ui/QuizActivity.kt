@@ -79,7 +79,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         setContentView(R.layout.activity_quiz)
 
         this.title = getString(R.string.quiz_title_actionbar)
-        // done: MVVM to analytic Repo
         firebaseRepo.logQuizBeginEvent()
 
         // Language
@@ -132,30 +131,10 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         showNextQuestion()
     }
 
-    /* for debugging
-    text_hor_step_point.text = ""
-    text_ver_step_point.text = ""
-    // Log all questions
-    for (question in questionList) {
-        var answers = ""
-        question.answerList.forEach { answers += "\n Answer: " + it.answer + ", " + it.point}
-
-        Log.i(
-            TAG, """ Get all questions:
-            ID: ${question.id}
-            Question: ${question.question}
-            Answers: $answers
-        """.trimIndent())
-    }
-
-
-     */
-
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when (v) {
             radio_answer_1 -> {
-                Log.i("MyApp", "Checked Index: ${radio_group_answers.indexOfChild(radio_answer_1)}")
-
+                Log.i(TAG, "Checked Index: ${radio_group_answers.indexOfChild(radio_answer_1)}")
 
                 rbSelectedIndex = radio_group_answers.indexOfChild(radio_answer_1)
 
@@ -170,7 +149,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             }
 
             radio_answer_2 -> {
-                Log.i("MyApp", "Checked: ${radio_group_answers.indexOfChild(radio_answer_2)}")
+                Log.i(TAG, "Checked: ${radio_group_answers.indexOfChild(radio_answer_2)}")
 
                 rbSelectedIndex = radio_group_answers.indexOfChild(radio_answer_2)
 
@@ -185,7 +164,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             }
 
             radio_answer_3 -> {
-                Log.i("MyApp", "Checked: ${radio_group_answers.indexOfChild(radio_answer_3)}")
+                Log.i(TAG, "Checked: ${radio_group_answers.indexOfChild(radio_answer_3)}")
 
                 rbSelectedIndex = radio_group_answers.indexOfChild(radio_answer_3)
 
@@ -200,7 +179,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             }
 
             radio_answer_4 -> {
-                Log.i("MyApp", "Checked: ${radio_group_answers.indexOfChild(radio_answer_4)}")
+                Log.i(TAG, "Checked: ${radio_group_answers.indexOfChild(radio_answer_4)}")
 
                 rbSelectedIndex = radio_group_answers.indexOfChild(radio_answer_4)
 
@@ -215,7 +194,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             }
 
             radio_answer_5 -> {
-                Log.i("MyApp", "Checked: ${radio_group_answers.indexOfChild(radio_answer_5)}")
+                Log.i(TAG, "Checked: ${radio_group_answers.indexOfChild(radio_answer_5)}")
 
                 rbSelectedIndex = radio_group_answers.indexOfChild(radio_answer_5)
 
@@ -331,35 +310,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
             Log.d(TAG, "$width and $height")
 
-            // Animate an old question
-            val quesOldAnimation = AnimationUtils.loadAnimation(this, R.anim.move_old_question)
-            quesOldAnimation.duration = 300
-            quesOldAnimation.setAnimationListener (object : Animation.AnimationListener {
-                override fun onAnimationStart(p0: Animation?) {}
-                override fun onAnimationRepeat(p0: Animation?) {}
-                override fun onAnimationEnd(animation: Animation?) {
-                    text_question_old.visibility = View.INVISIBLE
-                }
-            })
-            text_question_old.startAnimation(quesOldAnimation)
-
-            // Animate a new question
-            val quesNewAnimation = AnimationUtils.loadAnimation(this, R.anim.move_new_question)
-            quesNewAnimation.duration = 300
-            text_question_new.startAnimation(quesNewAnimation)
-
-            // Animate Progress Bar
-            text_questions_left.text = "${questionCounter+1} / $questionCountTotal"
-            val percent = (((questionCounter+1).toFloat()/questionCountTotal.toFloat())*1000).toInt()
-            val oldPercent = (((questionCounter).toFloat()/questionCountTotal.toFloat())*1000).toInt()
-            ObjectAnimator.ofInt(progress_bar, "progress", oldPercent, percent).apply {
-                duration = 300
-                interpolator = DecelerateInterpolator()
-            }.start()
-
-             //for debugging
-/*            text_current_horizontal_score.text = "Horizontal score: " + horizontalScore.toString()
-            text_current_vertical_score.text = "Vertical score: " + verticalScore.toString()*/
+            startOldQuestionAnimation()
+            startNewQuestionAnimation()
+            startProgressBarAnimation()
 
             questionCounter++
         } else {
@@ -367,12 +320,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             quizFinished = true
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
-            // For debug
-            // done: MVVM to Reposytory
             prefRepo.putZeroAnswerCht(zeroAnswerCnt)
             prefRepo.putHorScore(horizontalScore.toInt())
             prefRepo.putVerScore(verticalScore.toInt())
-            prefRepo.putQuizId(quizId)
 
             val intent = Intent(this, ResultActivity::class.java)
             startActivity(intent)
@@ -418,6 +368,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     radio_answer_5.text = ans[4].answerEn
                 }
             }
+
+
+            // TODO: create methods for animation
 
             // Animate an old question backward
             val quesOldAnimation = AnimationUtils.loadAnimation(this, R.anim.back_move_old_question)
@@ -533,6 +486,34 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             val colorStateList = ContextCompat.getColorStateList(this, R.color.selector_ripple_effect_normal)
             rippleEffect.setColor(colorStateList)
         }
+    }
+
+    // ANIMATION METHODS
+    private fun startOldQuestionAnimation() {
+        val quesOldAnimation = AnimationUtils.loadAnimation(this, R.anim.move_old_question)
+        quesOldAnimation.duration = 300
+        quesOldAnimation.setAnimationListener (object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+            override fun onAnimationEnd(animation: Animation?) {
+                text_question_old.visibility = View.INVISIBLE
+            }
+        })
+        text_question_old.startAnimation(quesOldAnimation)
+    }
+    private fun startNewQuestionAnimation() {
+        val quesNewAnimation = AnimationUtils.loadAnimation(this, R.anim.move_new_question)
+        quesNewAnimation.duration = 300
+        text_question_new.startAnimation(quesNewAnimation)
+    }
+    private fun startProgressBarAnimation() {
+        text_questions_left.text = "${questionCounter+1} / $questionCountTotal"
+        val percent = (((questionCounter+1).toFloat()/questionCountTotal.toFloat())*1000).toInt()
+        val oldPercent = (((questionCounter).toFloat()/questionCountTotal.toFloat())*1000).toInt()
+        ObjectAnimator.ofInt(progress_bar, "progress", oldPercent, percent).apply {
+            duration = 300
+            interpolator = DecelerateInterpolator()
+        }.start()
     }
 }
 

@@ -12,10 +12,15 @@ import com.google.android.material.tabs.TabLayout
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.ScreenItem
 import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
+import eltonio.projects.politicalsquare.data.FirebaseRepository
+import eltonio.projects.politicalsquare.data.SharedPrefRepository
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_intro.*
 
 class IntroActivity : AppCompatActivity() {
+
+    // TEMP
+    private val prefRepo = SharedPrefRepository()
 
     // TODO: MVVM to VM
     private lateinit var screenList: MutableList<ScreenItem>
@@ -30,11 +35,10 @@ class IntroActivity : AppCompatActivity() {
 
         // TODO: MVVM to VM
         // Skip Intro if it was opened before
-        if (loadIsIntroOpened()) {
+        if (prefRepo.getIntroOpened()) {
             Log.d(TAG, "Intro was already opened")
-            // Load language
-            var loadedLang = LocaleUtil.loadLang(this)
-            LocaleUtil.setLang(this, loadedLang)
+            var loadedLang = prefRepo.loadLang()
+            prefRepo.setLang(this, loadedLang)
 
             // Set short animation without Intro
             splashAnimationTime = 600L
@@ -47,20 +51,12 @@ class IntroActivity : AppCompatActivity() {
             splashAnimationTime = 1200L
         }
         // End MVVM
-
-        // Load language
-        // TODO: MVVM to VM
-        var loadedLang = LocaleUtil.loadLang(this)
-        LocaleUtil.setLang(this, loadedLang)
-        // end MVVM
+        var loadedLang = prefRepo.loadLang()
+        prefRepo.setLang(this, loadedLang)
 
         setContentView(R.layout.activity_intro)
 
-        screenList = mutableListOf(
-            ScreenItem(getString(R.string.intro_title_1), R.drawable.gif_intro_1),
-            ScreenItem(getString(R.string.intro_title_2), R.drawable.gif_intro_2),
-            ScreenItem(getString(R.string.intro_title_3), R.drawable.gif_intro_3)
-        )
+        screenList = prefRepo.getViewPagerScreenList()
 
         // TODO: MVVM to VM
         // Set ViewPager
@@ -86,7 +82,7 @@ class IntroActivity : AppCompatActivity() {
         }
 
         button_get_started.setOnClickListener {
-            saveIsIntroOpened()
+            prefRepo.putIntroOpened()
             startActivity(Intent(this, MainActivity::class.java))
             fadeIn(this)
             finish()
@@ -120,6 +116,7 @@ class IntroActivity : AppCompatActivity() {
                     pager_intro.findViewWithTag<ImageView>("tag_image_intro_background_$position")
 
                 // We need animation to avoid jerking of an image
+                // TODO: create method
                 currentBackgroundItem.animate()
                     .alpha(0f)
                     .setDuration(100)

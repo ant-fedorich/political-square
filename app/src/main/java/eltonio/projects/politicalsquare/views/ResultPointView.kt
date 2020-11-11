@@ -27,7 +27,6 @@ class ResultPointView (context: Context, var radiusInDp: Float, var radiusResult
         //val centerCoeff = step * 0.5f // coefficient to center the point in a cell
 
         // Draw a chosen view point
-
         paint.apply {
             style = Paint.Style.STROKE
             color = Color.BLACK

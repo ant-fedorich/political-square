@@ -25,6 +25,7 @@ import eltonio.projects.politicalsquare.App.Companion.analytics
 import eltonio.projects.politicalsquare.App.Companion.appQuizResults
 import eltonio.projects.politicalsquare.data.FirebaseRepository
 import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ResultPointView
 
@@ -64,29 +65,9 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_result)
 
         title = getString(R.string.result_title_actionbar)
-        // done: MVVM to analytic repo
         firebaseRepo.logQuizCompleteEvent()
-/*        analytics.logEvent(EVENT_QUIZ_COMPLETE) {
-            param(FirebaseAnalytics.Param.END_DATE, System.currentTimeMillis())
-        }*/
 
         database = Firebase.database
-
-
-        // done: MVVM to Reposytory
-
-
-/*        val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        chosenViewX = sharedPref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
-        chosenViewY = sharedPref.getFloat(PREF_CHOSEN_VIEW_Y, 0f)
-        horStartScore = sharedPref.getInt(PREF_HORIZONTAL_START_SCORE, 0)
-        verStartScore = sharedPref.getInt(PREF_VERTICAL_START_SCORE, 0)
-        chosenIdeology = sharedPref.getString(PREF_CHOSEN_IDEOLOGY, "").toString()
-        startedAt = sharedPref.getString(PREF_STARTED_AT, "").toString()
-        zeroAnswerCnt = sharedPref.getInt(PREF_ZERO_ANSWER_CNT, -1)
-
-        userId = sharedPref.getString(PREF_USER_ID, "").toString()*/
-        // end MVVM to Reposytory
 
         chosenViewX = prefRepo.getChosenViewX()
         chosenViewY = prefRepo.getChosenViewY()
@@ -95,25 +76,17 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         chosenIdeology = prefRepo.getChosenIdeology()
         startedAt = prefRepo.getStartedAt()
         zeroAnswerCnt = prefRepo.getZeroAnswerCnt()
-        userId = prefRepo.getUserId()
 
         horScore = prefRepo.getHorScore()
         verScore = prefRepo.getVerScore()
-        quizId = prefRepo.getQuizId()
+        quizId = prefRepo.loadQuizOption()
+
+        userId = firebaseRepo.firebaseUser?.uid.toString()
+
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
         title_2_2.text = "($youThoughtText: $chosenIdeology)"
 
-
-//        val intent = intent.extras
-//        if (intent != null) {
-            // done: MVVM to Reposytory
-//            horScore = intent.getInt(EXTRA_HORIZONTAL_SCORE, -100)
-//            verScore = intent.getInt(EXTRA_VERTICAL_SCORE, -100)
-//            quizId = intent.getInt(EXTRA_QUIZ_ID, -1)
-//            // end: MVVM to Reposytory
-//
-//        }
         // For debug
         Log.i(TAG, "zeroAnswerCnt Total: $zeroAnswerCnt")
 
@@ -121,32 +94,86 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             resultIdeology = getIdeology(horScore, verScore)
         }
 
-        // Init listeners
-        button_compass_info_2.setOnClickListener(this)
-        database.getReference("QuizResults").addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(shapchot: DataSnapshot, p1: String?) {
-                Log.i(TAG, "QuizResults: onChildAdded")
-            }
-            override fun onCancelled(e: DatabaseError) {
-                Log.e(TAG, "QuizResults: onCancelled: $e")
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) { }
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) { }
-            override fun onChildRemoved(p0: DataSnapshot) { }
-        })
-
         title_2.text = resultIdeology
 
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val endDate = Date()
         val startedAtParsed = formatter.parse(startedAt)
         val diffInMillies = endDate.time - startedAtParsed.time
-        duration = TimeUnit.MILLISECONDS.convert(diffInMillies, TimeUnit.DAYS).toInt()
+        duration = TimeUnit.MILLISECONDS.toSeconds(diffInMillies).toInt()
         endedAt = formatter.format(endDate)
 
-        // TODO: Refactor animation
-        /* Add Result Points with animations */
+        startResultPointsAnimation()
+
+        // For debug
+        Log.d(TAG, "Datetime duration: $duration, endedAt: $endedAt")
+
+        avgAnswerTime =
+            if (quizId == QuizOptions.WORLD.id)
+                duration/QuizOptions.WORLD.quesAmount.toDouble()
+            else
+                duration/QuizOptions.UKRAINE.quesAmount.toDouble()
+
+
+        Log.d(TAG, "Date avgAnswerTime: $avgAnswerTime")
+
+        val ideologyId = getIdeologyStringId(resultIdeology)
+
+        // Adding data to Room DB
+        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.IO)
+
+        val quizResult = QuizResult(
+            id = 0, //id is autoincrement
+            quizId = chosenQuizId,
+            ideologyStringId = ideologyId,
+            horStartScore = horStartScore,
+            verStartScore = verStartScore,
+            horResultScore = horScore,
+            verResultScore = verScore,
+            startedAt = startedAt,
+            endedAt = endedAt,
+            duration = duration,
+            avgAnswerTime = avgAnswerTime
+        )
+
+        // TODO: For firebase it needs User ID for result
+        firebaseRepo.addQuizResult(userId, quizResult)
+
+        appViewModel.addQuizResult(quizResult)
+        scope.launch {
+            appQuizResults = appViewModel.getQuizResults()
+            Log.w(TAG, "QuizResults in ResultActivity inside Coroutine:")
+            for (item in appQuizResults) Log.w(TAG, "Item: $item")
+        }
+
+        compassX = horScore.plus(40)
+        compassY = verScore.plus(40)
+
+    }
+
+    override fun onBackPressed() {
+        showEndQuizDialogLambda(this) {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+    }
+    /** INTERFACE METHODS */
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.button_compass_info_2 -> {
+                firebaseRepo.logDetailedInfoEvent()
+
+                val intent = Intent(this, ViewInfoActivity::class.java)
+                intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)
+                startActivity(intent)
+                pushLeft(this) // info in
+            }
+        }
+    }
+
+    /** CUSTOM METHODS */
+    private fun startResultPointsAnimation() {
         // Add start points
         val resultPoints = ResultPointView(this, 0f, 0f)
         resultPoints.alpha = 0f
@@ -210,72 +237,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             playSequentially(animateResultPoint1, animateResultPoint2)
             start()
         }
-
-        // For debug
-        Log.d(TAG, "Datetime duration: $duration, endedAt: $endedAt")
-
-        avgAnswerTime = (duration/40.0)
-
-        Log.d(TAG, "Date avgAnswerTime: $avgAnswerTime")
-
-        val ideologyId = getIdeologyStringId(resultIdeology)
-
-        // Adding data to Room DB
-        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
-        scope = CoroutineScope(Dispatchers.IO)
-
-        val quizResult = QuizResult(
-            id = 0, //id is autoincrement
-            quizId = chosenQuizId,
-            ideologyStringId = ideologyId,
-            horStartScore = horStartScore,
-            verStartScore = verStartScore,
-            horResultScore = horScore,
-            verResultScore = verScore,
-            startedAt = startedAt,
-            endedAt = endedAt,
-            duration = duration,
-            avgAnswerTime = avgAnswerTime
-        )
-        appViewModel.addQuizResult(quizResult)
-        scope.launch {
-            appQuizResults = appViewModel.getQuizResults()
-            Log.w(TAG, "QuizResults in ResultActivity inside Coroutine:")
-            for (item in appQuizResults) Log.w(TAG, "Item: $item")
-        }
-
-        // Adding data to Firebase
-        // TODO: MVVM to Reposytory
-        database.getReference("QuizResults").push().setValue(quizResult)
-        // end: MVVM to Reposytory
-
-        compassX = horScore.plus(40)
-        compassY = verScore.plus(40)
-
     }
-
-    override fun onBackPressed() {
-        showEndQuizDialogLambda(this) {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
-    }
-    /** INTERFACE METHODS */
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.button_compass_info_2 -> {
-                // done: MVVM to Analytic Repo
-                firebaseRepo.logDetailedInfoEvent()
-
-                val intent = Intent(this, ViewInfoActivity::class.java)
-                intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)
-                startActivity(intent)
-                pushLeft(this) // info in
-            }
-        }
-    }
-
-    /** CUSTOM METHODS */
 
     companion object {
         var chosenViewX = 0f

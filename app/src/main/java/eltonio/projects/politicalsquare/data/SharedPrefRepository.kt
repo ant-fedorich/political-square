@@ -1,11 +1,15 @@
 package eltonio.projects.politicalsquare.data
 
-import android.app.Application
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import eltonio.projects.politicalsquare.ui.ResultActivity
+import android.content.res.Configuration
+import android.util.Log
+import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.models.QuizOptions
+import eltonio.projects.politicalsquare.models.ScreenItem
 import eltonio.projects.politicalsquare.util.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SharedPrefRepository {
 
@@ -72,4 +76,50 @@ class SharedPrefRepository {
     fun putHorScore(horizontalScore: Int) = pref.edit().putInt(PREF_HORIZONTAL_SCORE, horizontalScore).apply()
     fun putVerScore(verticalScore: Int) = pref.edit().putInt(PREF_VERTICAL_SCORE, verticalScore).apply()
     fun putQuizId(quizId: Int) = pref.edit().putInt(PREF_QUIZ_ID, quizId).apply()
+
+    fun putSessionStarted() = pref.edit().putBoolean(PREF_SESSION_STARTED, true).apply()
+    fun getSessionStarted(): Boolean = pref.getBoolean(PREF_SESSION_STARTED, false)
+
+    fun putIntroOpened() = prefSettings.edit().putBoolean(PREF_IS_INTRO_OPENED, true).apply()
+    fun getIntroOpened(): Boolean = prefSettings.getBoolean(PREF_IS_INTRO_OPENED, false)
+
+    fun putUserLoggedIn() = prefSettings.edit().putBoolean(PREF_USER_LOGGED_IN, true).apply()
+    fun getUserLoggedIn(): Boolean = prefSettings.getBoolean(PREF_USER_LOGGED_IN, false)
+
+
+
+    fun setLang(context: Context, lang: String) {
+        val locale = Locale(lang)
+        Log.d(TAG, "Lang: $lang, Default Lang: ${Locale.getDefault().language}")
+        val config = Configuration()
+        config.setLocale(locale)
+        // TODO: Deprecated. Change it
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+        prefSettings.edit().putString(PREF_LANG, lang).apply()
+
+        defaultLang = lang
+    }
+
+    fun loadLang(): String {
+        val defLang = Locale.getDefault().language
+        val language = prefSettings.getString(PREF_LANG, defLang)
+        return language ?: defLang
+    }
+
+    fun saveQuizOption(quizOptionId: Int) =
+        prefSettings.edit().putInt(PREF_QUIZ_OPTION, quizOptionId).apply()
+
+    fun loadQuizOption(): Int {
+        val defQuizOption: Int = QuizOptions.WORLD.id
+        return prefSettings.getInt(PREF_QUIZ_OPTION, defQuizOption)
+    }
+
+    fun getViewPagerScreenList(): MutableList<ScreenItem> {
+        return mutableListOf(
+            ScreenItem(appContext.getString(R.string.intro_title_1), R.drawable.gif_intro_1),
+            ScreenItem(appContext.getString(R.string.intro_title_2), R.drawable.gif_intro_2),
+            ScreenItem(appContext.getString(R.string.intro_title_3), R.drawable.gif_intro_3)
+        )
+    }
+
 }

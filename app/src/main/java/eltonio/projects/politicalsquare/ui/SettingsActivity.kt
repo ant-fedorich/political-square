@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.SharedPrefRepository
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.util.*
@@ -24,6 +25,9 @@ import kotlinx.android.synthetic.main.activity_base.view.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
+
+    //Temp
+    private val prefRepo = SharedPrefRepository()
 
     private lateinit var langBorderShapeUkr: GradientDrawable
     private lateinit var langBorderShapeRus: GradientDrawable
@@ -58,7 +62,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         }
 
         // Load language for Settings
-        when(LocaleUtil.loadLang(this)) {
+        when(prefRepo.loadLang()) {
             "uk" -> {
                 // TODO: Refactor, repeating
                 radio_ukr.isChecked = true
@@ -78,7 +82,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         }
 
         // Load Quiz option
-        when(QuizOptionUtil.loadQuizOption(this)) {
+        when(prefRepo.loadQuizOption()) {
             QuizOptions.WORLD.id -> {
                 setQuizOptionToSelected(layout_quiz_option_1)
                 title_quiz_option_1.setTypeface(null, Typeface.BOLD)
@@ -164,7 +168,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
                     title_quiz_option_2.setTypeface(null, Typeface.NORMAL)
                     setQuizOptionToDefault(layout_quiz_option_2)
 
-                    QuizOptionUtil.saveQuizOption(QuizOptions.WORLD.id)
+                    prefRepo.saveQuizOption(QuizOptions.WORLD.id)
                     MainActivity.spinnerView.setSelection(0)
                 }
                 return true
@@ -178,7 +182,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
                     title_quiz_option_1.setTypeface(null, Typeface.NORMAL)
                     setQuizOptionToDefault(layout_quiz_option_1)
 
-                    QuizOptionUtil.saveQuizOption(QuizOptions.UKRAINE.id)
+                    prefRepo.saveQuizOption(QuizOptions.UKRAINE.id)
                     MainActivity.spinnerView.setSelection(1)
                 }
                 return true
@@ -205,27 +209,24 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
             R.id.radio_ukr -> {
                 // TODO: Refactor, repeating
                 radio_ukr.isChecked
-                LocaleUtil.setLang(this, "uk")
-                Ideologies.refreshAll(this)
-                QuizOptions.refreshAll(this)
+                prefRepo.setLang(this, "uk")
+                refreshAllСatalogs(this)
 
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
             R.id.radio_rus -> {
                 radio_rus.isChecked
-                LocaleUtil.setLang(this,"ru")
-                Ideologies.refreshAll(this)
-                QuizOptions.refreshAll(this)
+                prefRepo.setLang(this, "ru")
+                refreshAllСatalogs(this)
 
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
             R.id.radio_eng -> {
                 radio_eng.isChecked
-                LocaleUtil.setLang(this,"en")
-                Ideologies.refreshAll(this)
-                QuizOptions.refreshAll(this)
+                prefRepo.setLang(this, "en")
+                refreshAllСatalogs(this)
 
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()

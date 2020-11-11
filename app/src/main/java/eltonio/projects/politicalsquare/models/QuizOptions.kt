@@ -9,6 +9,7 @@ enum class QuizOptions(
     title: String,
     owner: String,
     desc: String,
+    quesAmount: Int,
     image: Int
 ) {
     WORLD(
@@ -16,6 +17,7 @@ enum class QuizOptions(
         appContext.getString(R.string.all_title_quiz_option_1),
         appContext.getString(R.string.all_owner_quiz_option_1),
         appContext.getString(R.string.all_desc_quiz_option_1),
+        54,
         R.drawable.img_world_quiz
     ),
     UKRAINE(
@@ -23,6 +25,7 @@ enum class QuizOptions(
         appContext.getString(R.string.all_title_quiz_option_2),
         appContext.getString(R.string.all_owner_quiz_option_2),
         appContext.getString(R.string.all_desc_quiz_option_2),
+        40,
         R.drawable.img_ukraine_quiz
     );
 
@@ -33,6 +36,8 @@ enum class QuizOptions(
     var owner = owner
         private set
     var desc = desc
+        private set
+    var quesAmount = quesAmount
         private set
     var image = image
         private set

@@ -10,14 +10,13 @@ import android.view.animation.*
 import com.bumptech.glide.Glide
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.SharedPrefRepository
-import eltonio.projects.politicalsquare.util.loadIsIntroOpened
 import eltonio.projects.politicalsquare.util.splashAnimationTime
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
 
     // TEMP
-    private val prefRepository = SharedPrefRepository()
+    private val prefRepo = SharedPrefRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,53 +24,64 @@ class SplashActivity : AppCompatActivity() {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        Log.e(eltonio.projects.politicalsquare.util.TAG, "loadIsIntroOpened(): " + loadIsIntroOpened())
+        Log.e(eltonio.projects.politicalsquare.util.TAG, "loadIsIntroOpened(): " + prefRepo.getIntroOpened())
 
         Glide.with(this)
             .load(R.drawable.img_compass_only_strokes)
             .into(image_compass_only_strokes)
 
-            //== Fading ==
-        // Create fading animation
-/*        splashAnimationTime = 600L // For Test without Into*/
+        // Fading
+        startFadingAnimation()
+        doActionAfterFading()
+        // Moving
+        startMovingAnimation()
+        doActionAfterMoving()
+    }
 
-        val compassAnimation1 = AnimationUtils.loadAnimation(this, R.anim.splash_fading)
-        compassAnimation1.apply {
-            duration = splashAnimationTime
-            interpolator = DecelerateInterpolator(2f)
-        }
-        // Start fading animation
-        view_foreground.startAnimation(compassAnimation1)
-        // Do action after fading
+
+
+   /** CUSTOM METHODS */
+    private fun startFadingAnimation() {
+       //splashAnimationTime = 600L // For Test without Into
+       val fadingAnimation = AnimationUtils.loadAnimation(this, R.anim.splash_fading)
+       fadingAnimation.apply {
+           duration = splashAnimationTime
+           interpolator = DecelerateInterpolator(2f)
+       }
+       view_foreground.startAnimation(fadingAnimation)
+   }
+
+    private fun doActionAfterFading() {
         Handler().postDelayed({
             view_foreground.visibility = View.INVISIBLE
         }, splashAnimationTime) //600
+    }
 
-        //== Moving ==
+    private fun startMovingAnimation() {
         // Create moving animation
-        val compassAnimation2 = AnimationUtils.loadAnimation(this, R.anim.splash_move_left_up)
-        compassAnimation2.apply {
+        val moveLeftUpAnimation = AnimationUtils.loadAnimation(this, R.anim.splash_move_left_up)
+        moveLeftUpAnimation.apply {
             duration = splashAnimationTime //600
             interpolator = DecelerateInterpolator(2f)
         }
-        val compassAnimation3 = AnimationUtils.loadAnimation(this, R.anim.splash_move_left)
-        compassAnimation3.apply {
+        val moveLeftAnimation = AnimationUtils.loadAnimation(this, R.anim.splash_move_left)
+        moveLeftAnimation.apply {
             duration = 700
             startOffset = splashAnimationTime //600
             interpolator = DecelerateInterpolator(5f)
         }
-
+        // Create set
         val animationSet = AnimationSet(false).apply {
-            addAnimation(compassAnimation2)
-            addAnimation(compassAnimation3)
+            addAnimation(moveLeftUpAnimation)
+            addAnimation(moveLeftAnimation)
         }
-        // Start moving animation
+        // Start animation
         image_compass_only_strokes.startAnimation(animationSet)
-        // Do action after moving
-        Handler().postDelayed({
-            // done:  MVVM to Repository
-            prefRepository.setSplashIsAppeared()
+    }
 
+    private fun doActionAfterMoving() {
+        Handler().postDelayed({
+            prefRepo.setSplashIsAppeared()
             finish()
             overridePendingTransition(0, 0)
         }, 600 + splashAnimationTime) //1300
