@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.other
+package eltonio.projects.politicalsquare.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.ScreenItem
+import eltonio.projects.politicalsquare.util.playGif
 import kotlinx.android.synthetic.main.layout_screen_item.view.*
 
 class IntroViewPagerAdapter(var context: Context, var screenList: MutableList<ScreenItem>) : PagerAdapter(){

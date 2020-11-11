@@ -1,15 +1,10 @@
 package eltonio.projects.politicalsquare.data
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import eltonio.projects.politicalsquare.models.Question
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.QuizResult
-import eltonio.projects.politicalsquare.other.PREF_SETTINGS
-import eltonio.projects.politicalsquare.other.PREF_SPLASH_APPEARED
-import eltonio.projects.politicalsquare.other.appContext
 
-class AppRepository(
+class DatabaseRepository(
     private val quizResultDao: QuizResultDao,
     private val questionDao: QuestionDao
 ) {

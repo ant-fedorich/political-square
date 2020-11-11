@@ -26,10 +26,12 @@ import com.google.firebase.analytics.ktx.logEvent
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
-import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.App.Companion.analytics
 import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
+import eltonio.projects.politicalsquare.data.FirebaseRepository
+import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.util.*
 
 import kotlinx.android.synthetic.main.activity_quiz.*
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +41,9 @@ import java.util.*
 class QuizActivity : BaseActivity(), View.OnTouchListener {
 
     // TODO: MVVM to VM
+    //TEMP
+    private var prefRepo = SharedPrefRepository()
+    private var firebaseRepo = FirebaseRepository()
 
     private var quizId = -1
     private var previousStep: Step? = null
@@ -74,24 +79,13 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         setContentView(R.layout.activity_quiz)
 
         this.title = getString(R.string.quiz_title_actionbar)
-        // TODO: MVVM to Reposytory
-        analytics.logEvent(EVENT_QUIZ_BEGIN) {
-            param(FirebaseAnalytics.Param.START_DATE, System.currentTimeMillis())
-        }
-        // end: MVVM to Reposytory
-
+        // done: MVVM to analytic Repo
+        firebaseRepo.logQuizBeginEvent()
 
         // Language
         Locale.getDefault().language
 
         // ROOM DB
-        // Debug
-/*        Log.w(TAG, "--- QuestionsWithAnswers ------------")
-        appQuestionsWithAnswers.forEach { question ->
-            Log.w(TAG, "${question.id}, ${question.questionRu}, ${question.scale}")
-            question.answerList.forEach { Log.w(TAG, "Answers: $it") }
-        }*/
-
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
 
@@ -102,7 +96,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
         // Listeners
         fab_undo.setOnClickListener { showPrevQuestion() }
-
         radio_answer_1.setOnTouchListener(this)
         radio_answer_2.setOnTouchListener(this)
         radio_answer_3.setOnTouchListener(this)
@@ -375,18 +368,13 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
             // For debug
-            // TODO: MVVM to Reposytory
-            val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
-            sharedPref.putInt(PREF_ZERO_ANSWER_CNT, zeroAnswerCnt)
-            sharedPref.apply()
-            // end: MVVM to Reposytory
-
+            // done: MVVM to Reposytory
+            prefRepo.putZeroAnswerCht(zeroAnswerCnt)
+            prefRepo.putHorScore(horizontalScore.toInt())
+            prefRepo.putVerScore(verticalScore.toInt())
+            prefRepo.putQuizId(quizId)
 
             val intent = Intent(this, ResultActivity::class.java)
-            intent.putExtra(EXTRA_HORIZONTAL_SCORE, horizontalScore.toInt())
-            intent.putExtra(EXTRA_VERTICAL_SCORE, verticalScore.toInt())
-            intent.putExtra(EXTRA_QUIZ_ID, quizId)
-
             startActivity(intent)
             slideLeft(this) //quiz in
         }

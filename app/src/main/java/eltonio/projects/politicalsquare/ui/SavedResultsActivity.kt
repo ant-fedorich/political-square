@@ -10,8 +10,7 @@ import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.QuizRecycleAdapter
+import eltonio.projects.politicalsquare.adapter.QuizRecycleAdapter
 import eltonio.projects.politicalsquare.R
 import kotlinx.android.synthetic.main.activity_saved_results.*
 import androidx.core.content.ContextCompat
@@ -24,6 +23,7 @@ import com.google.android.material.transition.platform.*
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.util.*
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.*
 
@@ -98,8 +98,6 @@ class SavedResultsActivity : AppCompatActivity() {
                     }
                     quizAdapter.setQuizResults(resultList)
                     //quizAdapter.notifyItemRemoved(position)
-
-
                     //deletedResultItem = resultList2[position]
 
                     for (ideo in Ideologies.values()) {
@@ -168,6 +166,7 @@ class SavedResultsActivity : AppCompatActivity() {
         val dateTransitionName = itemView.text_saved_result_date.transitionName
         val imageTransitionName = itemView.image_compass_saved_result.transitionName
 
+        // TODO: MVVM Extra to Repository
         var intent = Intent(this, SavedResultDetailActivity::class.java).apply {
             putExtra(EXTRA_IDEOLOGY_ID, resultList[position].ideologyStringId)
             putExtra(EXTRA_QUIZ_ID, resultList[position].quizId)

@@ -1,9 +1,9 @@
-package eltonio.projects.politicalsquare.other
+package eltonio.projects.politicalsquare.util
 
 import android.content.Context
 import eltonio.projects.politicalsquare.models.QuizOptions
 
-object QuizOptionHelper {
+object QuizOptionUtil {
     fun saveQuizOption(quizOptionId: Int) {
         val sharedPrefs = appContext.getSharedPreferences(PREF_SETTINGS, Context.MODE_PRIVATE).edit()
         sharedPrefs.putInt(PREF_QUIZ_OPTION, quizOptionId)

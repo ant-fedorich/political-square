@@ -11,9 +11,8 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.ScreenItem
-import eltonio.projects.politicalsquare.other.IntroViewPagerAdapter
-import eltonio.projects.politicalsquare.other.fadeIn
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
+import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_intro.*
 
 class IntroActivity : AppCompatActivity() {
@@ -34,8 +33,8 @@ class IntroActivity : AppCompatActivity() {
         if (loadIsIntroOpened()) {
             Log.d(TAG, "Intro was already opened")
             // Load language
-            var loadedLang = LocaleHelper.loadLang(this)
-            LocaleHelper.setLang(this, loadedLang)
+            var loadedLang = LocaleUtil.loadLang(this)
+            LocaleUtil.setLang(this, loadedLang)
 
             // Set short animation without Intro
             splashAnimationTime = 600L
@@ -51,8 +50,8 @@ class IntroActivity : AppCompatActivity() {
 
         // Load language
         // TODO: MVVM to VM
-        var loadedLang = LocaleHelper.loadLang(this)
-        LocaleHelper.setLang(this, loadedLang)
+        var loadedLang = LocaleUtil.loadLang(this)
+        LocaleUtil.setLang(this, loadedLang)
         // end MVVM
 
         setContentView(R.layout.activity_intro)

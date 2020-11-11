@@ -10,12 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
-    private var repository: AppRepository
+    private var repository: DatabaseRepository
+    private var prefRepository: SharedPrefRepository
 
     init {
         val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
         val questionDao = AppDatabase.getDatabase(application).questionDao()
-        repository = AppRepository(quizResultDao, questionDao)
+        repository = DatabaseRepository(quizResultDao, questionDao)
+        prefRepository = SharedPrefRepository()
     }
 
     fun addQuizResult(quizResult: QuizResult) {
@@ -41,4 +43,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     suspend fun getQuestionsWithAnswers(quizId: Int): List<QuestionWithAnswers> {
         return repository.getQuestionsWithAnswers(quizId)
     }
+
+    // SharefPrefRepository
+
+
 }

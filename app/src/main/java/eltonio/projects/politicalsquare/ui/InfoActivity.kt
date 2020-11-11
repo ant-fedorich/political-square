@@ -10,7 +10,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_info.*
 import kotlinx.android.synthetic.main.activity_info.image_anar_hover
 import kotlinx.android.synthetic.main.activity_info.image_autho_left_hover
@@ -61,6 +61,8 @@ class InfoActivity : AppCompatActivity() {
                 Handler().postDelayed({
                     v.performClick()
                     val intent = Intent(this, ViewInfoActivity::class.java)
+
+                    // TODO: MVVM Extra to Repository?
                     intent.putExtra(EXTRA_IDEOLOGY_TITLE, ideologyForInfo)
                     startActivity(intent)
                     pushLeft(this)

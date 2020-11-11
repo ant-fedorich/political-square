@@ -6,8 +6,8 @@ import android.text.method.ScrollingMovementMethod
 import androidx.core.content.ContextCompat
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.other.EXTRA_IDEOLOGY_TITLE
-import eltonio.projects.politicalsquare.other.pushRight
+import eltonio.projects.politicalsquare.util.EXTRA_IDEOLOGY_TITLE
+import eltonio.projects.politicalsquare.util.pushRight
 import kotlinx.android.synthetic.main.activity_view_info.*
 
 class ViewInfoActivity : AppCompatActivity() {
@@ -28,6 +28,7 @@ class ViewInfoActivity : AppCompatActivity() {
 
         text_ideology_description.movementMethod = ScrollingMovementMethod()
 
+        // TODO: MVVM Extra to Repository
         var ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
 
         when (ideology) {

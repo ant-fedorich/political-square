@@ -1,9 +1,11 @@
 package eltonio.projects.politicalsquare.data
 
+import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.ui.ResultActivity
+import eltonio.projects.politicalsquare.util.*
 
 class SharedPrefRepository {
 
@@ -13,9 +15,17 @@ class SharedPrefRepository {
     private val pref =
         appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    fun setSplashAppeared() {
+    fun clearPref() = pref.edit().clear().apply()
+
+    fun setSplashIsAppeared() {
         prefSettings.edit()
             .putBoolean(PREF_SPLASH_APPEARED, true)
+            .apply()
+    }
+
+    fun setSplashIsNotAppeared() {
+        prefSettings.edit()
+            .putBoolean(PREF_SPLASH_APPEARED, false)
             .apply()
     }
 
@@ -43,23 +53,23 @@ class SharedPrefRepository {
         }.apply()
     }
 
+    fun getChosenViewX() = pref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
+    fun getChosenViewY() = pref.getFloat(PREF_CHOSEN_VIEW_Y, 0f)
+    fun getHorStartScore() = pref.getInt(PREF_HORIZONTAL_START_SCORE, 0)
+    fun getVerStartScore() = pref.getInt(PREF_VERTICAL_START_SCORE, 0)
+    fun getChosenIdeology() = pref.getString(PREF_CHOSEN_IDEOLOGY, "").toString()
+    fun getStartedAt() = pref.getString(PREF_STARTED_AT, "").toString()
+    fun getZeroAnswerCnt() = pref.getInt(PREF_ZERO_ANSWER_CNT, -1)
+    fun getUserId() = pref.getString(PREF_USER_ID, "").toString()
 
-    fun getChosenViewX(): Float = pref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
-    fun getChosenViewY(): Float = pref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
-    fun getHorStartScore(): Float = pref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
-    fun getVerStartScore(): Float = pref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
-    fun getChosenIdeology(): Float = pref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
-    fun getStartedAt(): Float = pref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
-    fun getStartedAt(): Float = pref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
+    fun getHorScore() = pref.getInt(PREF_HORIZONTAL_SCORE, -100)
+    fun getVerScore() = pref.getInt(PREF_VERTICAL_SCORE, -100)
+    fun getQuizId() = pref.getInt(PREF_QUIZ_ID, -1)
 
-    zeroAnswerCnt
+    fun putZeroAnswerCht(zeroAnswerCnt: Int) = pref.edit().putInt(PREF_ZERO_ANSWER_CNT, zeroAnswerCnt).apply()
+    fun putUserId(userId: String) = pref.edit().putString(PREF_USER_ID, userId).apply()
 
-    val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-    chosenViewX = sharedPref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
-    chosenViewY = sharedPref.getFloat(PREF_CHOSEN_VIEW_Y, 0f)
-    horStartScore = sharedPref.getInt(PREF_HORIZONTAL_START_SCORE, 0)
-    verStartScore = sharedPref.getInt(PREF_VERTICAL_START_SCORE, 0)
-    chosenIdeology = sharedPref.getString(PREF_CHOSEN_IDEOLOGY, "").toString()
-    startedAt = sharedPref.getString(PREF_STARTED_AT, "").toString()
-    zeroAnswerCnt = sharedPref.getInt(PREF_ZERO_ANSWER_CNT, -1)
+    fun putHorScore(horizontalScore: Int) = pref.edit().putInt(PREF_HORIZONTAL_SCORE, horizontalScore).apply()
+    fun putVerScore(verticalScore: Int) = pref.edit().putInt(PREF_VERTICAL_SCORE, verticalScore).apply()
+    fun putQuizId(quizId: Int) = pref.edit().putInt(PREF_QUIZ_ID, quizId).apply()
 }

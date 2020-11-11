@@ -1,12 +1,11 @@
-package eltonio.projects.politicalsquare.other
+package eltonio.projects.politicalsquare.util
 
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
-import androidx.core.os.ConfigurationCompat
 import java.util.*
 
-object LocaleHelper {
+object LocaleUtil {
 
     fun setLang(context: Context, lang: String) {
         val locale = Locale(lang)

@@ -3,7 +3,7 @@ package eltonio.projects.politicalsquare.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.other.pushRight
+import eltonio.projects.politicalsquare.util.pushRight
 
 class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -19,7 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_base.view.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
@@ -58,7 +58,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         }
 
         // Load language for Settings
-        when(LocaleHelper.loadLang(this)) {
+        when(LocaleUtil.loadLang(this)) {
             "uk" -> {
                 // TODO: Refactor, repeating
                 radio_ukr.isChecked = true
@@ -78,7 +78,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         }
 
         // Load Quiz option
-        when(QuizOptionHelper.loadQuizOption(this)) {
+        when(QuizOptionUtil.loadQuizOption(this)) {
             QuizOptions.WORLD.id -> {
                 setQuizOptionToSelected(layout_quiz_option_1)
                 title_quiz_option_1.setTypeface(null, Typeface.BOLD)
@@ -164,7 +164,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
                     title_quiz_option_2.setTypeface(null, Typeface.NORMAL)
                     setQuizOptionToDefault(layout_quiz_option_2)
 
-                    QuizOptionHelper.saveQuizOption(QuizOptions.WORLD.id)
+                    QuizOptionUtil.saveQuizOption(QuizOptions.WORLD.id)
                     MainActivity.spinnerView.setSelection(0)
                 }
                 return true
@@ -178,7 +178,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
                     title_quiz_option_1.setTypeface(null, Typeface.NORMAL)
                     setQuizOptionToDefault(layout_quiz_option_1)
 
-                    QuizOptionHelper.saveQuizOption(QuizOptions.UKRAINE.id)
+                    QuizOptionUtil.saveQuizOption(QuizOptions.UKRAINE.id)
                     MainActivity.spinnerView.setSelection(1)
                 }
                 return true
@@ -205,7 +205,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
             R.id.radio_ukr -> {
                 // TODO: Refactor, repeating
                 radio_ukr.isChecked
-                LocaleHelper.setLang(this, "uk")
+                LocaleUtil.setLang(this, "uk")
                 Ideologies.refreshAll(this)
                 QuizOptions.refreshAll(this)
 
@@ -214,7 +214,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
             }
             R.id.radio_rus -> {
                 radio_rus.isChecked
-                LocaleHelper.setLang(this,"ru")
+                LocaleUtil.setLang(this,"ru")
                 Ideologies.refreshAll(this)
                 QuizOptions.refreshAll(this)
 
@@ -223,7 +223,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
             }
             R.id.radio_eng -> {
                 radio_eng.isChecked
-                LocaleHelper.setLang(this,"en")
+                LocaleUtil.setLang(this,"en")
                 Ideologies.refreshAll(this)
                 QuizOptions.refreshAll(this)
 

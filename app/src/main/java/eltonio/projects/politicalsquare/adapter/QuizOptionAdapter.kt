@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.other
+package eltonio.projects.politicalsquare.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

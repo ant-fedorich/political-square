@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.other
+package eltonio.projects.politicalsquare.util
 
 import android.app.Activity
 //import android.app.AlertDialog
@@ -36,9 +36,9 @@ const val PREF_CHOSEN_IDEOLOGY = "PREF_CHOSEN_IDEOLOGY"
 const val PREF_STARTED_AT = "PREF_STARTED_AT"
 const val PREF_USER_ID = "PREF_USER_ID"
 const val PREF_QUIZ_ID = "PREF_QUIZ_ID"
+const val PREF_HORIZONTAL_SCORE = "PREF_HORIZONTAL_SCORE"
+const val PREF_VERTICAL_SCORE = "PREF_VERTICAL_SCORE"
 
-const val EXTRA_HORIZONTAL_SCORE = "EXTRA_HORIZONTAL_SCORE"
-const val EXTRA_VERTICAL_SCORE = "EXTRA_VERTICAL_SCORE"
 const val EXTRA_IDEOLOGY_ID = "EXTRA_IDEOLOGY_ID"
 const val EXTRA_QUIZ_ID = "EXTRA_QUIZ_ID"
 const val EXTRA_ENDED_AT = "EXTRA_ENDED_AT"
@@ -191,7 +191,8 @@ fun getIdeologyStringId(ideologyName: String): String {
 }
 
 fun saveIsIntroOpened() {
-    val prefs = appContext.getSharedPreferences(PREF_SETTINGS,
+    val prefs = appContext.getSharedPreferences(
+        PREF_SETTINGS,
         AppCompatActivity.MODE_PRIVATE
     ).edit()
     prefs.putBoolean(PREF_IS_INTRO_OPENED, true)
@@ -199,7 +200,8 @@ fun saveIsIntroOpened() {
 }
 
 fun loadIsIntroOpened(): Boolean {
-    val prefs = appContext.getSharedPreferences(PREF_SETTINGS,
+    val prefs = appContext.getSharedPreferences(
+        PREF_SETTINGS,
         AppCompatActivity.MODE_PRIVATE
     )
     return prefs.getBoolean(PREF_IS_INTRO_OPENED, false)

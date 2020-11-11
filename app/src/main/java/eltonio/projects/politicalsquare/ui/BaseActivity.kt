@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.mainActivityIsInFront
+import eltonio.projects.politicalsquare.util.pushLeft
+import eltonio.projects.politicalsquare.util.quizIsActive
+import eltonio.projects.politicalsquare.util.showEndQuizDialogLambda
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_base.view.*
 

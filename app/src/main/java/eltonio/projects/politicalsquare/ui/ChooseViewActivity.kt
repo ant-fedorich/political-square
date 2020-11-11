@@ -2,7 +2,6 @@ package eltonio.projects.politicalsquare.ui
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -25,10 +24,10 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.App.Companion.appQuestions
 import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
 import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.models.Quiz
+import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.CoroutineScope
@@ -43,8 +42,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     //TEMP
     private val prefRepository = SharedPrefRepository()
-
-    var choosePointView: ChoosePointView? = null
 
     // TODO: mvvm to vm?
     private var horStartScore = 0
@@ -108,53 +105,28 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
             override fun onChildRemoved(p0: DataSnapshot) { }
         })
 
-        quizId = 1
+/*        quizId = 1
         database.getReference("Quizzes").child(quizId.toString()).apply {
             child("title").setValue("Quiz1")
             child("description").setValue("This is a test quiz")
-        }
+        }*/
         // end vm
-
-
         // Init listeners
         button_start_quiz.setOnClickListener(this)
         button_compass_info.setOnClickListener(this)
-
         frame_1.setOnTouchListener(this)
 
         // ROOM DB
         // TODO: mvvm to VM
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
-
-        scope.launch(Dispatchers.IO) {
-            appQuestions = appViewModel.getAllQuestions()
-        }
-        scope.launch(Dispatchers.IO) {
-            appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(2)
-        }
         // end MVVM
 
         /** Get questions*/
-
-
         // TODO: mvvm to vm
-        when(QuizOptionHelper.loadQuizOption(this)) {
-            QuizOptions.UKRAINE.id ->
-            {
-                quizId = QuizOptions.UKRAINE.id
-                chosenQuizId = QuizOptions.UKRAINE.id // todo: Repeating
-                scope.launch {
-                    appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
-                }
-            }
-            QuizOptions.WORLD.id -> {
-                quizId = QuizOptions.WORLD.id
-                chosenQuizId = QuizOptions.WORLD.id
-                scope.launch {
-                    appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
-                }
-            }
+        when(QuizOptionUtil.loadQuizOption(this)) {
+            QuizOptions.UKRAINE.id -> getQuestionsWithAnswers(QuizOptions.UKRAINE.id)
+            QuizOptions.WORLD.id -> getQuestionsWithAnswers(QuizOptions.WORLD.id)
         }
 //        questionCountTotal = appQuestionsWithAnswers.size
         Collections.shuffle(appQuestionsWithAnswers)
@@ -273,34 +245,12 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
         quizIsActive = true
 
-
-        // TODO: MVVM to Reposytory
+        // TODO: MVVM to settings repo?
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val startedAt = formatter.format(Date())
 
+        // done: MVVM to Reposytory
         prefRepository.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt)
-
-/*        val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
-        sharedPref.apply {
-            putFloat(PREF_CHOSEN_VIEW_X, x)
-            putFloat(PREF_CHOSEN_VIEW_Y, y)
-            putInt(PREF_HORIZONTAL_START_SCORE, horStartScore)
-            putInt(PREF_VERTICAL_START_SCORE, verStartScore)
-            putString(PREF_CHOSEN_IDEOLOGY, ideology)
-
-            putInt(PREF_QUIZ_ID, quizId)
-            apply()
-        }*/
-        // end MVVM to Reposytory
-
-
-
-        // TODO: MVVM to Reposytory
-        // for Debug
-//        sharedPref.putString(PREF_STARTED_AT, startedAt)
-//        sharedPref.apply()
-        // end MVVM to Reposytory
-
 
         startActivity(Intent(this, QuizActivity::class.java))
         slideLeft(this)
@@ -311,6 +261,14 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private fun onCompassInfoClicked() {
         val intent = Intent(this, InfoActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun getQuestionsWithAnswers(quizId: Int) {
+        this.quizId = quizId
+        chosenQuizId = quizId // todo: Repeating
+        scope.launch {
+            appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -422,5 +380,4 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         oldIdeologyHover = ideologyHover
     }
     // end MVVM
-
 }

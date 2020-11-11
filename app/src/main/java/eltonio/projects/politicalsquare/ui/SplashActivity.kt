@@ -1,6 +1,5 @@
 package eltonio.projects.politicalsquare.ui
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -10,9 +9,9 @@ import android.view.WindowManager
 import android.view.animation.*
 import com.bumptech.glide.Glide
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.data.SharedPrefRepository
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.loadIsIntroOpened
+import eltonio.projects.politicalsquare.util.splashAnimationTime
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
@@ -26,7 +25,7 @@ class SplashActivity : AppCompatActivity() {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        Log.e(TAG, "loadIsIntroOpened(): " + loadIsIntroOpened())
+        Log.e(eltonio.projects.politicalsquare.util.TAG, "loadIsIntroOpened(): " + loadIsIntroOpened())
 
         Glide.with(this)
             .load(R.drawable.img_compass_only_strokes)
@@ -35,7 +34,6 @@ class SplashActivity : AppCompatActivity() {
             //== Fading ==
         // Create fading animation
 /*        splashAnimationTime = 600L // For Test without Into*/
-
 
         val compassAnimation1 = AnimationUtils.loadAnimation(this, R.anim.splash_fading)
         compassAnimation1.apply {
@@ -71,12 +69,8 @@ class SplashActivity : AppCompatActivity() {
         image_compass_only_strokes.startAnimation(animationSet)
         // Do action after moving
         Handler().postDelayed({
-            // TODO:  MVVM to Repository
-/*            val prefs = getSharedPreferences(PREF_SETTINGS, Context.MODE_PRIVATE).edit()
-            prefs.putBoolean(PREF_SPLASH_APPEARED, true)
-            prefs.apply()*/
-            // End:  MVVM to VM
-            prefRepository.setSplashAppeared()
+            // done:  MVVM to Repository
+            prefRepository.setSplashIsAppeared()
 
             finish()
             overridePendingTransition(0, 0)

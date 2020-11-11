@@ -21,9 +21,11 @@ import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuizResult
-import eltonio.projects.politicalsquare.other.*
 import eltonio.projects.politicalsquare.App.Companion.analytics
 import eltonio.projects.politicalsquare.App.Companion.appQuizResults
+import eltonio.projects.politicalsquare.data.FirebaseRepository
+import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
@@ -35,6 +37,10 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class ResultActivity : BaseActivity(), View.OnClickListener {
+
+    //TEMP
+    private var prefRepo = SharedPrefRepository()
+    private var firebaseRepo = FirebaseRepository()
 
     private var chosenIdeology = ""
     private var resultIdeology = ""
@@ -58,15 +64,19 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_result)
 
         title = getString(R.string.result_title_actionbar)
-        analytics.logEvent(EVENT_QUIZ_COMPLETE) {
+        // done: MVVM to analytic repo
+        firebaseRepo.logQuizCompleteEvent()
+/*        analytics.logEvent(EVENT_QUIZ_COMPLETE) {
             param(FirebaseAnalytics.Param.END_DATE, System.currentTimeMillis())
-        }
+        }*/
 
         database = Firebase.database
 
 
-        // TODO: MVVM to Reposytory
-        val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        // done: MVVM to Reposytory
+
+
+/*        val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         chosenViewX = sharedPref.getFloat(PREF_CHOSEN_VIEW_X, 0f)
         chosenViewY = sharedPref.getFloat(PREF_CHOSEN_VIEW_Y, 0f)
         horStartScore = sharedPref.getInt(PREF_HORIZONTAL_START_SCORE, 0)
@@ -75,25 +85,37 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         startedAt = sharedPref.getString(PREF_STARTED_AT, "").toString()
         zeroAnswerCnt = sharedPref.getInt(PREF_ZERO_ANSWER_CNT, -1)
 
-        userId = sharedPref.getString(PREF_USER_ID, "").toString()
+        userId = sharedPref.getString(PREF_USER_ID, "").toString()*/
         // end MVVM to Reposytory
 
+        chosenViewX = prefRepo.getChosenViewX()
+        chosenViewY = prefRepo.getChosenViewY()
+        horStartScore = prefRepo.getHorStartScore()
+        verStartScore = prefRepo.getVerStartScore()
+        chosenIdeology = prefRepo.getChosenIdeology()
+        startedAt = prefRepo.getStartedAt()
+        zeroAnswerCnt = prefRepo.getZeroAnswerCnt()
+        userId = prefRepo.getUserId()
+
+        horScore = prefRepo.getHorScore()
+        verScore = prefRepo.getVerScore()
+        quizId = prefRepo.getQuizId()
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
         title_2_2.text = "($youThoughtText: $chosenIdeology)"
 
 
-        val intent = intent.extras
-        if (intent != null) {
-            // TODO: MVVM to Reposytory
-            horScore = intent.getInt(EXTRA_HORIZONTAL_SCORE, -100)
-            verScore = intent.getInt(EXTRA_VERTICAL_SCORE, -100)
-            quizId = intent.getInt(EXTRA_QUIZ_ID, -1)
-            // end: MVVM to Reposytory
-
-        }
+//        val intent = intent.extras
+//        if (intent != null) {
+            // done: MVVM to Reposytory
+//            horScore = intent.getInt(EXTRA_HORIZONTAL_SCORE, -100)
+//            verScore = intent.getInt(EXTRA_VERTICAL_SCORE, -100)
+//            quizId = intent.getInt(EXTRA_QUIZ_ID, -1)
+//            // end: MVVM to Reposytory
+//
+//        }
         // For debug
-        Log.d(TAG, "zeroAnswerCnt Total: $zeroAnswerCnt")
+        Log.i(TAG, "zeroAnswerCnt Total: $zeroAnswerCnt")
 
         if (horScore != null && verScore != null) {
             resultIdeology = getIdeology(horScore, verScore)
@@ -125,16 +147,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         // TODO: Refactor animation
         /* Add Result Points with animations */
-    /* ValueAnimator variant
-       ValueAnimator.ofFloat(4f, 100f).apply {
-           duration = 3000
-           addUpdateListener {
-               val resultPotins = ResultAnimatedPointView(this@ResultActivity, it.animatedValue as Float)
-               frame_result_points.addView(resultPotins)
-           }
-           start()
-       }*/
-
         // Add start points
         val resultPoints = ResultPointView(this, 0f, 0f)
         resultPoints.alpha = 0f
@@ -199,8 +211,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             start()
         }
 
-
-
         // For debug
         Log.d(TAG, "Datetime duration: $duration, endedAt: $endedAt")
 
@@ -254,7 +264,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_compass_info_2 -> {
-                analytics.logEvent(EVENT_DETAILED_INFO, null)
+                // done: MVVM to Analytic Repo
+                firebaseRepo.logDetailedInfoEvent()
 
                 val intent = Intent(this, ViewInfoActivity::class.java)
                 intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)

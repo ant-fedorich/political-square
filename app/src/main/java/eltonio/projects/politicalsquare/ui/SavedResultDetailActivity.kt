@@ -17,7 +17,7 @@ import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ResultDetailPointView
 import kotlinx.android.synthetic.main.activity_result.button_compass_info_2
 import kotlinx.android.synthetic.main.activity_saved_result_detail.*
@@ -77,7 +77,8 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
             title_result_detail.transitionName = it.getString(EXTRA_TITLE_TRANSITION_NAME, "NONE")
             text_result_date.transitionName  = it.getString(EXTRA_DATE_TRANSITION_NAME,"NONE")
             image_main_compass_2.transitionName  = it.getString(EXTRA_IMAGE_TRANSITION_NAME, "NONE")
-            layout_saved_result_detail.transitionName = it.getString(EXTRA_ITEM_CONTAINER_TRANSITION_NAME, "NONE")
+            layout_saved_result_detail.transitionName = it.getString(
+                EXTRA_ITEM_CONTAINER_TRANSITION_NAME, "NONE")
         }
 
         when(quizId) {
