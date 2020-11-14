@@ -417,5 +417,6 @@
     <string name="savedresultdetail_title_quiz">Варіант теста:</string>
     <string name="all_owner_quiz_option_1">для Всіх</string>
     <string name="all_owner_quiz_option_2">для України</string>
+    <string name="chooseview_toast_choose_first">Виберіть спочатку політичний погляд на квадраті!</string>
 
 </resources>

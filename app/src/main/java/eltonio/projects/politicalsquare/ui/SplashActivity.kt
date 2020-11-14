@@ -9,14 +9,14 @@ import android.view.WindowManager
 import android.view.animation.*
 import com.bumptech.glide.Glide
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.util.splashAnimationTime
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
 
     // TEMP
-    private val prefRepo = SharedPrefRepository()
+    private val localRepo = AppRepository.Local()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        Log.e(eltonio.projects.politicalsquare.util.TAG, "loadIsIntroOpened(): " + prefRepo.getIntroOpened())
+        Log.e(eltonio.projects.politicalsquare.util.TAG, "loadIsIntroOpened(): " + localRepo.getIntroOpened())
 
         Glide.with(this)
             .load(R.drawable.img_compass_only_strokes)
@@ -81,7 +81,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun doActionAfterMoving() {
         Handler().postDelayed({
-            prefRepo.setSplashIsAppeared()
+            localRepo.setSplashIsAppeared()
             finish()
             overridePendingTransition(0, 0)
         }, 600 + splashAnimationTime) //1300

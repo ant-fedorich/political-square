@@ -2,18 +2,12 @@ package eltonio.projects.politicalsquare.ui
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.*
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.logEvent
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -21,10 +15,8 @@ import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuizResult
-import eltonio.projects.politicalsquare.App.Companion.analytics
 import eltonio.projects.politicalsquare.App.Companion.appQuizResults
-import eltonio.projects.politicalsquare.data.FirebaseRepository
-import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ResultPointView
@@ -40,8 +32,8 @@ import java.util.concurrent.TimeUnit
 class ResultActivity : BaseActivity(), View.OnClickListener {
 
     //TEMP
-    private var prefRepo = SharedPrefRepository()
-    private var firebaseRepo = FirebaseRepository()
+    private var localRepo = AppRepository.Local()
+    private var cloudRepo = AppRepository.Cloud()
 
     private var chosenIdeology = ""
     private var resultIdeology = ""
@@ -65,30 +57,27 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_result)
 
         title = getString(R.string.result_title_actionbar)
-        firebaseRepo.logQuizCompleteEvent()
+        cloudRepo.logQuizCompleteEvent()
 
         database = Firebase.database
 
-        chosenViewX = prefRepo.getChosenViewX()
-        chosenViewY = prefRepo.getChosenViewY()
-        horStartScore = prefRepo.getHorStartScore()
-        verStartScore = prefRepo.getVerStartScore()
-        chosenIdeology = prefRepo.getChosenIdeology()
-        startedAt = prefRepo.getStartedAt()
-        zeroAnswerCnt = prefRepo.getZeroAnswerCnt()
+        chosenViewX = localRepo.getChosenViewX()
+        chosenViewY = localRepo.getChosenViewY()
+        horStartScore = localRepo.getHorStartScore()
+        verStartScore = localRepo.getVerStartScore()
+        chosenIdeology = localRepo.getChosenIdeology()
+        startedAt = localRepo.getStartedAt()
+        zeroAnswerCnt = localRepo.getZeroAnswerCnt()
 
-        horScore = prefRepo.getHorScore()
-        verScore = prefRepo.getVerScore()
-        quizId = prefRepo.loadQuizOption()
+        horScore = localRepo.getHorScore()
+        verScore = localRepo.getVerScore()
+        quizId = localRepo.loadQuizOption()
 
-        userId = firebaseRepo.firebaseUser?.uid.toString()
+        userId = cloudRepo.firebaseUser?.uid.toString()
 
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
         title_2_2.text = "($youThoughtText: $chosenIdeology)"
-
-        // For debug
-        Log.i(TAG, "zeroAnswerCnt Total: $zeroAnswerCnt")
 
         if (horScore != null && verScore != null) {
             resultIdeology = getIdeology(horScore, verScore)
@@ -114,12 +103,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             else
                 duration/QuizOptions.UKRAINE.quesAmount.toDouble()
 
-
-        Log.d(TAG, "Date avgAnswerTime: $avgAnswerTime")
-
         val ideologyId = getIdeologyStringId(resultIdeology)
 
-        // Adding data to Room DB
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
 
@@ -137,8 +122,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             avgAnswerTime = avgAnswerTime
         )
 
-        // TODO: For firebase it needs User ID for result
-        firebaseRepo.addQuizResult(userId, quizResult)
+        cloudRepo.addQuizResult(userId, quizResult)
 
         appViewModel.addQuizResult(quizResult)
         scope.launch {
@@ -149,7 +133,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
         compassX = horScore.plus(40)
         compassY = verScore.plus(40)
-
     }
 
     override fun onBackPressed() {
@@ -162,7 +145,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_compass_info_2 -> {
-                firebaseRepo.logDetailedInfoEvent()
+                cloudRepo.logDetailedInfoEvent()
 
                 val intent = Intent(this, ViewInfoActivity::class.java)
                 intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)

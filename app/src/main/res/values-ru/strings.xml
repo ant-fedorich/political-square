@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="main_btn_start">Начать</string>
     <string name="main_txt_register_with">Зарегистрироваться через</string>
     <string name="main_link_why_to_register">Зачем регистрироваться?</string>
@@ -8,8 +7,7 @@
     <string name="chooseview_title">Выберете ваш политический взгляд</string>
     <string name="chooseview_btn_start">Начать тест</string>
     <string name="chooseview_btn_compass_info">Детальнее про Квадрат</string>
-
-
+    <string name="chooseview_toast_choose_first">Выберете сначала политический взгляд на квадрате!</string>
 
     <string name="radio_answer_1_template">Скорее не согласен</string>
     <string name="radio_answer_2_template">Не согласен</string>

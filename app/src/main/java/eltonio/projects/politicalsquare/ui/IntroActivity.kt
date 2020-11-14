@@ -12,15 +12,14 @@ import com.google.android.material.tabs.TabLayout
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.ScreenItem
 import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
-import eltonio.projects.politicalsquare.data.FirebaseRepository
-import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_intro.*
 
 class IntroActivity : AppCompatActivity() {
 
     // TEMP
-    private val prefRepo = SharedPrefRepository()
+    private val localRepo = AppRepository.Local()
 
     // TODO: MVVM to VM
     private lateinit var screenList: MutableList<ScreenItem>
@@ -35,10 +34,10 @@ class IntroActivity : AppCompatActivity() {
 
         // TODO: MVVM to VM
         // Skip Intro if it was opened before
-        if (prefRepo.getIntroOpened()) {
+        if (localRepo.getIntroOpened()) {
             Log.d(TAG, "Intro was already opened")
-            var loadedLang = prefRepo.loadLang()
-            prefRepo.setLang(this, loadedLang)
+            var loadedLang = localRepo.getLang()
+            localRepo.setLang(this, loadedLang)
 
             // Set short animation without Intro
             splashAnimationTime = 600L
@@ -51,12 +50,12 @@ class IntroActivity : AppCompatActivity() {
             splashAnimationTime = 1200L
         }
         // End MVVM
-        var loadedLang = prefRepo.loadLang()
-        prefRepo.setLang(this, loadedLang)
+        var loadedLang = localRepo.getLang()
+        localRepo.setLang(this, loadedLang)
 
         setContentView(R.layout.activity_intro)
 
-        screenList = prefRepo.getViewPagerScreenList()
+        screenList = localRepo.getViewPagerScreenList()
 
         // TODO: MVVM to VM
         // Set ViewPager
@@ -82,7 +81,7 @@ class IntroActivity : AppCompatActivity() {
         }
 
         button_get_started.setOnClickListener {
-            prefRepo.putIntroOpened()
+            localRepo.setIntroOpened()
             startActivity(Intent(this, MainActivity::class.java))
             fadeIn(this)
             finish()

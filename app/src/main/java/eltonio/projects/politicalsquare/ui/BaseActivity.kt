@@ -31,7 +31,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         )
         toggle.syncState()
         activity_container.addDrawerListener(toggle)
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

@@ -33,7 +33,6 @@ import kotlinx.coroutines.*
 class SavedResultsActivity : AppCompatActivity() {
 
     private lateinit var resultList: List<QuizResult>
-
     private lateinit var quizAdapter: QuizRecycleAdapter
 
     private lateinit var appViewModel: AppViewModel
@@ -48,7 +47,6 @@ class SavedResultsActivity : AppCompatActivity() {
 
         title = getString(R.string.saved_title_actionbar)
 
-        // ROOM DB
         resultList = emptyList()
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
@@ -57,7 +55,6 @@ class SavedResultsActivity : AppCompatActivity() {
             Log.w(TAG, "QuizResults in Coroutine:")
             for (item in resultList) Log.i(TAG, "Item: $item")
         }
-
 
         // For debugging
         Log.w(TAG, "QuizResults out of Coroutine:")
@@ -85,7 +82,6 @@ class SavedResultsActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-//                appViewModel.deleteQuizResult(quizAdapter.getQuizResultAt(position))
                 val deletedResultItem: QuizResult
                 var ideologyTitle = "NONE"
 
@@ -97,8 +93,6 @@ class SavedResultsActivity : AppCompatActivity() {
                         resultList = appViewModel.getQuizResults()
                     }
                     quizAdapter.setQuizResults(resultList)
-                    //quizAdapter.notifyItemRemoved(position)
-                    //deletedResultItem = resultList2[position]
 
                     for (ideo in Ideologies.values()) {
                         if (ideo.stringId == deletedResultItem.ideologyStringId) {
@@ -145,7 +139,6 @@ class SavedResultsActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-//        super.onBackPressed()
         finish()
         pushRight(this) // info out
         return true
@@ -153,7 +146,6 @@ class SavedResultsActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-//        finish()
         pushRight(this) //info out
     }
 

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Point
 import android.graphics.drawable.GradientDrawable
@@ -20,17 +19,13 @@ import android.view.animation.*
 import android.widget.RadioButton
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.logEvent
 
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.*
-import eltonio.projects.politicalsquare.App.Companion.analytics
 import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
-import eltonio.projects.politicalsquare.data.FirebaseRepository
-import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.util.*
 
 import kotlinx.android.synthetic.main.activity_quiz.*
@@ -42,10 +37,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
     // TODO: MVVM to VM
     //TEMP
-    private var prefRepo = SharedPrefRepository()
-    private var firebaseRepo = FirebaseRepository()
+    private var localRepo = AppRepository.Local()
+    private var cloudRepo = AppRepository.Cloud()
 
-    private var quizId = -1
     private var previousStep: Step? = null
     private var isPreviousStep = false
     private var questionCountTotal = 0
@@ -79,12 +73,8 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         setContentView(R.layout.activity_quiz)
 
         this.title = getString(R.string.quiz_title_actionbar)
-        firebaseRepo.logQuizBeginEvent()
+        cloudRepo.logQuizBeginEvent()
 
-        // Language
-        Locale.getDefault().language
-
-        // ROOM DB
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
 
@@ -103,11 +93,11 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
         // == Radio button hovers ==
         // Get shape_radio_hover for every radio button
-        radioShapeHover1 = getDrawable(R.drawable.shape_radio_hover) as GradientDrawable
-        radioShapeHover2 = getDrawable(R.drawable.shape_radio_hover) as GradientDrawable
-        radioShapeHover3 = getDrawable(R.drawable.shape_radio_hover) as GradientDrawable
-        radioShapeHover4 = getDrawable(R.drawable.shape_radio_hover) as GradientDrawable
-        radioShapeHover5 = getDrawable(R.drawable.shape_radio_hover) as GradientDrawable
+        radioShapeHover1 = ContextCompat.getDrawable(this, R.drawable.shape_radio_hover) as GradientDrawable
+        radioShapeHover2 = ContextCompat.getDrawable(this, R.drawable.shape_radio_hover) as GradientDrawable
+        radioShapeHover3 = ContextCompat.getDrawable(this, R.drawable.shape_radio_hover) as GradientDrawable
+        radioShapeHover4 = ContextCompat.getDrawable(this, R.drawable.shape_radio_hover) as GradientDrawable
+        radioShapeHover5 = ContextCompat.getDrawable(this, R.drawable.shape_radio_hover) as GradientDrawable
 
         (radio_answer_1.background as LayerDrawable).setDrawableByLayerId(R.id.shape_radio_hover, radioShapeHover1)
         (radio_answer_2.background as LayerDrawable).setDrawableByLayerId(R.id.shape_radio_hover, radioShapeHover2)
@@ -222,8 +212,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         if (isPreviousStep) return // Need to check, because setOnCheckedChangeListener shoots automatically after radio changed
 
         if (radio_answer_3.isChecked) zeroAnswerCnt++
-        // For debug
-        Log.d(TAG, "zeroAnswerCnt: $zeroAnswerCnt")
 
         val rbSelected = findViewById<RadioButton>(radio_group_answers.checkedRadioButtonId)
         val point = currentQuestion.answerList[radioSelectedIndex].point
@@ -243,17 +231,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         // Save as a previous step
         previousStep = step
 
-        // Show FAB
-        if (fab_undo.visibility == View.GONE) {
-            fab_undo.apply {
-                scaleX = 0.2f
-                scaleY = 0.2f
-                alpha = 0f
-                visibility = View.VISIBLE
-            }
-            fab_undo.animate().scaleY(1f).scaleX(1f).alpha(1f)
-        }
+        startShowFABAnimation()
     }
+
 
     private fun showNextQuestion() {
 
@@ -300,15 +280,11 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                 }
             }
 
-
-            // Get Screen Resolution
-            val display = windowManager.defaultDisplay
-            val size = Point()
-            display.getSize(size)
+            val size = getScreenResolution(this)
             val width = size.x
             val height = size.y
 
-            Log.d(TAG, "$width and $height")
+            Log.i(TAG, "$width and $height")
 
             startOldQuestionAnimation()
             startNewQuestionAnimation()
@@ -320,9 +296,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             quizFinished = true
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
-            prefRepo.putZeroAnswerCht(zeroAnswerCnt)
-            prefRepo.putHorScore(horizontalScore.toInt())
-            prefRepo.putVerScore(verticalScore.toInt())
+            localRepo.setZeroAnswerCht(zeroAnswerCnt)
+            localRepo.setHorScore(horizontalScore.toInt())
+            localRepo.setVerScore(verticalScore.toInt())
 
             val intent = Intent(this, ResultActivity::class.java)
             startActivity(intent)
@@ -369,34 +345,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                 }
             }
 
-
-            // TODO: create methods for animation
-
-            // Animate an old question backward
-            val quesOldAnimation = AnimationUtils.loadAnimation(this, R.anim.back_move_old_question)
-            quesOldAnimation.duration = 250
-
-            quesOldAnimation.setAnimationListener(object : Animation.AnimationListener{
-                override fun onAnimationStart(p0: Animation?) {}
-                override fun onAnimationRepeat(p0: Animation?) {}
-                override fun onAnimationEnd(animation: Animation?) {
-                    text_question_new.visibility = View.INVISIBLE
-                }
-            })
-            text_question_old.startAnimation(quesOldAnimation)
-
-            // Animate a new question away
-            val quesNewAnimation = AnimationUtils.loadAnimation(this, R.anim.back_move_new_question)
-            quesNewAnimation.duration = 250
-            text_question_new.startAnimation(quesNewAnimation)
-
-            // Animate Progress Bar backward
-            val percent = (((questionCounter+1).toFloat()/questionCountTotal.toFloat())*1000).toInt()
-            val oldPercent = (((questionCounter).toFloat()/questionCountTotal.toFloat())*1000).toInt()
-            ObjectAnimator.ofInt(progress_bar, "progress", percent, oldPercent).apply {
-                duration = 300
-                interpolator = DecelerateInterpolator()
-            }.start()
+            startOldQuestionBackwardAnimation()
+            startNewQuestionBackwardAnimation()
+            startProgressBarBackwardAnimation()
 
             text_questions_left.text = "${questionCounter} / $questionCountTotal"
 
@@ -404,9 +355,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             val prevStep = previousStep
 
             if (prevStep != null) {
-
                 prevStep.rbSelected?.isChecked = true
-
                 fadeInOldAnswer(prevStep.rbSelected, radioShapeHoverList[prevStep.rbIndex])
 
                 if (prevStep.rbSelected == radio_answer_3) zeroAnswerCnt-- // a zero answer
@@ -424,14 +373,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         previousStep = null
         isPreviousStep = false
 
-        // Hide FAB
-        if (fab_undo.visibility == View.VISIBLE) {
-            fab_undo.isEnabled = false
-            fab_undo.animate().scaleX(0.2f).scaleY(0.2f).alpha(0f)
-                .withEndAction {
-                    fab_undo.visibility = View.GONE
-                }
-        }
+        startHideFABAnimation()
     }
 
     private fun fadeInOldAnswer(radioButtonSelected: RadioButton?, radioShapeHover: GradientDrawable) {
@@ -514,6 +456,54 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             duration = 300
             interpolator = DecelerateInterpolator()
         }.start()
+    }
+
+    private fun startOldQuestionBackwardAnimation() {
+        val quesOldAnimation = AnimationUtils.loadAnimation(this, R.anim.back_move_old_question)
+        quesOldAnimation.duration = 250
+
+        quesOldAnimation.setAnimationListener(object : Animation.AnimationListener{
+            override fun onAnimationStart(p0: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+            override fun onAnimationEnd(animation: Animation?) {
+                text_question_new.visibility = View.INVISIBLE
+            }
+        })
+        text_question_old.startAnimation(quesOldAnimation)
+    }
+    private fun startNewQuestionBackwardAnimation() {
+        val quesNewAnimation = AnimationUtils.loadAnimation(this, R.anim.back_move_new_question)
+        quesNewAnimation.duration = 250
+        text_question_new.startAnimation(quesNewAnimation)
+    }
+    private fun startProgressBarBackwardAnimation() {
+        val percent = (((questionCounter+1).toFloat()/questionCountTotal.toFloat())*1000).toInt()
+        val oldPercent = (((questionCounter).toFloat()/questionCountTotal.toFloat())*1000).toInt()
+        ObjectAnimator.ofInt(progress_bar, "progress", percent, oldPercent).apply {
+            duration = 300
+            interpolator = DecelerateInterpolator()
+        }.start()
+    }
+
+    private fun startShowFABAnimation() {
+        if (fab_undo.visibility == View.GONE) {
+            fab_undo.apply {
+                scaleX = 0.2f
+                scaleY = 0.2f
+                alpha = 0f
+                visibility = View.VISIBLE
+            }
+            fab_undo.animate().scaleY(1f).scaleX(1f).alpha(1f)
+        }
+    }
+    private fun startHideFABAnimation() {
+        if (fab_undo.visibility == View.VISIBLE) {
+            fab_undo.isEnabled = false
+            fab_undo.animate().scaleX(0.2f).scaleY(0.2f).alpha(0f)
+                .withEndAction {
+                    fab_undo.visibility = View.GONE
+                }
+        }
     }
 }
 

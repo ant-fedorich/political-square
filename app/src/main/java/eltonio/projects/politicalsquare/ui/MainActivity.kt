@@ -2,44 +2,30 @@ package eltonio.projects.politicalsquare.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.AdapterView
 import android.widget.Spinner
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.adapter.QuizOptionAdapter
-import eltonio.projects.politicalsquare.data.FirebaseRepository
-import eltonio.projects.politicalsquare.data.SharedPrefRepository
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MainActivity : BaseActivity() {
 
     // TEMP
-    private val prefRepo = SharedPrefRepository()
-    private val firebaseRepo = FirebaseRepository()
-
-    val mainActivity = this
+    private val localRepo = AppRepository.Local()
+    private val cloudRepo = AppRepository.Cloud()
 
     private lateinit var usersRef: DatabaseReference
     private var currentUser: FirebaseUser? = null
     private lateinit var userId: String
     private lateinit var lastSessionStarted: String
-
-    private var userExists = true
-    private var userCreationDate = ""
-
 
     companion object {
         lateinit var spinnerView: Spinner // To use it in Settings
@@ -48,16 +34,11 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-/*        // FOR TEST - Load language (without intro)
-        var loadedLang = LocaleHelper.loadLocate(this)
-        LocaleHelper.setLocate(this, loadedLang)
-        */
-
         // TODO: mvvm, to vm
-        var loadedLang = prefRepo.loadLang()
-        firebaseRepo.setUserLangProperty(loadedLang)
+        var loadedLang = localRepo.getLang()
+        cloudRepo.setUserLangProperty(loadedLang)
 
-        if (prefRepo.getSplashAppeared() == false) {
+        if (localRepo.getSplashAppeared() == false) {
             val splashActivityIntent = Intent(this@MainActivity, SplashActivity::class.java)
             startActivity(splashActivityIntent)
         }
@@ -72,33 +53,34 @@ class MainActivity : BaseActivity() {
         startContainerFadeAnimation()
         // MVVM End
 
-        //== Set Quiz Options Spinner ==
+        // Set Quiz Options Spinner
         // TODO: mvvm, to vm
         val spinnerAdapter = QuizOptionAdapter(this, QuizOptions.values())
         spinner_quiz_options.adapter = spinnerAdapter
         spinnerView = spinner_quiz_options
 
-        when(prefRepo.loadQuizOption()) {
+        when(localRepo.loadQuizOption()) {
             QuizOptions.WORLD.id -> spinner_quiz_options.setSelection(0)
             QuizOptions.UKRAINE.id -> spinner_quiz_options.setSelection(1)
         }
 
-        usersRef = firebaseRepo.usersRef
-        currentUser = firebaseRepo.firebaseUser // TODO: Check nullable
+        // Set User
+        usersRef = cloudRepo.usersRef
+        currentUser = cloudRepo.firebaseUser
         lastSessionStarted = getDateTime()
 
         if (currentUser == null) {
-            firebaseRepo.createAndSignInAnonymously()
-            prefRepo.putSessionStarted()
+            cloudRepo.createAndSignInAnonymously()
+            localRepo.setSessionStarted()
             userId = currentUser?.uid ?: "none"
         } else {
             userId = currentUser?.uid ?: "none"
-            if (!prefRepo.getSessionStarted()) {
-                firebaseRepo.updateUser(userId, lastSessionStarted)
-                prefRepo.putSessionStarted()
+            if (localRepo.getSessionStarted() == false) {
+                cloudRepo.updateUser(userId, lastSessionStarted)
+                localRepo.setSessionStarted()
             }
-            firebaseRepo.setAnalyticsUserId(userId)
-            firebaseRepo.logAnonymLoginEvent(lastSessionStarted)
+            cloudRepo.setAnalyticsUserId(userId)
+            cloudRepo.logAnonymLoginEvent(lastSessionStarted)
         }
 
         button_start.setOnClickListener{ onStartClicked() }
@@ -109,12 +91,12 @@ class MainActivity : BaseActivity() {
                 val clickedItem = parent?.getItemAtPosition(position) as QuizOptions
                 when (clickedItem.id) {
                     QuizOptions.WORLD.id -> {
-                        prefRepo.saveQuizOption(QuizOptions.WORLD.id)
-                        firebaseRepo.logChangeQuizOptionEvent(QuizOptions.WORLD.id)
+                        localRepo.saveQuizOption(QuizOptions.WORLD.id)
+                        cloudRepo.logChangeQuizOptionEvent(QuizOptions.WORLD.id)
                     }
                     QuizOptions.UKRAINE.id -> {
-                        prefRepo.saveQuizOption(QuizOptions.UKRAINE.id)
-                        firebaseRepo.logChangeQuizOptionEvent(QuizOptions.UKRAINE.id)
+                        localRepo.saveQuizOption(QuizOptions.UKRAINE.id)
+                        cloudRepo.logChangeQuizOptionEvent(QuizOptions.UKRAINE.id)
                     }
                 }
                 // end mvvm

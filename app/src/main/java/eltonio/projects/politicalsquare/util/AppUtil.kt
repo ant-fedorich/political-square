@@ -4,6 +4,7 @@ import android.app.Activity
 //import android.app.AlertDialog
 import androidx.appcompat.app.AlertDialog
 import android.content.Context
+import android.graphics.Point
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -145,6 +146,14 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
 }
 
 fun convertDpToPx(dp: Float): Float = dp * appContext.resources.displayMetrics.density
+
+fun getScreenResolution(context: Context): Point {
+    context as Activity
+    val display = context.windowManager.defaultDisplay
+    val size = Point()
+    display.getSize(size)
+    return size
+}
 
 // Get an ideology from a Compass score
 fun getIdeology(horScore: Int, verScore: Int): String {

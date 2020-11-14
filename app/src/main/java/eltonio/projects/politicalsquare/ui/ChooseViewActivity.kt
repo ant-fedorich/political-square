@@ -14,37 +14,29 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
-import eltonio.projects.politicalsquare.data.FirebaseRepository
-import eltonio.projects.politicalsquare.data.SharedPrefRepository
-import eltonio.projects.politicalsquare.models.Quiz
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
-
-// TODO: Change image_for_canvas
 
 class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchListener {
 
     // TEMP
-    private val prefRepo = SharedPrefRepository()
+    private val localRepo = AppRepository.Local()
+    // TODO: Should I use a global var of view model and a scope
+    private lateinit var appViewModel: AppViewModel
+    private lateinit var scope: CoroutineScope
 
-    // TODO: mvvm to vm?
+    // TODO: mvvm vars to vm?
     private var horStartScore = 0
     private var verStartScore = 0
     private var ideology = ""
@@ -76,10 +68,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private var containerHeight = -1
     private var containerWidth = -1
 
-    // TODO: Should I use a global var of view model and a scope
-    private lateinit var appViewModel: AppViewModel
-    private lateinit var scope: CoroutineScope
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,15 +79,13 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         button_compass_info.setOnClickListener(this)
         frame_1.setOnTouchListener(this)
 
-        // ROOM DB
         // TODO: mvvm to VM
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
         // end MVVM
 
-        /** Get questions*/
         // TODO: mvvm to vm
-        when(prefRepo.loadQuizOption()) {
+        when(localRepo.loadQuizOption()) {
             QuizOptions.UKRAINE.id -> getQuestionsWithAnswers(QuizOptions.UKRAINE.id)
             QuizOptions.WORLD.id -> getQuestionsWithAnswers(QuizOptions.WORLD.id)
         }
@@ -215,17 +201,16 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     // TODO: MVVM to VM
     @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
     private fun onStartQuizClicked() {
-        if (!ideologyIsChosen) return toast("Выберете политический взгляд сначало!") // TODO: Add text in Strings
+        if (!ideologyIsChosen) return toast(getString(R.string.chooseview_toast_choose_first))
 
         quizIsActive = true
 
         val startedAt = getDateTime()
-
-        prefRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt)
+        localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt) // TODO: put an object instead of attributes
 
         startActivity(Intent(this, QuizActivity::class.java))
         slideLeft(this)
-        MainActivity().mainActivity.finish()
+        MainActivity().finish()
         finish()
     }
 
@@ -253,11 +238,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         val bitmap = Bitmap.createBitmap(endX, endY, Bitmap.Config.ARGB_8888)
         image_for_canvas.visibility = View.VISIBLE
         image_for_canvas.setImageBitmap(bitmap)
-        val canvas = Canvas(bitmap)
-
-        val radius = convertDpToPx(10f) //10f
-        val strokeWidthPx =
-            convertDpToPx(2f)
 
         when {
             x >= 0 && x <= endX && y >= 0 && y <= endY -> {

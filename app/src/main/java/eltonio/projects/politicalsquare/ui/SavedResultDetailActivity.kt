@@ -32,8 +32,6 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
     private var quizOwner = ""
     private var endedAt = ""
 
-    private lateinit var database: FirebaseDatabase
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
@@ -62,8 +60,6 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         title = getString(R.string.savedresultdetail_title_actionbar)
 
-        database = Firebase.database
-
         val extras = intent.extras
 
         extras?.let {
@@ -85,7 +81,6 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
             QuizOptions.UKRAINE.id -> quizOwner = QuizOptions.UKRAINE.owner
             QuizOptions.WORLD.id -> quizOwner = QuizOptions.WORLD.owner
         }
-
 
         // Init listeners
         button_compass_info_2.setOnClickListener(this)
