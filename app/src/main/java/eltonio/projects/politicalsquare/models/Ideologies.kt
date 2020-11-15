@@ -2,7 +2,7 @@ package eltonio.projects.politicalsquare.models
 
 import android.content.Context
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.appContext
 
 enum class Ideologies(title: String, stringId: String) {
     AUTHORITARIAN_LEFT(

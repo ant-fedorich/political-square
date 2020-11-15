@@ -6,8 +6,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.Log
 import android.view.View
-import eltonio.projects.politicalsquare.other.TAG
-import eltonio.projects.politicalsquare.other.convertDpToPx
+import eltonio.projects.politicalsquare.util.TAG
+import eltonio.projects.politicalsquare.util.convertDpToPx
 
 class ChoosePointView(context: Context, var inputX: Float, var inputY: Float, var radiusInDp: Float): View(context) {
 
@@ -22,7 +22,6 @@ class ChoosePointView(context: Context, var inputX: Float, var inputY: Float, va
         val radius = convertDpToPx(radiusInDp) //10f
         val strokeWidthPx = convertDpToPx(2f)
 
-//        createCircle()
         paint.apply {
             style = Paint.Style.FILL
             color = Color.WHITE

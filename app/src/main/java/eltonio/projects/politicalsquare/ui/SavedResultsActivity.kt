@@ -10,8 +10,7 @@ import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.QuizRecycleAdapter
+import eltonio.projects.politicalsquare.adapter.QuizRecycleAdapter
 import eltonio.projects.politicalsquare.R
 import kotlinx.android.synthetic.main.activity_saved_results.*
 import androidx.core.content.ContextCompat
@@ -24,6 +23,7 @@ import com.google.android.material.transition.platform.*
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.util.*
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.*
 
@@ -33,7 +33,6 @@ import kotlinx.coroutines.*
 class SavedResultsActivity : AppCompatActivity() {
 
     private lateinit var resultList: List<QuizResult>
-
     private lateinit var quizAdapter: QuizRecycleAdapter
 
     private lateinit var appViewModel: AppViewModel
@@ -48,7 +47,6 @@ class SavedResultsActivity : AppCompatActivity() {
 
         title = getString(R.string.saved_title_actionbar)
 
-        // ROOM DB
         resultList = emptyList()
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
@@ -57,7 +55,6 @@ class SavedResultsActivity : AppCompatActivity() {
             Log.w(TAG, "QuizResults in Coroutine:")
             for (item in resultList) Log.i(TAG, "Item: $item")
         }
-
 
         // For debugging
         Log.w(TAG, "QuizResults out of Coroutine:")
@@ -85,7 +82,6 @@ class SavedResultsActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-//                appViewModel.deleteQuizResult(quizAdapter.getQuizResultAt(position))
                 val deletedResultItem: QuizResult
                 var ideologyTitle = "NONE"
 
@@ -97,10 +93,6 @@ class SavedResultsActivity : AppCompatActivity() {
                         resultList = appViewModel.getQuizResults()
                     }
                     quizAdapter.setQuizResults(resultList)
-                    //quizAdapter.notifyItemRemoved(position)
-
-
-                    //deletedResultItem = resultList2[position]
 
                     for (ideo in Ideologies.values()) {
                         if (ideo.stringId == deletedResultItem.ideologyStringId) {
@@ -147,7 +139,6 @@ class SavedResultsActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-//        super.onBackPressed()
         finish()
         pushRight(this) // info out
         return true
@@ -155,7 +146,6 @@ class SavedResultsActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-//        finish()
         pushRight(this) //info out
     }
 
@@ -168,6 +158,7 @@ class SavedResultsActivity : AppCompatActivity() {
         val dateTransitionName = itemView.text_saved_result_date.transitionName
         val imageTransitionName = itemView.image_compass_saved_result.transitionName
 
+        // TODO: MVVM Extra to Repository
         var intent = Intent(this, SavedResultDetailActivity::class.java).apply {
             putExtra(EXTRA_IDEOLOGY_ID, resultList[position].ideologyStringId)
             putExtra(EXTRA_QUIZ_ID, resultList[position].quizId)

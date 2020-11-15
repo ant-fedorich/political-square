@@ -438,5 +438,6 @@
     <string name="settings_owner_quiz_option_1">Owner: politicalcompass.org</string>
     <string name="settings_title_quiz_option_2">For Ukraine</string>
     <string name="settings_title_quiz_option_1">For World</string>
+    <string name="chooseview_toast_choose_first">First choose a political view on the square!</string>
 
 </resources>

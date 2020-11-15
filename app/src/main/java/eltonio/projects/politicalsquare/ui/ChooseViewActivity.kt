@@ -2,7 +2,6 @@ package eltonio.projects.politicalsquare.ui
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -15,34 +14,29 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.other.*
-import eltonio.projects.politicalsquare.other.App.Companion.appQuestions
-import eltonio.projects.politicalsquare.other.App.Companion.appQuestionsWithAnswers
+import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
+import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
-
-// TODO: Change image_for_canvas
 
 class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchListener {
 
-    var choosePointView: ChoosePointView? = null
+    // TEMP
+    private val localRepo = AppRepository.Local()
+    // TODO: Should I use a global var of view model and a scope
+    private lateinit var appViewModel: AppViewModel
+    private lateinit var scope: CoroutineScope
 
+    // TODO: mvvm vars to vm?
     private var horStartScore = 0
     private var verStartScore = 0
     private var ideology = ""
@@ -52,7 +46,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private var ideologyIsChosen = false
     private var oldIdeologyHover: ImageView? = null
 
-    private lateinit var database: FirebaseDatabase
     private var quizId = -1
 
     private var pointView: ChoosePointView? = null
@@ -75,77 +68,29 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private var containerHeight = -1
     private var containerWidth = -1
 
-    // TODO: Should I use a global var of view model and a scope
-    private lateinit var appViewModel: AppViewModel
-    private lateinit var scope: CoroutineScope
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_view)
 
-        // debug
-        Locale.getDefault().language
-
-        database = Firebase.database
-
-        database.getReference("Quizzes").addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(shapchot: DataSnapshot, p1: String?) {
-                Log.i(TAG, "Quizzes: onChildAdded")
-            }
-            override fun onCancelled(e: DatabaseError) {
-                Log.e(TAG, "Quizzes: onCancelled: $e")
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) { }
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) { }
-            override fun onChildRemoved(p0: DataSnapshot) { }
-        })
-
-        quizId = 1
-        database.getReference("Quizzes").child(quizId.toString()).apply {
-            child("title").setValue("Quiz1")
-            child("description").setValue("This is a test quiz")
-        }
-
+        // end vm
         // Init listeners
         button_start_quiz.setOnClickListener(this)
         button_compass_info.setOnClickListener(this)
-
         frame_1.setOnTouchListener(this)
 
-        // ROOM DB
+        // TODO: mvvm to VM
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
+        // end MVVM
 
-        scope.launch(Dispatchers.IO) {
-            appQuestions = appViewModel.getAllQuestions()
+        // TODO: mvvm to vm
+        when(localRepo.loadQuizOption()) {
+            QuizOptions.UKRAINE.id -> getQuestionsWithAnswers(QuizOptions.UKRAINE.id)
+            QuizOptions.WORLD.id -> getQuestionsWithAnswers(QuizOptions.WORLD.id)
         }
-        scope.launch(Dispatchers.IO) {
-            appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(2)
-        }
-
-        /** Get questions*/
-
-        when(QuizOptionHelper.loadQuizOption(this)) {
-            QuizOptions.UKRAINE.id ->
-            {
-                quizId = QuizOptions.UKRAINE.id
-                chosenQuizId = QuizOptions.UKRAINE.id // todo: Repeating
-                scope.launch {
-                    appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
-                }
-            }
-            QuizOptions.WORLD.id -> {
-                quizId = QuizOptions.WORLD.id
-                chosenQuizId = QuizOptions.WORLD.id
-                scope.launch {
-                    appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
-                }
-            }
-        }
-//        questionCountTotal = appQuestionsWithAnswers.size
         Collections.shuffle(appQuestionsWithAnswers)
+        //end MVVM
     }
 
     override fun onBackPressed() {
@@ -155,6 +100,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
+        // TODO: mvvm to vm? animation
         containerHeight = frame_1.height
         containerWidth = frame_1.width
 
@@ -236,6 +182,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 ideologyIsChosen = true
                 v?.performClick()
             }
+            //end MVVM
         }
 
         return true
@@ -248,34 +195,22 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
+
+
+    /** CUSTOM METHODS */
+    // TODO: MVVM to VM
+    @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
     private fun onStartQuizClicked() {
-        if (!ideologyIsChosen) return toast("Выберете политический взгляд сначало!")
+        if (!ideologyIsChosen) return toast(getString(R.string.chooseview_toast_choose_first))
 
         quizIsActive = true
 
-        val sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
-        sharedPref.apply {
-            putFloat(PREF_CHOSEN_VIEW_X, x)
-            putFloat(PREF_CHOSEN_VIEW_Y, y)
-            putInt(PREF_HORIZONTAL_START_SCORE, horStartScore)
-            putInt(PREF_VERTICAL_START_SCORE, verStartScore)
-            putString(PREF_CHOSEN_IDEOLOGY, ideology)
-
-            putInt(PREF_QUIZ_ID, quizId)
-            apply()
-        }
-
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val startedAt = formatter.format(Date())
-
-        // for Debug
-        sharedPref.putString(PREF_STARTED_AT, startedAt)
-        sharedPref.apply()
+        val startedAt = getDateTime()
+        localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt) // TODO: put an object instead of attributes
 
         startActivity(Intent(this, QuizActivity::class.java))
         slideLeft(this)
-        MainActivity().mainActivity.finish()
+        MainActivity().finish()
         finish()
     }
 
@@ -284,7 +219,15 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         startActivity(intent)
     }
 
-    /** CUSTOM METHODS */
+    private fun getQuestionsWithAnswers(quizId: Int) {
+        this.quizId = quizId
+        chosenQuizId = quizId
+        scope.launch {
+            appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
+        }
+    }
+
+    // Graphic
     @SuppressLint("SetTextI18n")
     private fun drawHover(event: MotionEvent) {
         x = event.x
@@ -295,11 +238,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         val bitmap = Bitmap.createBitmap(endX, endY, Bitmap.Config.ARGB_8888)
         image_for_canvas.visibility = View.VISIBLE
         image_for_canvas.setImageBitmap(bitmap)
-        val canvas = Canvas(bitmap)
-
-        val radius = convertDpToPx(10f) //10f
-        val strokeWidthPx =
-            convertDpToPx(2f)
 
         when {
             x >= 0 && x <= endX && y >= 0 && y <= endY -> {
@@ -393,5 +331,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
         oldIdeologyHover = ideologyHover
     }
+    // end MVVM
 
 }

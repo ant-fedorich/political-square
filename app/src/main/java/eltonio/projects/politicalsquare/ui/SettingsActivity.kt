@@ -17,13 +17,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_base.view.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
+
+    //Temp
+    private val localRepo = AppRepository.Local()
 
     private lateinit var langBorderShapeUkr: GradientDrawable
     private lateinit var langBorderShapeRus: GradientDrawable
@@ -38,9 +41,9 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         title = getString(R.string.settings_title_actionbar)
 
         // Get all language border shapes
-        langBorderShapeUkr = getDrawable(R.drawable.shape_lang_radio_border) as GradientDrawable
-        langBorderShapeRus = getDrawable(R.drawable.shape_lang_radio_border) as GradientDrawable
-        langBorderShapeEng = getDrawable(R.drawable.shape_lang_radio_border) as GradientDrawable
+        langBorderShapeUkr = ContextCompat.getDrawable(this, R.drawable.shape_lang_radio_border) as GradientDrawable
+        langBorderShapeRus = ContextCompat.getDrawable(this, R.drawable.shape_lang_radio_border) as GradientDrawable
+        langBorderShapeEng = ContextCompat.getDrawable(this, R.drawable.shape_lang_radio_border) as GradientDrawable
 
         (image_ukr.background as LayerDrawable).setDrawableByLayerId(R.id.shape_lang_radio_border, langBorderShapeUkr)
         (image_rus.background as LayerDrawable).setDrawableByLayerId(R.id.shape_lang_radio_border, langBorderShapeRus)
@@ -58,26 +61,14 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         }
 
         // Load language for Settings
-        when(LocaleHelper.loadLang(this)) {
-            "uk" -> {
-                radio_ukr.isChecked = true
-                changeLangRadioImage(langBorderShapeUkr)
-                changeLangRadioTitle(radio_ukr)
-            }
-            "ru" -> {
-                radio_rus.isChecked = true
-                changeLangRadioImage(langBorderShapeRus)
-                changeLangRadioTitle(radio_rus)
-            }
-            "en" -> {
-                radio_eng.isChecked = true
-                changeLangRadioImage(langBorderShapeEng)
-                changeLangRadioTitle(radio_eng)
-            }
+        when(localRepo.getLang()) {
+            "uk" -> loadLangForSettings(radio_ukr, langBorderShapeUkr)
+            "ru" -> loadLangForSettings(radio_rus, langBorderShapeRus)
+            "en" -> loadLangForSettings(radio_eng, langBorderShapeEng)
         }
 
         // Load Quiz option
-        when(QuizOptionHelper.loadQuizOption(this)) {
+        when(localRepo.loadQuizOption()) {
             QuizOptions.WORLD.id -> {
                 setQuizOptionToSelected(layout_quiz_option_1)
                 title_quiz_option_1.setTypeface(null, Typeface.BOLD)
@@ -163,7 +154,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
                     title_quiz_option_2.setTypeface(null, Typeface.NORMAL)
                     setQuizOptionToDefault(layout_quiz_option_2)
 
-                    QuizOptionHelper.saveQuizOption(QuizOptions.WORLD.id)
+                    localRepo.saveQuizOption(QuizOptions.WORLD.id)
                     MainActivity.spinnerView.setSelection(0)
                 }
                 return true
@@ -177,7 +168,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
                     title_quiz_option_1.setTypeface(null, Typeface.NORMAL)
                     setQuizOptionToDefault(layout_quiz_option_1)
 
-                    QuizOptionHelper.saveQuizOption(QuizOptions.UKRAINE.id)
+                    localRepo.saveQuizOption(QuizOptions.UKRAINE.id)
                     MainActivity.spinnerView.setSelection(1)
                 }
                 return true
@@ -201,33 +192,9 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
 
     private fun checkRadioButton(checkedId: Int) {
         when (checkedId) {
-            R.id.radio_ukr -> {
-                radio_ukr.isChecked
-                LocaleHelper.setLang(this, "uk")
-                Ideologies.refreshAll(this)
-                QuizOptions.refreshAll(this)
-
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
-            R.id.radio_rus -> {
-                radio_rus.isChecked
-                LocaleHelper.setLang(this,"ru")
-                Ideologies.refreshAll(this)
-                QuizOptions.refreshAll(this)
-
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
-            R.id.radio_eng -> {
-                radio_eng.isChecked
-                LocaleHelper.setLang(this,"en")
-                Ideologies.refreshAll(this)
-                QuizOptions.refreshAll(this)
-
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
+            R.id.radio_ukr -> setLangAndStartMain(radio_ukr, "uk")
+            R.id.radio_rus -> setLangAndStartMain(radio_rus, "ru")
+            R.id.radio_eng -> setLangAndStartMain(radio_eng, "en")
         }
     }
 
@@ -255,7 +222,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
 
     private fun changeLangRadioImage(langBorderShape: GradientDrawable) {
         langBorderShape.alpha = 0
-        langBorderShape?.setColor(ContextCompat.getColor(this, R.color.primary))
+        langBorderShape.setColor(ContextCompat.getColor(this, R.color.primary))
         ValueAnimator.ofInt(0, 255).apply {
             duration = 200
             addUpdateListener { langBorderShape.alpha = animatedValue as Int }
@@ -281,6 +248,21 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
                     .setStroke(animatedValue as Int, ContextCompat.getColor(this@SettingsActivity, R.color.on_surface))
             }
         }.start()
+    }
+
+    private fun setLangAndStartMain(radioButton: RadioButton, lang: String) {
+        radioButton.isChecked
+        localRepo.setLang(this, lang)
+        refreshAllСatalogs(this)
+
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    private fun loadLangForSettings(radioButton: RadioButton, langBorderShape: GradientDrawable) {
+        radioButton.isChecked = true
+        changeLangRadioImage(langBorderShape)
+        changeLangRadioTitle(radioButton)
     }
 
 }

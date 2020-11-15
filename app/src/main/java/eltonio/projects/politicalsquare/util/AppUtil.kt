@@ -1,9 +1,10 @@
-package eltonio.projects.politicalsquare.other
+package eltonio.projects.politicalsquare.util
 
 import android.app.Activity
 //import android.app.AlertDialog
 import androidx.appcompat.app.AlertDialog
 import android.content.Context
+import android.graphics.Point
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +14,12 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.QuizOptions
+import java.text.SimpleDateFormat
+import java.util.*
 
 /** Constants **/
 const val TAG = "MyApp"
@@ -26,6 +31,8 @@ const val PREF_LANG = "PREF_LANG"
 const val PREF_QUIZ_OPTION = "PREF_QUIZ_OPTION"
 const val PREF_IS_INTRO_OPENED = "PREF_IS_INTRO_OPENED"
 const val PREF_SPLASH_APPEARED = "PREF_SPLASH_APPEARED"
+const val PREF_USER_LOGGED_IN = "PREF_USER_LOGGED_IN"
+const val PREF_SESSION_STARTED = "PREF_SESSION_STARTED"
 const val PREF_ZERO_ANSWER_CNT = "PREF_ZERO_ANSWER_CNT"
 const val PREF_CHOSEN_VIEW_X = "PREF_CHOSEN_VIEW_X"
 const val PREF_CHOSEN_VIEW_Y = "PREF_CHOSEN_VIEW_Y"
@@ -35,9 +42,9 @@ const val PREF_CHOSEN_IDEOLOGY = "PREF_CHOSEN_IDEOLOGY"
 const val PREF_STARTED_AT = "PREF_STARTED_AT"
 const val PREF_USER_ID = "PREF_USER_ID"
 const val PREF_QUIZ_ID = "PREF_QUIZ_ID"
+const val PREF_HORIZONTAL_SCORE = "PREF_HORIZONTAL_SCORE"
+const val PREF_VERTICAL_SCORE = "PREF_VERTICAL_SCORE"
 
-const val EXTRA_HORIZONTAL_SCORE = "EXTRA_HORIZONTAL_SCORE"
-const val EXTRA_VERTICAL_SCORE = "EXTRA_VERTICAL_SCORE"
 const val EXTRA_IDEOLOGY_ID = "EXTRA_IDEOLOGY_ID"
 const val EXTRA_QUIZ_ID = "EXTRA_QUIZ_ID"
 const val EXTRA_ENDED_AT = "EXTRA_ENDED_AT"
@@ -79,6 +86,8 @@ var splashAnimationTime = 600L
 fun toast(msg: String) = Toast.makeText(appContext, msg, Toast.LENGTH_SHORT).show()
 
 fun toastLong(msg: String) = Toast.makeText(appContext, msg, Toast.LENGTH_LONG).show()
+
+fun getDateTime(): String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
 
 // Transitions between activities
 fun slideLeft(context: Context) {
@@ -138,6 +147,14 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
 
 fun convertDpToPx(dp: Float): Float = dp * appContext.resources.displayMetrics.density
 
+fun getScreenResolution(context: Context): Point {
+    context as Activity
+    val display = context.windowManager.defaultDisplay
+    val size = Point()
+    display.getSize(size)
+    return size
+}
+
 // Get an ideology from a Compass score
 fun getIdeology(horScore: Int, verScore: Int): String {
     return when {
@@ -189,22 +206,6 @@ fun getIdeologyStringId(ideologyName: String): String {
     return stringId
 }
 
-fun saveIsIntroOpened() {
-    val prefs = appContext.getSharedPreferences(PREF_SETTINGS,
-        AppCompatActivity.MODE_PRIVATE
-    ).edit()
-    prefs.putBoolean(PREF_IS_INTRO_OPENED, true)
-    prefs.apply()
-}
-
-fun loadIsIntroOpened(): Boolean {
-    val prefs = appContext.getSharedPreferences(PREF_SETTINGS,
-        AppCompatActivity.MODE_PRIVATE
-    )
-    return prefs.getBoolean(PREF_IS_INTRO_OPENED, false)
-}
-
-
 fun playGif(screenImage: Int, containerImageView: ImageView) {
     Glide.with(appContext)
         .asGif()
@@ -230,4 +231,9 @@ fun playGif(screenImage: Int, containerImageView: ImageView) {
             }
         })
         .into(containerImageView)
+}
+
+fun refreshAllСatalogs(context: Context) {
+    Ideologies.refreshAll(context)
+    QuizOptions.refreshAll(context)
 }

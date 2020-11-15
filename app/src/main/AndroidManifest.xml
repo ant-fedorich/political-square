@@ -3,7 +3,7 @@
     package="eltonio.projects.politicalsquare">
 
     <application
-        android:name="eltonio.projects.politicalsquare.other.App"
+        android:name="eltonio.projects.politicalsquare.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

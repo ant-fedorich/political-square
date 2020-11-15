@@ -17,7 +17,7 @@ import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ResultDetailPointView
 import kotlinx.android.synthetic.main.activity_result.button_compass_info_2
 import kotlinx.android.synthetic.main.activity_saved_result_detail.*
@@ -31,8 +31,6 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
     private var quizId = -1
     private var quizOwner = ""
     private var endedAt = ""
-
-    private lateinit var database: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -62,8 +60,6 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         title = getString(R.string.savedresultdetail_title_actionbar)
 
-        database = Firebase.database
-
         val extras = intent.extras
 
         extras?.let {
@@ -77,7 +73,8 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
             title_result_detail.transitionName = it.getString(EXTRA_TITLE_TRANSITION_NAME, "NONE")
             text_result_date.transitionName  = it.getString(EXTRA_DATE_TRANSITION_NAME,"NONE")
             image_main_compass_2.transitionName  = it.getString(EXTRA_IMAGE_TRANSITION_NAME, "NONE")
-            layout_saved_result_detail.transitionName = it.getString(EXTRA_ITEM_CONTAINER_TRANSITION_NAME, "NONE")
+            layout_saved_result_detail.transitionName = it.getString(
+                EXTRA_ITEM_CONTAINER_TRANSITION_NAME, "NONE")
         }
 
         when(quizId) {
@@ -85,21 +82,8 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
             QuizOptions.WORLD.id -> quizOwner = QuizOptions.WORLD.owner
         }
 
-
         // Init listeners
         button_compass_info_2.setOnClickListener(this)
-        database.getReference("QuizResults").addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(shapchot: DataSnapshot, p1: String?) {
-                Log.i(TAG, "QuizResults: onChildAdded")
-            }
-            override fun onCancelled(e: DatabaseError) {
-                Log.e(TAG, "QuizResults: onCancelled: $e")
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) { }
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) { }
-            override fun onChildRemoved(p0: DataSnapshot) { }
-        })
 
         for (ideology in Ideologies.values()) {
             if (ideology.stringId == ideologyId) {

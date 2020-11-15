@@ -10,7 +10,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.other.*
+import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_info.*
 import kotlinx.android.synthetic.main.activity_info.image_anar_hover
 import kotlinx.android.synthetic.main.activity_info.image_autho_left_hover
@@ -30,10 +30,12 @@ import kotlinx.android.synthetic.main.activity_info.image_soc_hover
 
 class InfoActivity : AppCompatActivity() {
 
+    // TODO: MVVM to VM, many vars?
     private var horScore = 0
     private var verScore = 0
     private var ideology = ""
     private var oldIdeologyHover: ImageView? = null
+    // end VM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,20 +51,24 @@ class InfoActivity : AppCompatActivity() {
 
         // Set listeners
         frame_3.setOnTouchListener { v, event ->
-            var ideologyForInfo = ""
-            ideologyForInfo = showIdeologyHover(event.x, event.y)
+
+            // TODO: MVVM to VM
+            var ideologyForInfo = showIdeologyHover(event.x, event.y)
             text_ideology_selected.text = ideologyForInfo
 
             if (event.action == MotionEvent.ACTION_UP) {
                 Handler().postDelayed({
                     v.performClick()
                     val intent = Intent(this, ViewInfoActivity::class.java)
+
+                    // TODO: MVVM Extra to Repository???
                     intent.putExtra(EXTRA_IDEOLOGY_TITLE, ideologyForInfo)
                     startActivity(intent)
                     pushLeft(this)
                 }, 80)
             }
             return@setOnTouchListener true
+            //end VM
         }
 
     }
@@ -79,6 +85,7 @@ class InfoActivity : AppCompatActivity() {
     }
 
     /** CUSTOM METHODS */
+    // TODO: MVVM to VM
     private fun showIdeologyHover(x: Float, y: Float): String {
         var step = convertDpToPx(4f)
         horScore = (x/step - 40).toInt()
@@ -127,32 +134,6 @@ class InfoActivity : AppCompatActivity() {
                 alpha(0f)
             }
         }
-/*   old style
- val listOfIdeologyHover = listOf<ImageView>(
-            image_autho_left_hover,
-            image_nation_hover,
-            image_gov_hover,
-            image_soc_demo_hover,
-            image_soc_hover,
-            image_autho_right_hover,
-            image_radical_cap_hover,
-            image_cons_hover,
-            image_prog_hover,
-            image_right_anar_hover,
-            image_soc_hover,
-            image_anar_hover,
-            image_lib_hover,
-            image_libertar_hover,
-            image_left_anar_hover,
-            image_lib_soc
-        )
-        listOfIdeologyHover.forEach {
-            it.alpha = 0.5f
-            it.animate().alpha(0f).setDuration(1000)
-//            it.visibility = View.INVISIBLE
-        }*/
-        // show this ideology
-//        ideologyHover?.visibility = View.VISIBLE
         ideologyHover?.alpha = 0f
 
         ideologyHover?.animate()?.apply {
@@ -163,6 +144,7 @@ class InfoActivity : AppCompatActivity() {
 
         oldIdeologyHover = ideologyHover
     }
+    // end VM
 
 }
 

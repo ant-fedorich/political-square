@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 import eltonio.projects.politicalsquare.ui.ResultActivity
-import eltonio.projects.politicalsquare.other.convertDpToPx
+import eltonio.projects.politicalsquare.util.convertDpToPx
 
 class ResultPointView (context: Context, var radiusInDp: Float, var radiusResultInDp: Float) : View(context) {
 
@@ -27,7 +27,6 @@ class ResultPointView (context: Context, var radiusInDp: Float, var radiusResult
         //val centerCoeff = step * 0.5f // coefficient to center the point in a cell
 
         // Draw a chosen view point
-
         paint.apply {
             style = Paint.Style.STROKE
             color = Color.BLACK

@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.other
+package eltonio.projects.politicalsquare
 
 import android.app.Application
 import android.content.Context
@@ -6,8 +6,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
-import eltonio.projects.politicalsquare.models.Question
-import eltonio.projects.politicalsquare.models.QuestionAnswerDetail
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.QuizResult
 
@@ -20,7 +19,8 @@ class App : Application() {
             private set
         lateinit var analytics: FirebaseAnalytics
             private set
-        var appQuestions: List<Question> = emptyList()
+
+        // TODO: Get rid of storing data in App
         var appQuestionsWithAnswers: List<QuestionWithAnswers> = emptyList()
         var appQuizResults: List<QuizResult> = emptyList()
     }
@@ -31,16 +31,16 @@ class App : Application() {
         crashlytics = FirebaseCrashlytics.getInstance()
         analytics = Firebase.analytics
 
-        analytics.logEvent(EVENT_QUIZ_SESSION_START, null)
-
-        // Reset splash appearance on starting the app
-        val prefs = getSharedPreferences(PREF_SETTINGS, MODE_PRIVATE).edit()
-        prefs.putBoolean(PREF_SPLASH_APPEARED, false)
-        prefs.apply()
+        AppRepository.Cloud().logSessionStartEvent()
+        AppRepository.Local().clearPref()
+        AppRepository.Local().setSplashIsNotAppeared()
 
         // We have to set a lang before loading UI, cause it will take a lang by system default
-        var loadedLang = LocaleHelper.loadLang(this)
-        LocaleHelper.setLang(this, loadedLang)
+        var loadedLang = AppRepository.Local().getLang()
+        AppRepository.Local().setLang(this, loadedLang)
     }
+
+
+
 
 }

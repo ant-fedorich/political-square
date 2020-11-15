@@ -6,8 +6,8 @@ import android.text.method.ScrollingMovementMethod
 import androidx.core.content.ContextCompat
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.other.EXTRA_IDEOLOGY_TITLE
-import eltonio.projects.politicalsquare.other.pushRight
+import eltonio.projects.politicalsquare.util.EXTRA_IDEOLOGY_TITLE
+import eltonio.projects.politicalsquare.util.pushRight
 import kotlinx.android.synthetic.main.activity_view_info.*
 
 class ViewInfoActivity : AppCompatActivity() {
@@ -26,29 +26,13 @@ class ViewInfoActivity : AppCompatActivity() {
             setExpandedTitleColor(resources.getColor(R.color.on_primary_bright))
         }
 
-/*        var isShow = false
-        var scrollRange = -1
-
-        layout_appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            if (scrollRange == -1) {
-                scrollRange = appBarLayout.totalScrollRange
-            }
-            if (abs(scrollRange) == 0) {
-                layout_collapsing_toolbar.title = "Hello Hello Hello HelloHello Hello HelloHelloHelloHelloHellov  HelloHello Hello"
-                isShow = true
-            } else if (isShow) {
-                layout_collapsing_toolbar.title = " "
-                isShow = false
-            }
-        })*/
-
         text_ideology_description.movementMethod = ScrollingMovementMethod()
 
+        // TODO: MVVM Extra to Repository
         var ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
 
         when (ideology) {
             Ideologies.AUTHORITARIAN_LEFT.title -> {
-                //title_toolbar.text
                 toolbar_collapsing.title = Ideologies.AUTHORITARIAN_LEFT.title
                 image_ideology_info.setImageResource(R.drawable.img_info_1_autho_left)
                 text_ideology_description.text = getString(R.string.desc_authoritarian_left)

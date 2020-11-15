@@ -12,7 +12,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.other.appContext
+import eltonio.projects.politicalsquare.util.appContext
 import org.hamcrest.Matchers.*
 import org.junit.Rule
 import org.junit.Test
