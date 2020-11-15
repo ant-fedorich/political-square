@@ -135,7 +135,7 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
         val dialogTitle = context.getString(R.string.all_dialog_do_you_want_to_end)
         setTitle(dialogTitle)
         setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.all_dialog_yes)) { _, _ ->
-            quizIsActive = false
+            quizIsActive = false // TODO: V - livedata? or get from Repo directly?
             onOkBlock()
         }
         setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.all_dialog_no)) { _, _ ->

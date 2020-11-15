@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity() {
 
     // TEMP
+    // TODO: mvvm to vm
     private val localRepo = AppRepository.Local()
     private val cloudRepo = AppRepository.Cloud()
 
@@ -26,6 +27,7 @@ class MainActivity : BaseActivity() {
     private var currentUser: FirebaseUser? = null
     private lateinit var userId: String
     private lateinit var lastSessionStarted: String
+    // end
 
     companion object {
         lateinit var spinnerView: Spinner // To use it in Settings
@@ -34,18 +36,18 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO: mvvm, to vm
+        // TODO: mvvm, to vm - init
         var loadedLang = localRepo.getLang()
         cloudRepo.setUserLangProperty(loadedLang)
 
-        if (localRepo.getSplashAppeared() == false) {
+        if (localRepo.getSplashAppeared() == false) { // TODO: mvvm - livedata<event>
             val splashActivityIntent = Intent(this@MainActivity, SplashActivity::class.java)
             startActivity(splashActivityIntent)
         }
 
         Thread.sleep(300) // Needs to load Splash Activity
 
-        refreshAllСatalogs(this)
+        refreshAllСatalogs(this) // TODO: mvvm - how to pass with context???
         this.title = getString(R.string.main_title_actionbar)
 
         setContentView(R.layout.activity_main)
@@ -59,12 +61,14 @@ class MainActivity : BaseActivity() {
         spinner_quiz_options.adapter = spinnerAdapter
         spinnerView = spinner_quiz_options
 
+        // TODO: mvvm to vm
         when(localRepo.loadQuizOption()) {
-            QuizOptions.WORLD.id -> spinner_quiz_options.setSelection(0)
+            QuizOptions.WORLD.id -> spinner_quiz_options.setSelection(0) // TODO: - spinner - livedata<event>
             QuizOptions.UKRAINE.id -> spinner_quiz_options.setSelection(1)
         }
 
         // Set User
+        // TODO: mvvm to vm
         usersRef = cloudRepo.usersRef
         currentUser = cloudRepo.firebaseUser
         lastSessionStarted = getDateTime()
@@ -82,13 +86,14 @@ class MainActivity : BaseActivity() {
             cloudRepo.setAnalyticsUserId(userId)
             cloudRepo.logAnonymLoginEvent(lastSessionStarted)
         }
+        // end
 
         button_start.setOnClickListener{ onStartClicked() }
 
         spinner_quiz_options.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // TODO: mvvm, to vm
                 val clickedItem = parent?.getItemAtPosition(position) as QuizOptions
+                // TODO: mvvm to vm - viewmodel.clickedItem(id)
                 when (clickedItem.id) {
                     QuizOptions.WORLD.id -> {
                         localRepo.saveQuizOption(QuizOptions.WORLD.id)
@@ -99,7 +104,7 @@ class MainActivity : BaseActivity() {
                         cloudRepo.logChangeQuizOptionEvent(QuizOptions.UKRAINE.id)
                     }
                 }
-                // end mvvm
+                // end
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -107,12 +112,12 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        mainActivityIsInFront = true  // TODO: mvvm, to vm
+        mainActivityIsInFront = true  // TODO: VM, to vm - lifecycle
     }
 
     override fun onPause() {
         super.onPause()
-        mainActivityIsInFront = false // TODO: mvvm, to vm
+        mainActivityIsInFront = false // TODO: VM, to vm  - lifecycle
     }
 
 

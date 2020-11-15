@@ -72,16 +72,20 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
+        // TODO: V
         this.title = getString(R.string.quiz_title_actionbar)
-        cloudRepo.logQuizBeginEvent()
 
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
+        // end
 
+        // TODO: VM - to vm
+        cloudRepo.logQuizBeginEvent()
         questionCountTotal = appQuestionsWithAnswers.size
+        // end
 
-        // DISABLE "Hard to answer" radio
-        radio_answer_3.visibility = View.GONE
+        // TODO: V
+        radio_answer_3.visibility = View.GONE // DISABLE "Hard to answer" radio
 
         // Listeners
         fab_undo.setOnClickListener { showPrevQuestion() }
@@ -90,7 +94,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         radio_answer_3.setOnTouchListener(this)
         radio_answer_4.setOnTouchListener(this)
         radio_answer_5.setOnTouchListener(this)
+        // end
 
+        // TODO: V - to method
         // == Radio button hovers ==
         // Get shape_radio_hover for every radio button
         radioShapeHover1 = ContextCompat.getDrawable(this, R.drawable.shape_radio_hover) as GradientDrawable
@@ -117,7 +123,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         for (item in radioShapeHoverList) {
             item.setColor(ContextCompat.getColor(this@QuizActivity, android.R.color.transparent))
         }
+        // end
 
+        // TODO: VM - to vm
         showNextQuestion()
     }
 
@@ -237,90 +245,123 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
     private fun showNextQuestion() {
 
-        if (fab_undo.isEnabled != true) fab_undo.isEnabled = true
+        if (fab_undo.isEnabled != true) fab_undo.isEnabled = true // TODO: V
 
+        // TODO: VM - to vm
         if (questionCounter < questionCountTotal) {
-            radio_group_answers.clearCheck()
+            radio_group_answers.clearCheck() // TODO: V - livedata<clearCheckTriggerEvent>
+
+            // TODO: VM - to vm
             currentQuestion = appQuestionsWithAnswers[questionCounter]
 
+            // TODO: V - livedata<questionNewVisible>, livedata<questionOldVisible>
             text_question_new.visibility = View.VISIBLE
             text_question_old.visibility = View.VISIBLE
 
+            // TODO: VM - to vm
             val ans = currentQuestion.answerList
             when (defaultLang) {
                 "uk" -> {
-                    if (questionCounter > 0) text_question_old.text = appQuestionsWithAnswers[questionCounter - 1].questionUk
+                    if (questionCounter > 0)
+                        text_question_old.text = // TODO: V - livedate<qustionOld>
+                            appQuestionsWithAnswers[questionCounter - 1].questionUk
 
-                    text_question_new.text = currentQuestion.questionUk
+                    text_question_new.text = currentQuestion.questionUk //TODO: V - livedate<qustionNew>
+                    // TODO: Refactoring, transfer answers to Strings
+                    // TODO: V
                     radio_answer_1.text = ans[0].answerUk
                     radio_answer_2.text = ans[1].answerUk
                     radio_answer_3.text = ans[2].answerUk
                     radio_answer_4.text = ans[3].answerUk
                     radio_answer_5.text = ans[4].answerUk
+                    // end
                 }
                 "ru" -> {
                     if (questionCounter > 0) text_question_old.text = appQuestionsWithAnswers[questionCounter - 1].questionRu
 
-                    text_question_new.text = currentQuestion.questionRu
+                    text_question_new.text = currentQuestion.questionRu //TODO: V - livedate<qustionNew>
+                    //TODO: Refactoring, transfer answers to Strings
+                    // TODO: V
                     radio_answer_1.text = ans[0].answerRu
                     radio_answer_2.text = ans[1].answerRu
                     radio_answer_3.text = ans[2].answerRu
                     radio_answer_4.text = ans[3].answerRu
                     radio_answer_5.text = ans[4].answerRu
+                    // end
                 }
                 "en" -> {
                     if (questionCounter > 0) text_question_old.text = appQuestionsWithAnswers[questionCounter - 1].questionEn
 
-                    text_question_new.text = currentQuestion.questionEn
+                    text_question_new.text = currentQuestion.questionEn //TODO: V - livedate<qustionNew>
+                    //TODO: Refactoring, transfer answers to Strings
+                    // TODO: V
                     radio_answer_1.text = ans[0].answerEn
                     radio_answer_2.text = ans[1].answerEn
                     radio_answer_3.text = ans[2].answerEn
                     radio_answer_4.text = ans[3].answerEn
                     radio_answer_5.text = ans[4].answerEn
+                    // end
                 }
+                // end
             }
 
+            // TODO: V - debug
             val size = getScreenResolution(this)
             val width = size.x
             val height = size.y
 
             Log.i(TAG, "$width and $height")
+            // end
 
+            // TODO: V
             startOldQuestionAnimation()
             startNewQuestionAnimation()
             startProgressBarAnimation()
+            // end
 
+            // TODO: VM - to vm
             questionCounter++
         } else {
             // Finish Quiz
-            quizFinished = true
+            // TODO: VM - to vm
+            quizFinished = true // todo: VM - livedata
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
             localRepo.setZeroAnswerCht(zeroAnswerCnt)
             localRepo.setHorScore(horizontalScore.toInt())
             localRepo.setVerScore(verticalScore.toInt())
+            // end
 
+            // TODO: V
             val intent = Intent(this, ResultActivity::class.java)
             startActivity(intent)
             slideLeft(this) //quiz in
+            // end
         }
     }
 
     private fun showPrevQuestion() {
+        // TODO: VM - to vm, livedata
         isPreviousStep = true
 
+        // TODO: VM - to vm
         if (questionCounter > 1) {
             questionCounter-- // reset a next question to current
 
             currentQuestion = appQuestionsWithAnswers[questionCounter-1] // take the previous question
+            // end
 
+            // TODO: V - livedata<questionNewVisible>, livedata<questionOldVisible>
             text_question_new.visibility = View.VISIBLE
             text_question_old.visibility = View.VISIBLE
 
+            // TODO: VM - to vm
             val ans = currentQuestion.answerList
             when (defaultLang) {
                 "uk" -> {
-                    text_question_old.text = currentQuestion.questionUk
+                    text_question_old.text = currentQuestion.questionUk // TODO: V - livedate<qustionOld>
+                    //TODO: Refactoring, transfer answers to Strings
+                    // TODO: V
                     radio_answer_1.text = ans[0].answerUk
                     radio_answer_2.text = ans[1].answerUk
                     radio_answer_3.text = ans[2].answerUk
@@ -328,7 +369,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     radio_answer_5.text = ans[4].answerUk
                 }
                 "ru" -> {
-                    text_question_old.text = currentQuestion.questionRu
+                    text_question_old.text = currentQuestion.questionRu // TODO: V - livedate<qustionOld>
+                    //TODO: Refactoring, transfer answers to Strings
+                    // TODO: V
                     radio_answer_1.text = ans[0].answerRu
                     radio_answer_2.text = ans[1].answerRu
                     radio_answer_3.text = ans[2].answerRu
@@ -336,7 +379,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     radio_answer_5.text = ans[4].answerRu
                 }
                 "en" -> {
-                    text_question_old.text = currentQuestion.questionEn
+                    text_question_old.text = currentQuestion.questionEn // TODO: V - livedate<qustionOld>
+                    //TODO: Refactoring, transfer answers to Strings
+                    // TODO: V
                     radio_answer_1.text = ans[0].answerEn
                     radio_answer_2.text = ans[1].answerEn
                     radio_answer_3.text = ans[2].answerEn
@@ -344,24 +389,32 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     radio_answer_5.text = ans[4].answerEn
                 }
             }
+            // end
 
+            // TODO: V
             startOldQuestionBackwardAnimation()
             startNewQuestionBackwardAnimation()
             startProgressBarBackwardAnimation()
 
-            text_questions_left.text = "${questionCounter} / $questionCountTotal"
+            text_questions_left.text = "${questionCounter} / $questionCountTotal" // TODO: V - livedata...
+            // end
 
             // Save a previous state
+            // TODO: VM - to vm
             val prevStep = previousStep
 
             if (prevStep != null) {
-                prevStep.rbSelected?.isChecked = true
+                // TODO: Refactor - get rid of Radio in Step
+                prevStep.rbSelected?.isChecked = true // todo: V - livedata<prevStepChecked>
+                // TODO: V
                 fadeInOldAnswer(prevStep.rbSelected, radioShapeHoverList[prevStep.rbIndex])
 
+                // TODO: Refactor: get rid of zero answer
                 if (prevStep.rbSelected == radio_answer_3) zeroAnswerCnt-- // a zero answer
                 // For debug
                 Log.d(TAG, "zeroAnswerCnt: $zeroAnswerCnt")
 
+                // TODO: VM - vm
                 if (prevStep.scale == "horizontal")
                     horizontalScore -= prevStep.point
                 else
@@ -370,12 +423,15 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         }
 
         // Clear the previous step
+        // TODO: VM - to VM, method
         previousStep = null
         isPreviousStep = false
 
+        // TODO: V
         startHideFABAnimation()
     }
 
+    // TODO: V
     private fun fadeInOldAnswer(radioButtonSelected: RadioButton?, radioShapeHover: GradientDrawable) {
         if (radioButtonSelected != null) {
             val radioBackground = radioButtonSelected.background as LayerDrawable
@@ -505,5 +561,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                 }
         }
     }
+    // end
 }
 

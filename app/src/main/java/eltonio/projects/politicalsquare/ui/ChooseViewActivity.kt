@@ -36,7 +36,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private lateinit var appViewModel: AppViewModel
     private lateinit var scope: CoroutineScope
 
-    // TODO: mvvm vars to vm?
+    // TODO: mvvm vars to vm???
     private var horStartScore = 0
     private var verStartScore = 0
     private var ideology = ""
@@ -79,10 +79,8 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         button_compass_info.setOnClickListener(this)
         frame_1.setOnTouchListener(this)
 
-        // TODO: mvvm to VM
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
-        // end MVVM
 
         // TODO: mvvm to vm
         when(localRepo.loadQuizOption()) {
@@ -90,7 +88,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
             QuizOptions.WORLD.id -> getQuestionsWithAnswers(QuizOptions.WORLD.id)
         }
         Collections.shuffle(appQuestionsWithAnswers)
-        //end MVVM
+        //end
     }
 
     override fun onBackPressed() {
@@ -100,7 +98,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
-        // TODO: mvvm to vm? animation
+        // TODO: V - to method
         containerHeight = frame_1.height
         containerWidth = frame_1.width
 
@@ -113,6 +111,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 drawHover(event)
 
                 if (oldPointExists) {
+                    // TODO: V - to animation method
                     oldPointFrame = ConstraintLayout(this)
                     oldLayoutFrameParams?.leftMargin = oldLeftMargin
                     oldLayoutFrameParams?.topMargin = oldTopMargin
@@ -121,17 +120,26 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                     oldPointFrame?.layoutParams = oldLayoutFrameParams
                     frame_1.removeAllViews()
                     frame_1.addView(oldPointFrame)
+                    // end
 
+                    // TODO: V - to animation method
                     ObjectAnimator.ofFloat(radiusInDp, 0f).apply {
                         interpolator = AccelerateInterpolator()
                         addUpdateListener {
-                            oldPointView = ChoosePointView(this@ChooseViewActivity, 100f, 100f, animatedValue as Float)
+                            oldPointView = ChoosePointView(
+                                this@ChooseViewActivity,
+                                100f,
+                                100f,
+                                animatedValue as Float
+                            )
                             oldPointFrame?.removeAllViews()
                             oldPointFrame?.addView(oldPointView)
                         }
                     }.start()
+                    //end
                 }
 
+                // TODO: V - to method
                 // Add a point frame
                 pointFrame = ConstraintLayout(this)
                 layoutFrameParams?.leftMargin = event.x.toInt() - diameterInPx
@@ -142,11 +150,17 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 frame_1.removeView(pointFrame)
                 frame_1.addView(pointFrame)
 
+                // TODO: V - to animation method
                 // Add a point
                 ObjectAnimator.ofFloat(0f, bigRadiusInDp).apply {
                     interpolator = DecelerateInterpolator()
                     addUpdateListener {
-                        pointView = ChoosePointView(this@ChooseViewActivity, 100f, 100f, animatedValue as Float)
+                        pointView = ChoosePointView(
+                            this@ChooseViewActivity,
+                            100f,
+                            100f,
+                            animatedValue as Float
+                        )
                         pointFrame?.removeAllViews()
                         pointFrame?.addView(pointView)
                     }
@@ -154,6 +168,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
             }
             MotionEvent.ACTION_MOVE -> {
+                // TODO: V - to method
                 layoutFrameParams?.leftMargin = event.x.toInt() - diameterInPx
                 layoutFrameParams?.topMargin = event.y.toInt() - diameterInPx
                 layoutFrameParams?.rightMargin = containerWidth - event.x.toInt() - diameterInPx
@@ -161,26 +176,38 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 pointFrame?.layoutParams = layoutFrameParams
 
                 drawHover(event)
+                // end
             }
             MotionEvent.ACTION_UP -> {
+                // TODO: V - to animation method
                 ObjectAnimator.ofFloat(bigRadiusInDp, radiusInDp).apply {
                     interpolator = DecelerateInterpolator()
                     addUpdateListener {
-                        pointView = ChoosePointView(this@ChooseViewActivity, 100f, 100f, animatedValue as Float)
+                        pointView = ChoosePointView(
+                            this@ChooseViewActivity,
+                            100f,
+                            100f,
+                            animatedValue as Float
+                        )
                         pointFrame?.removeAllViews()
                         pointFrame?.addView(pointView)
                     }
                 }.start()
+                // end
 
                 // Save the old point params
+                // TODO: V - to method
                 oldPointExists = true
                 oldLeftMargin = event.x.toInt() - diameterInPx
                 oldTopMargin = event.y.toInt() - diameterInPx
                 oldRightMargin = containerWidth - event.x.toInt() - diameterInPx
                 oldBottomMargin = containerHeight - event.y.toInt() - diameterInPx
 
+                // TODO: M - to repo
                 ideologyIsChosen = true
+                // end
                 v?.performClick()
+
             }
             //end MVVM
         }
@@ -198,15 +225,19 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
 
     /** CUSTOM METHODS */
-    // TODO: MVVM to VM
     @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
     private fun onStartQuizClicked() {
-        if (!ideologyIsChosen) return toast(getString(R.string.chooseview_toast_choose_first))
 
+        // TODO: VM - to vm
+        if (!ideologyIsChosen) // TODO: VM - to vm, livedata or repo?
+            return toast(getString(R.string.chooseview_toast_choose_first)) // TODO: V - trigger livedata
+
+        // TODO: VM - to vm Repo, works everywhere
         quizIsActive = true
 
         val startedAt = getDateTime()
         localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt) // TODO: put an object instead of attributes
+        // end
 
         startActivity(Intent(this, QuizActivity::class.java))
         slideLeft(this)
@@ -219,6 +250,8 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         startActivity(intent)
     }
 
+
+    // TODO: mvvm to vm
     private fun getQuestionsWithAnswers(quizId: Int) {
         this.quizId = quizId
         chosenQuizId = quizId
@@ -226,19 +259,24 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
             appQuestionsWithAnswers = appViewModel.getQuestionsWithAnswers(quizId)
         }
     }
+    // end
 
     // Graphic
     @SuppressLint("SetTextI18n")
     private fun drawHover(event: MotionEvent) {
         x = event.x
         y = event.y
+
+        // TODO: V - V
         val endX = image_for_canvas.width
         val endY = image_for_canvas.height
 
         val bitmap = Bitmap.createBitmap(endX, endY, Bitmap.Config.ARGB_8888)
         image_for_canvas.visibility = View.VISIBLE
         image_for_canvas.setImageBitmap(bitmap)
+        // end
 
+        // TODO: VM - to VM
         when {
             x >= 0 && x <= endX && y >= 0 && y <= endY -> {
                 x = x; y = y
@@ -270,16 +308,23 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 x = endX.toFloat(); y = 0f
             }
         }
+        // end
 
+        // TODO: VM - to vm
         val step = convertDpToPx(4f)
-        horStartScore = (x / step - 40).toInt()
-        verStartScore = (y / step - 40).toInt()
+        horStartScore = // livedata
+            (x / step - 40).toInt()
+        verStartScore = // livedata
+            (y / step - 40).toInt()
+        // end
 
 
+        // TODO: VM - to vm
         ideology = getIdeology(horStartScore, verStartScore)
 
         when (ideology) {
-            Ideologies.AUTHORITARIAN_LEFT.title -> showThisIdeologyHover(image_autho_left_hover)
+            Ideologies.AUTHORITARIAN_LEFT.title ->
+                showThisIdeologyHover(image_autho_left_hover) // TODO: V - livedata<ideology>
             Ideologies.RADICAL_NATIONALISM.title -> showThisIdeologyHover(image_nation_hover)
             Ideologies.POWER_CENTRISM.title -> showThisIdeologyHover(image_gov_hover)
             Ideologies.SOCIAL_DEMOCRACY.title -> showThisIdeologyHover(image_soc_demo_hover)
@@ -300,9 +345,12 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
             else -> showThisIdeologyHover(null)
         }
+        // end
 
         Log.d(TAG, "Area is touched: x = $x, y = $y")
     }
+
+    // TODO: V
     private fun showThisIdeologyHover(ideologyHover: ImageView?) {
 
         // If Ideology same, break
@@ -331,6 +379,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
         oldIdeologyHover = ideologyHover
     }
-    // end MVVM
+    // end
 
 }

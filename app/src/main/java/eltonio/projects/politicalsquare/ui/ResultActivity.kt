@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit
 class ResultActivity : BaseActivity(), View.OnClickListener {
 
     //TEMP
+    // TODO: VM - to vm
     private var localRepo = AppRepository.Local()
     private var cloudRepo = AppRepository.Cloud()
 
@@ -43,11 +44,11 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     private var avgAnswerTime = 0.0
     private var zeroAnswerCnt = 0
 
-    private var quizOwner = ""
-
     private lateinit var database: FirebaseDatabase
     private var userId = ""
     private var quizId = -1
+    // end
+
 
     private lateinit var appViewModel: AppViewModel
     private lateinit var scope: CoroutineScope
@@ -57,6 +58,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_result)
 
         title = getString(R.string.result_title_actionbar)
+
+        // TODO: VM - to vm
         cloudRepo.logQuizCompleteEvent()
 
         database = Firebase.database
@@ -74,29 +77,37 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         quizId = localRepo.loadQuizOption()
 
         userId = cloudRepo.firebaseUser?.uid.toString()
+        // end
 
-
+        // TODO: V
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
         title_2_2.text = "($youThoughtText: $chosenIdeology)"
+        // end
 
+        // TODO: VM - to VM
         if (horScore != null && verScore != null) {
             resultIdeology = getIdeology(horScore, verScore)
         }
+        // end
 
-        title_2.text = resultIdeology
+        title_2.text = resultIdeology // TODO: V - livedata<resultIdeology>
 
+        // TODO: VM - to vm
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val endDate = Date()
         val startedAtParsed = formatter.parse(startedAt)
         val diffInMillies = endDate.time - startedAtParsed.time
         duration = TimeUnit.MILLISECONDS.toSeconds(diffInMillies).toInt()
         endedAt = formatter.format(endDate)
+        // end
 
+        // TODO: V
         startResultPointsAnimation()
 
         // For debug
         Log.d(TAG, "Datetime duration: $duration, endedAt: $endedAt")
 
+        // TODO: VM - to vm
         avgAnswerTime =
             if (quizId == QuizOptions.WORLD.id)
                 duration/QuizOptions.WORLD.quesAmount.toDouble()
@@ -104,10 +115,14 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
                 duration/QuizOptions.UKRAINE.quesAmount.toDouble()
 
         val ideologyId = getIdeologyStringId(resultIdeology)
+        // end
 
+        // TODO: V
         appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
         scope = CoroutineScope(Dispatchers.IO)
+        // end
 
+        // TODO: VM - to vm
         val quizResult = QuizResult(
             id = 0, //id is autoincrement
             quizId = chosenQuizId,
@@ -123,19 +138,23 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         )
 
         cloudRepo.addQuizResult(userId, quizResult)
-
         appViewModel.addQuizResult(quizResult)
+        // end
+
+        // Debug
         scope.launch {
             appQuizResults = appViewModel.getQuizResults()
             Log.w(TAG, "QuizResults in ResultActivity inside Coroutine:")
             for (item in appQuizResults) Log.w(TAG, "Item: $item")
         }
-
-        compassX = horScore.plus(40)
+        // end
+        // TODO: V - leave in V? only for View
+        compassX = horScore.plus(40) // TODO: change 40 to var
         compassY = verScore.plus(40)
     }
 
     override fun onBackPressed() {
+        // TODO: How to handle Lambda?
         showEndQuizDialogLambda(this) {
             startActivity(Intent(this, MainActivity::class.java))
         }
@@ -145,17 +164,21 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_compass_info_2 -> {
+                // TODO: VM - to vm
                 cloudRepo.logDetailedInfoEvent()
 
+                // TODO: V
                 val intent = Intent(this, ViewInfoActivity::class.java)
                 intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)
                 startActivity(intent)
                 pushLeft(this) // info in
+                // end
             }
         }
     }
 
     /** CUSTOM METHODS */
+    // TODO: V
     private fun startResultPointsAnimation() {
         // Add start points
         val resultPoints = ResultPointView(this, 0f, 0f)
@@ -221,12 +244,15 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             start()
         }
     }
+    // end
 
     companion object {
-        var chosenViewX = 0f
-        var chosenViewY = 0f
-        var compassX: Int? = 0
-        var compassY: Int? = 0
+        var chosenViewX = 0f // TODO: V - only for view
+        var chosenViewY = 0f // TODO: V - only for view
+        var compassX: Int? = 0 // TODO: V - only for view
+        var compassY: Int? = 0 // TODO: V - only for view
+
+        // TODO: Refactor to members' vars
         var verScore: Int = 0
         var horScore: Int = 0
         var horStartScore = 0
