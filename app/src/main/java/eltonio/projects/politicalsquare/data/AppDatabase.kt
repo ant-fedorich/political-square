@@ -52,7 +52,8 @@ abstract class AppDatabase : RoomDatabase() {
             try {
                 check = SQLiteDatabase.openDatabase(dbFullPath, null, SQLiteDatabase.OPEN_READWRITE)
             } catch (e: Exception) {
-                App.crashlytics.log("ERROR while checking to open DB. DB does not exist (this time): $e")
+                // TODO: Crashlytics disabled
+                //App.crashlytics.log("ERROR while checking to open DB. DB does not exist (this time): $e")
                 Log.e(TAG, "ERROR while checking to open DB. DB does not exist (this time)")
             }
             check?.close()

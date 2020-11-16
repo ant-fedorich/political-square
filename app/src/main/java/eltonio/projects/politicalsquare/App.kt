@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
+//import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
@@ -15,8 +15,10 @@ class App : Application() {
     companion object {
         lateinit var appContext: Context
             private set
-        lateinit var crashlytics: FirebaseCrashlytics
-            private set
+
+        // TODO: Crashlytics disabled
+//        lateinit var crashlytics: FirebaseCrashlytics
+//            private set
         lateinit var analytics: FirebaseAnalytics
             private set
 
@@ -28,7 +30,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
-        crashlytics = FirebaseCrashlytics.getInstance()
+
+//        crashlytics = FirebaseCrashlytics.getInstance()
         analytics = Firebase.analytics
 
         AppRepository.Cloud().logSessionStartEvent()
