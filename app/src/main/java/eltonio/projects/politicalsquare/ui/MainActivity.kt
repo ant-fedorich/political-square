@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
-
     private lateinit var viewModel: MainViewModel
 
     companion object {
@@ -39,9 +38,9 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        Thread.sleep(300) // Needs to load Splash Activity
+        Thread.sleep(300) // Needs to load Splash Activity Correctly
 
-        refreshAllСatalogs(this) // TODO: mvvm - how to pass with context???
+        refreshAllСatalogs(this)
         this.title = getString(R.string.main_title_actionbar)
 
         setContentView(R.layout.activity_main)
@@ -49,11 +48,9 @@ class MainActivity : BaseActivity() {
         startContainerFadeAnimation()
 
         initSpinner()
-
         viewModel.spinnerSelection.observe(this, Observer<Int> {
             spinner_quiz_options.setSelection(it)
         })
-
 
         button_start.setOnClickListener{ onStartClicked() }
 

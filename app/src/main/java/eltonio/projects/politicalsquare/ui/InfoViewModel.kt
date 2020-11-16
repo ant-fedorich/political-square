@@ -19,7 +19,6 @@ class InfoViewModel : ViewModel() {
     private var ideology: MutableLiveData<String> = MutableLiveData()
 
     fun getIdeology(x: Float, y: Float): LiveData<String> {
-        // TODO: VM - to vm
         var step = convertDpToPx(4f)
         horScore = (x/step - 40).toInt()
         verScore = (y/step - 40).toInt()

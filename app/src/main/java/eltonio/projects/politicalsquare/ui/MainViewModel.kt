@@ -11,7 +11,6 @@ import eltonio.projects.politicalsquare.util.mainActivityIsInFront
 
 class MainViewModel : ViewModel(), LifecycleObserver {
 
-    // TODO: mvvm to vm
     private val localRepo = AppRepository.Local()
     private val cloudRepo = AppRepository.Cloud()
 
@@ -20,13 +19,10 @@ class MainViewModel : ViewModel(), LifecycleObserver {
     private lateinit var userId: String
     private lateinit var lastSessionStarted: String
 
-    var splashAppearedEvent: MutableLiveData<Boolean>
-    var spinnerSelection: MutableLiveData<Int>
+    var splashAppearedEvent = MutableLiveData<Boolean>()
+    var spinnerSelection = MutableLiveData<Int>()
 
     init {
-        splashAppearedEvent = MutableLiveData()
-        spinnerSelection = MutableLiveData()
-
         cloudRepo.setUserLangProperty(localRepo.getLang())
 
         if (localRepo.getSplashAppeared() == false) splashAppearedEvent.value = false

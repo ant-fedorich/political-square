@@ -30,7 +30,6 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
     private var y = 0f
     private var horStartScore = 0
     private var verStartScore = 0
-//    private var ideology = ""
 
     var ideologyIsChosenEvent: MutableLiveData<Boolean>
     var ideology: MutableLiveData<String>
@@ -53,8 +52,7 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
         //end
     }
 
-
-    // TODO: mvvm to vm
+    /** METHODS */
     private fun getQuestionsWithAnswers(quizId: Int) {
         this.quizId = quizId
         chosenQuizId = quizId
@@ -62,10 +60,6 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
             App.appQuestionsWithAnswers = dbRepo.getQuestionsWithAnswers(quizId)
         }
     }
-    // end
-//    suspend fun getQuestionsWithAnswers(quizId: Int): List<QuestionWithAnswers> {
-//        return dbRepo.getQuestionsWithAnswers(quizId)
-//    }
 
     fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideology: String, quizId: Int) {
         val startedAt = getDateTime()

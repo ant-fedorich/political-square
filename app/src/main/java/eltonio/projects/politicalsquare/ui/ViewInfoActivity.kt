@@ -34,7 +34,7 @@ class ViewInfoActivity : AppCompatActivity() {
 
         text_ideology_description.movementMethod = ScrollingMovementMethod()
 
-        var ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
+        val ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
 
         viewModel.updateData(ideology)
         viewModel.getIdeology().observe(this, Observer {

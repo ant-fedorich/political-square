@@ -35,7 +35,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         viewModel.chosenIdeologyLiveData.observe(this, Observer {
             title_2_2.text = "$youThoughtText: $it"
         })
-
         viewModel.resultIdeologyLiveData.observe(this, Observer {
             title_2.text = it
         })
