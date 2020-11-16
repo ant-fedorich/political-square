@@ -15,6 +15,7 @@ class ViewInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_info)
 
+        // TODO: V
         setSupportActionBar(toolbar_collapsing)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // Set color, because is transparent by style
@@ -27,10 +28,13 @@ class ViewInfoActivity : AppCompatActivity() {
         }
 
         text_ideology_description.movementMethod = ScrollingMovementMethod()
+        // end
 
         // TODO: MVVM Extra to Repository
+        // TODO: MVVM - to vm???
         var ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
 
+        // TODO: VM - to vm
         when (ideology) {
             Ideologies.AUTHORITARIAN_LEFT.title -> {
                 toolbar_collapsing.title = Ideologies.AUTHORITARIAN_LEFT.title

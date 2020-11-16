@@ -23,7 +23,7 @@
         tools:text="Либерализм" />
 
     <Button
-        android:id="@+id/button_compass_info_2"
+        android:id="@+id/button_compass_info_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

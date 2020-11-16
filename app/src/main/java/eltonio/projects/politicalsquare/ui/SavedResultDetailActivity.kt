@@ -3,23 +3,15 @@ package eltonio.projects.politicalsquare.ui
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ResultDetailPointView
-import kotlinx.android.synthetic.main.activity_result.button_compass_info_2
 import kotlinx.android.synthetic.main.activity_saved_result_detail.*
 import kotlinx.android.synthetic.main.activity_saved_result_detail.view.*
 
@@ -83,7 +75,7 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         // Init listeners
-        button_compass_info_2.setOnClickListener(this)
+        button_compass_info_3.setOnClickListener(this)
 
         for (ideology in Ideologies.values()) {
             if (ideology.stringId == ideologyId) {
@@ -113,7 +105,7 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.button_compass_info_2 -> {
+            R.id.button_compass_info_3 -> {
                 val intent = Intent(this, ViewInfoActivity::class.java)
                 intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)
                 startActivity(intent)

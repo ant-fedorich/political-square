@@ -1,6 +1,5 @@
 package eltonio.projects.politicalsquare.ui
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -10,8 +9,7 @@ import eltonio.projects.politicalsquare.util.getDateTime
 import eltonio.projects.politicalsquare.util.mainActivityIsInFront
 
 
-class MainViewModel(application: Application) : AndroidViewModel(application), LifecycleObserver {
-    private var applicationContext = application.applicationContext
+class MainViewModel : ViewModel(), LifecycleObserver {
 
     // TODO: mvvm to vm
     private val localRepo = AppRepository.Local()

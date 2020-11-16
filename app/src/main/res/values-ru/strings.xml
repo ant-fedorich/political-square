@@ -431,5 +431,10 @@
     <string name="savedresultdetail_title_quiz">Вариант теста</string>
     <string name="all_owner_quiz_option_1">для Всех</string>
     <string name="all_owner_quiz_option_2">для Украины</string>
+    <string name="quiz_radio_answer_1">однозначно да</string>
+    <string name="quiz_radio_answer_2">скорее да</string>
+    <string name="quiz_radio_answer_3">сложно ответить</string>
+    <string name="quiz_radio_answer_4">скорее нет</string>
+    <string name="quiz_radio_answer_5">однозначно нет</string>
 
 </resources>
