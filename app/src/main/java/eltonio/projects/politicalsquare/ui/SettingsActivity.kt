@@ -30,7 +30,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     //Temp
     // TODO: VM
     private val localRepo = AppRepository.Local()
-    private lateinit var viewModel: _SettingsViewModel
+    private lateinit var viewModel: SettingsViewModel
 
     private lateinit var langBorderShapeUkr: GradientDrawable
     private lateinit var langBorderShapeRus: GradientDrawable
@@ -41,7 +41,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        viewModel = ViewModelProvider(this).get(_SettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
         title = getString(R.string.settings_title_actionbar)
 

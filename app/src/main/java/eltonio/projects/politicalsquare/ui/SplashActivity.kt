@@ -38,7 +38,6 @@ class SplashActivity : AppCompatActivity() {
         doActionAfterMoving()
     }
 
-
    /** CUSTOM METHODS */
     private fun startFadingAnimation() {
        //splashAnimationTime = 600L // For Test without Into

@@ -6,8 +6,7 @@ import androidx.lifecycle.ViewModel
 import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.util.quizIsActive
 
-
-class _SettingsViewModel : ViewModel() {
+class SettingsViewModel : ViewModel() {
     private val localRepo = AppRepository.Local()
 
     private var lang = MutableLiveData<String>()
