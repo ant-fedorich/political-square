@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.ui
+package eltonio.projects.politicalsquare.ui.viewmodel
 
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser

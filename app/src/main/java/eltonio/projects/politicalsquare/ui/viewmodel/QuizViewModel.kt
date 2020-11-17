@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.ui
+package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -12,7 +12,7 @@ import eltonio.projects.politicalsquare.util.TAG
 import eltonio.projects.politicalsquare.util.defaultLang
 
 class QuizViewModel(application: Application) : AndroidViewModel(application) {
-    //TEMP
+    // TODO: Refactor
     private var localRepo = AppRepository.Local()
     private var cloudRepo = AppRepository.Cloud()
 
@@ -44,7 +44,6 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
 
 
     init {
-//        questionCounter = MutableLiveData(0)
         appQuestionsWithAnswers = MutableLiveData()
         questionNewVisible = MutableLiveData()
         questionOldVisible = MutableLiveData()
@@ -75,10 +74,8 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         goForward.value = true
 
         if (questionCounter < questionCountTotal) {
-            quizFinishedEvent.value = false // todo: VM - livedata
+            quizFinishedEvent.value = false
             currentQuestion = App.appQuestionsWithAnswers[questionCounter]
-//            questionNewVisible.value = true
-//            questionOldVisible.value = true
 
             when (defaultLang) {
                 "uk" -> {
@@ -118,8 +115,6 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             questionCounterLiveData.value = questionCounter
 
             currentQuestion = App.appQuestionsWithAnswers[questionCounter-1]
-//            questionNewVisible.value = true
-//            questionOldVisible.value = true
 
             when (defaultLang) {
                 "uk" -> {

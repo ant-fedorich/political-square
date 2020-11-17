@@ -14,6 +14,7 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.ScreenItem
 import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
 import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.ui.viewmodel.IntroViewModel
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_intro.*
 

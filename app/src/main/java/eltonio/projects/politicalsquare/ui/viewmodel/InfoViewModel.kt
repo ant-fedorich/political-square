@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.ui
+package eltonio.projects.politicalsquare.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

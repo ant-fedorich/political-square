@@ -1,11 +1,7 @@
-package eltonio.projects.politicalsquare.ui
+package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.data.AppViewModel
@@ -13,7 +9,6 @@ import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewX
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewY
-import eltonio.projects.politicalsquare.util.TAG
 import eltonio.projects.politicalsquare.util.chosenQuizId
 import eltonio.projects.politicalsquare.util.getIdeology
 import eltonio.projects.politicalsquare.util.getIdeologyStringId

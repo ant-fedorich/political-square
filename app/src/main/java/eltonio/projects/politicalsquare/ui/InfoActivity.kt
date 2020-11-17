@@ -1,7 +1,6 @@
 package eltonio.projects.politicalsquare.ui
 
 import android.content.Intent
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -11,26 +10,10 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.skydoves.balloon.textForm
 import eltonio.projects.politicalsquare.*
-import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.ui.viewmodel.InfoViewModel
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_info.*
-import kotlinx.android.synthetic.main.activity_info.image_anar_hover
-import kotlinx.android.synthetic.main.activity_info.image_autho_left_hover
-import kotlinx.android.synthetic.main.activity_info.image_autho_right_hover
-import kotlinx.android.synthetic.main.activity_info.image_cons_hover
-import kotlinx.android.synthetic.main.activity_info.image_gov_hover
-import kotlinx.android.synthetic.main.activity_info.image_left_anar_hover
-import kotlinx.android.synthetic.main.activity_info.image_lib_hover
-import kotlinx.android.synthetic.main.activity_info.image_lib_soc
-import kotlinx.android.synthetic.main.activity_info.image_libertar_hover
-import kotlinx.android.synthetic.main.activity_info.image_nation_hover
-import kotlinx.android.synthetic.main.activity_info.image_prog_hover
-import kotlinx.android.synthetic.main.activity_info.image_radical_cap_hover
-import kotlinx.android.synthetic.main.activity_info.image_right_anar_hover
-import kotlinx.android.synthetic.main.activity_info.image_soc_demo_hover
-import kotlinx.android.synthetic.main.activity_info.image_soc_hover
 
 class InfoActivity : AppCompatActivity() {
     private lateinit var viewModel: InfoViewModel
@@ -44,7 +27,6 @@ class InfoActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(InfoViewModel::class.java)
 
         title = getString(R.string.info_title_actionbar)
-        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Set text for descriptions
         text_desc_compass_1.text = getString(R.string.text_desc_compass_1)
@@ -74,7 +56,6 @@ class InfoActivity : AppCompatActivity() {
             }
             return@setOnTouchListener true
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

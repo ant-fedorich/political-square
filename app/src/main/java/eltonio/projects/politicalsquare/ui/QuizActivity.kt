@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Point
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
@@ -23,17 +22,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Observer
 
 import eltonio.projects.politicalsquare.*
-import eltonio.projects.politicalsquare.data.AppViewModel
-import eltonio.projects.politicalsquare.models.QuestionWithAnswers
-import eltonio.projects.politicalsquare.models.*
-import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
-import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.ui.viewmodel.QuizViewModel
 import eltonio.projects.politicalsquare.util.*
 
 import kotlinx.android.synthetic.main.activity_quiz.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import java.util.*
 
 class QuizActivity : BaseActivity(), View.OnTouchListener {
     lateinit var viewModel: QuizViewModel
@@ -70,14 +64,12 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             text_questions_left.text = "${questionCounter} / $questionCountTotal"
         })
 
-        // TODO: V
         this.title = getString(R.string.quiz_title_actionbar)
         radio_answer_1.text = getString(R.string.quiz_radio_answer_1)
         radio_answer_2.text = getString(R.string.quiz_radio_answer_2)
         radio_answer_3.text = getString(R.string.quiz_radio_answer_3)
         radio_answer_4.text = getString(R.string.quiz_radio_answer_4)
         radio_answer_5.text = getString(R.string.quiz_radio_answer_5)
-        // TODO: V
         radio_answer_3.visibility = View.GONE // DISABLE "Hard to answer" radio
 
         // Listeners
@@ -89,13 +81,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         radio_answer_3.setOnTouchListener(this)
         radio_answer_4.setOnTouchListener(this)
         radio_answer_5.setOnTouchListener(this)
-        // end
 
-        // TODO: V - to method
-        // == Radio button hovers ==
         getRadioHovers()
 
-        // TODO: VM - to vm
         viewModel.showNextQuestion()
     }
 
@@ -125,9 +113,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         for (item in radioShapeHoverList) {
             item.setColor(ContextCompat.getColor(this@QuizActivity, android.R.color.transparent))
         }
-        // end
-
-        // TODO: VM - to vm
         viewModel.quizFinishedEvent.observe(this, Observer {
             if (it == false) {
                 radio_group_answers.clearCheck()
@@ -137,8 +122,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                 startOldQuestionAnimation()
                 startNewQuestionAnimation()
                 startProgressBarAnimation()
-
-//                viewModel.questionCounter++
             } else {
                 val intent = Intent(this, ResultActivity::class.java)
                 startActivity(intent)
@@ -337,7 +320,6 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         text_question_new.startAnimation(quesNewAnimation)
     }
     private fun startProgressBarAnimation() {
-//        text_questions_left.text = "${questionCounter+1} / $questionCountTotal"
         val percent = (((questionCounter+1).toFloat()/questionCountTotal.toFloat())*1000).toInt()
         val oldPercent = (((questionCounter).toFloat()/questionCountTotal.toFloat())*1000).toInt()
         ObjectAnimator.ofInt(progress_bar, "progress", oldPercent, percent).apply {

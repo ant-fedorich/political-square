@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -16,18 +15,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.App.Companion.appQuestionsWithAnswers
-import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.ui.viewmodel.ChooseViewViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.*
 
 class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchListener {
     /** DECLARATION */
@@ -41,7 +33,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     private var x = 0f
     private var y = 0f
-    private var ideologyIsChosen = false
     private var oldIdeologyHover: ImageView? = null
 
     private var quizId = -1
@@ -86,7 +77,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
-        // TODO: V - to method
         containerHeight = frame_1.height
         containerWidth = frame_1.width
 
@@ -116,7 +106,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 v?.performClick()
             }
         }
-
         return true
     }
 
@@ -131,23 +120,15 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     /** CUSTOM METHODS */
     @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
     private fun onStartQuizClicked() {
-        // TODO: VM - to vm
         viewModel.ideologyIsChosenEvent.observe(this, Observer<Boolean> {
             if (it != true) {
                 return@Observer toast(getString(R.string.chooseview_toast_choose_first))
             }
         })
 
-//        if (!ideologyIsChosen) // TODO: VM - to vm, livedata or repo?
-//            return toast(getString(R.string.chooseview_toast_choose_first)) // TODO: V - trigger livedata
-
 //        // TODO: VM - to vm Repo, works everywhere
         quizIsActive = true
         viewModel.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId)
-//
-//        val startedAt = getDateTime()
-//        localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt) // TODO: put an object instead of attributes
-//        // end
 
         startActivity(Intent(this, QuizActivity::class.java))
         slideLeft(this)
@@ -160,14 +141,12 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         startActivity(intent)
     }
 
-
     /** GRAPHIC METHODS */
     @SuppressLint("SetTextI18n")
     private fun drawHover(event: MotionEvent) {
         x = event.x
         y = event.y
 
-        // TODO: V - V
         val endX = image_for_canvas.width
         val endY = image_for_canvas.height
 
@@ -177,56 +156,13 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         // end
 
         viewModel.getXandYForHover(x, y, endX, endY)
-//        // TODO: VM - to VM
-//        when {
-//            x >= 0 && x <= endX && y >= 0 && y <= endY -> {
-//                x = x; y = y
-//            }
-//            x >= 0 && x <= endX && y < 0 -> {
-//                x = x; y = 0f
-//            }
-//            x >= 0 && x <= endX && y > endY -> {
-//                x = x; y = endY.toFloat()
-//            }
-//            x < 0 && y >= 0 && y <= endY -> {
-//                x = 0f; y = y
-//            }
-//            x > endX && y >= 0 && y <= endY -> {
-//                x = endX.toFloat(); y = y
-//            }
-//
-//            // Edges
-//            x < 0 && y < 0 -> {
-//                x = 0f; y = 0f
-//            }
-//            x > endX && y > endY -> {
-//                x = endX.toFloat(); y = endY.toFloat()
-//            }
-//            x < 0 && y > endY -> {
-//                x = 0f; y = endY.toFloat()
-//            }
-//            x > endX && y < 0 -> {
-//                x = endX.toFloat(); y = 0f
-//            }
-//        }
-//        // end
 
-        // TODO: VM - to vm
         viewModel.getStartScore()
         viewModel.getIdeology()
-//        val step = convertDpToPx(4f)
-//        horStartScore = // livedata
-//            (x / step - 40).toInt() // TODO: Refactor 40 to var
-//        verStartScore = // livedata
-//            (y / step - 40).toInt() // TODO: Refactor 40 to var
-//        // end
 
-
-//        // TODO: VM - to vm
-//        ideology = getIdeology(horStartScore, verStartScore)
         viewModel.ideology.observe(this, Observer<String> {
             when (it) {
-                Ideologies.AUTHORITARIAN_LEFT.title -> showThisIdeologyHover(image_autho_left_hover) // TODO: V - livedata<ideology>
+                Ideologies.AUTHORITARIAN_LEFT.title -> showThisIdeologyHover(image_autho_left_hover)
                 Ideologies.RADICAL_NATIONALISM.title -> showThisIdeologyHover(image_nation_hover)
                 Ideologies.POWER_CENTRISM.title -> showThisIdeologyHover(image_gov_hover)
                 Ideologies.SOCIAL_DEMOCRACY.title -> showThisIdeologyHover(image_soc_demo_hover)

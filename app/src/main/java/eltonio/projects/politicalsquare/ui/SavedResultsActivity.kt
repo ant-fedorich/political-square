@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.*
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.ui.viewmodel.SaveResultViewModel
 import eltonio.projects.politicalsquare.util.*
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 

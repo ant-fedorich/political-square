@@ -6,15 +6,12 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.AdapterView
 import android.widget.Spinner
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.adapter.QuizOptionAdapter
-import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.ui.viewmodel.MainViewModel
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*

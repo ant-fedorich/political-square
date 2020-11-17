@@ -1,8 +1,9 @@
-package eltonio.projects.politicalsquare.ui
+package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppRepository
@@ -23,7 +24,6 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
     private val localRepo = AppRepository.Local()
     private var dbRepo: AppRepository.DB
 
-    private lateinit var scope: CoroutineScope
     private var quizId = -1
 
     private var x = 0f
@@ -41,22 +41,19 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
         val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
         val questionDao = AppDatabase.getDatabase(application).questionDao()
         dbRepo = AppRepository.DB(quizResultDao, questionDao)
-        scope = CoroutineScope(Dispatchers.IO)
 
-        // TODO: mvvm to vm
         when(localRepo.loadQuizOption()) {
             QuizOptions.UKRAINE.id -> getQuestionsWithAnswers(QuizOptions.UKRAINE.id)
             QuizOptions.WORLD.id -> getQuestionsWithAnswers(QuizOptions.WORLD.id)
         }
         Collections.shuffle(App.appQuestionsWithAnswers)
-        //end
     }
 
     /** METHODS */
     private fun getQuestionsWithAnswers(quizId: Int) {
         this.quizId = quizId
         chosenQuizId = quizId
-        scope.launch {
+        viewModelScope.launch {
             App.appQuestionsWithAnswers = dbRepo.getQuestionsWithAnswers(quizId)
         }
     }
@@ -64,11 +61,9 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
     fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideology: String, quizId: Int) {
         val startedAt = getDateTime()
         localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt) // TODO: put an object instead of attributes
-        // end
     }
 
     fun getXandYForHover(inputX: Float, inputY: Float, endX: Int, endY: Int) {
-        // TODO: VM - to VM
         this.x = inputX
         this.y = inputY
         when {
@@ -102,19 +97,17 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
                 x = endX.toFloat(); y = 0f
             }
         }
-        // end
     }
 
     fun getStartScore() {
         val step = convertDpToPx(4f)
-        horStartScore = // livedata
-            (x / step - 40).toInt() // TODO: Refactor 40 to var
-        verStartScore = // livedata
-            (y / step - 40).toInt() // TODO: Refactor 40 to var
+        horStartScore =
+            (x / step - 40).toInt()
+        verStartScore =
+            (y / step - 40).toInt()
     }
 
     fun getIdeology() {
-        // TODO: VM - to vm
         ideology.value = eltonio.projects.politicalsquare.util.getIdeology(horStartScore, verStartScore)
     }
 

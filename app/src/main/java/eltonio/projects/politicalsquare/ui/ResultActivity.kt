@@ -10,15 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.ui.viewmodel.ResultViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
 
 class ResultActivity : BaseActivity(), View.OnClickListener {
-
-    //TEMP
-    // TODO: VM - to vm
     private lateinit var viewModel: ResultViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

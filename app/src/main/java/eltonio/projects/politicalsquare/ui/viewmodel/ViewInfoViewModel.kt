@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.ui
+package eltonio.projects.politicalsquare.ui.viewmodel
 
 
 import androidx.lifecycle.LiveData
@@ -110,7 +110,6 @@ class ViewInfoViewModel : ViewModel() {
                 styleId.value = R.style.TextAppearance_MyApp_Title_SmallExpanded
             }
         }
-
     }
 
     fun getIdeology(): LiveData<String> = ideology

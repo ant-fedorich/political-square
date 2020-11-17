@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.ui
+package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.app.Application
 import android.util.Log

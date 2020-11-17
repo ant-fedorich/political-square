@@ -6,14 +6,13 @@ import android.text.method.ScrollingMovementMethod
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.ui.viewmodel.ViewInfoViewModel
 import eltonio.projects.politicalsquare.util.EXTRA_IDEOLOGY_TITLE
 import eltonio.projects.politicalsquare.util.pushRight
 import kotlinx.android.synthetic.main.activity_view_info.*
 
 class ViewInfoActivity : AppCompatActivity() {
-
     private lateinit var viewModel: ViewInfoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
