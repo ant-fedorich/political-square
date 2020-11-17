@@ -14,8 +14,6 @@ import eltonio.projects.politicalsquare.util.splashAnimationTime
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
-
-    // TEMP
     private val localRepo = AppRepository.Local()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +35,6 @@ class SplashActivity : AppCompatActivity() {
         startMovingAnimation()
         doActionAfterMoving()
     }
-
-
 
    /** CUSTOM METHODS */
     private fun startFadingAnimation() {

@@ -135,7 +135,7 @@ class AppTest {
         onView(withId(R.id.radio_answer_5))
             .perform(click())
 
-        onView(withId(R.id.button_compass_info_2))
+        onView(withId(R.id.button_compass_info_3))
             .perform(click())
 
         Thread.sleep(1000)
@@ -149,7 +149,7 @@ class AppTest {
             .perform(click())
         onView(withId(R.id.recycler_results_list))
             .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-        onView(withId(R.id.button_compass_info_2))
+        onView(withId(R.id.button_compass_info_3))
             .perform(click())
 
         Thread.sleep(1000)

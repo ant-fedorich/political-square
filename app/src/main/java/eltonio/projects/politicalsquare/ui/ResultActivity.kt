@@ -4,151 +4,65 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.*
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppViewModel
-import eltonio.projects.politicalsquare.models.QuizResult
-import eltonio.projects.politicalsquare.App.Companion.appQuizResults
-import eltonio.projects.politicalsquare.data.AppRepository
-import eltonio.projects.politicalsquare.models.QuizOptions
+import eltonio.projects.politicalsquare.ui.viewmodel.ResultViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class ResultActivity : BaseActivity(), View.OnClickListener {
-
-    //TEMP
-    private var localRepo = AppRepository.Local()
-    private var cloudRepo = AppRepository.Cloud()
-
-    private var chosenIdeology = ""
-    private var resultIdeology = ""
-    private var startedAt = ""
-    private var endedAt = ""
-    private var duration = 0
-    private var avgAnswerTime = 0.0
-    private var zeroAnswerCnt = 0
-
-    private var quizOwner = ""
-
-    private lateinit var database: FirebaseDatabase
-    private var userId = ""
-    private var quizId = -1
-
-    private lateinit var appViewModel: AppViewModel
-    private lateinit var scope: CoroutineScope
+    private lateinit var viewModel: ResultViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
+        viewModel = ViewModelProvider(this).get(ResultViewModel::class.java)
 
         title = getString(R.string.result_title_actionbar)
-        cloudRepo.logQuizCompleteEvent()
 
-        database = Firebase.database
-
-        chosenViewX = localRepo.getChosenViewX()
-        chosenViewY = localRepo.getChosenViewY()
-        horStartScore = localRepo.getHorStartScore()
-        verStartScore = localRepo.getVerStartScore()
-        chosenIdeology = localRepo.getChosenIdeology()
-        startedAt = localRepo.getStartedAt()
-        zeroAnswerCnt = localRepo.getZeroAnswerCnt()
-
-        horScore = localRepo.getHorScore()
-        verScore = localRepo.getVerScore()
-        quizId = localRepo.loadQuizOption()
-
-        userId = cloudRepo.firebaseUser?.uid.toString()
+        button_compass_info_2.setOnClickListener(this)
 
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
-        title_2_2.text = "($youThoughtText: $chosenIdeology)"
-
-        if (horScore != null && verScore != null) {
-            resultIdeology = getIdeology(horScore, verScore)
-        }
-
-        title_2.text = resultIdeology
-
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val endDate = Date()
-        val startedAtParsed = formatter.parse(startedAt)
-        val diffInMillies = endDate.time - startedAtParsed.time
-        duration = TimeUnit.MILLISECONDS.toSeconds(diffInMillies).toInt()
-        endedAt = formatter.format(endDate)
+        viewModel.chosenIdeologyLiveData.observe(this, Observer {
+            title_2_2.text = "$youThoughtText: $it"
+        })
+        viewModel.resultIdeologyLiveData.observe(this, Observer {
+            title_2.text = it
+        })
 
         startResultPointsAnimation()
 
-        // For debug
-        Log.d(TAG, "Datetime duration: $duration, endedAt: $endedAt")
-
-        avgAnswerTime =
-            if (quizId == QuizOptions.WORLD.id)
-                duration/QuizOptions.WORLD.quesAmount.toDouble()
-            else
-                duration/QuizOptions.UKRAINE.quesAmount.toDouble()
-
-        val ideologyId = getIdeologyStringId(resultIdeology)
-
-        appViewModel = ViewModelProvider(this).get(AppViewModel::class.java)
-        scope = CoroutineScope(Dispatchers.IO)
-
-        val quizResult = QuizResult(
-            id = 0, //id is autoincrement
-            quizId = chosenQuizId,
-            ideologyStringId = ideologyId,
-            horStartScore = horStartScore,
-            verStartScore = verStartScore,
-            horResultScore = horScore,
-            verResultScore = verScore,
-            startedAt = startedAt,
-            endedAt = endedAt,
-            duration = duration,
-            avgAnswerTime = avgAnswerTime
-        )
-
-        cloudRepo.addQuizResult(userId, quizResult)
-
-        appViewModel.addQuizResult(quizResult)
-        scope.launch {
-            appQuizResults = appViewModel.getQuizResults()
-            Log.w(TAG, "QuizResults in ResultActivity inside Coroutine:")
-            for (item in appQuizResults) Log.w(TAG, "Item: $item")
-        }
-
-        compassX = horScore.plus(40)
-        compassY = verScore.plus(40)
+        viewModel.getCompassX().observe(this, Observer {
+            compassX = it
+        })
+        viewModel.getCompassY().observe(this, Observer {
+            compassY = it
+        })
     }
 
     override fun onBackPressed() {
+        // TODO: How to handle Lambda?
         showEndQuizDialogLambda(this) {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
-    /** INTERFACE METHODS */
 
+    /** INTERFACE METHODS */
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_compass_info_2 -> {
-                cloudRepo.logDetailedInfoEvent()
-
+                viewModel.onCompassInfoClick()
                 val intent = Intent(this, ViewInfoActivity::class.java)
-                intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)
+                viewModel.resultIdeologyLiveData.observe(this, Observer {
+                    intent.putExtra(EXTRA_IDEOLOGY_TITLE, it)
+                })
                 startActivity(intent)
                 pushLeft(this) // info in
             }
@@ -223,14 +137,11 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     }
 
     companion object {
+        // TODO: V - only for view
         var chosenViewX = 0f
         var chosenViewY = 0f
         var compassX: Int? = 0
         var compassY: Int? = 0
-        var verScore: Int = 0
-        var horScore: Int = 0
-        var horStartScore = 0
-        var verStartScore = 0
     }
 }
 

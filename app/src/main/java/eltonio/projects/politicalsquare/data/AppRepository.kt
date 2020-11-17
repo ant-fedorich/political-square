@@ -234,6 +234,7 @@ class AppRepository {
             App.analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
         }
 
-        fun logCrash(message: String) = App.crashlytics.log(message)
+// TODO: Crashlytics disabled
+// fun logCrash(message: String) = App.crashlytics.log(message)
     }
 }

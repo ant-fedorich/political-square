@@ -418,5 +418,10 @@
     <string name="all_owner_quiz_option_1">для Всіх</string>
     <string name="all_owner_quiz_option_2">для України</string>
     <string name="chooseview_toast_choose_first">Виберіть спочатку політичний погляд на квадраті!</string>
+    <string name="quiz_radio_answer_1">однозначно так</string>
+    <string name="quiz_radio_answer_2">скоріше так</string>
+    <string name="quiz_radio_answer_3">важко відповісти</string>
+    <string name="quiz_radio_answer_4">скоріше ні</string>
+    <string name="quiz_radio_answer_5">однозначно ні</string>
 
 </resources>

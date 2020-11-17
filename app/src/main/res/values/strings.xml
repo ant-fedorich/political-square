@@ -32,6 +32,12 @@
     <string name="radio_answer_4_template">Rather yes</string>
     <string name="radio_answer_5_template">Yes</string>
 
+    <string name="quiz_radio_answer_1">yes</string>
+    <string name="quiz_radio_answer_2">rather yes</string>
+    <string name="quiz_radio_answer_3">hard to answer</string>
+    <string name="quiz_radio_answer_4">rather no</string>
+    <string name="quiz_radio_answer_5">no</string>
+
     <string name="quiz_title_actionbar">Test</string>
     <string name="quiz_btn_next">Next</string>
 

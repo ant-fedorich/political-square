@@ -74,7 +74,7 @@ class QuizRecycleAdapter : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleVi
         val textSavedResultDate: TextView = itemView.text_saved_result_date
         val textSavedResultTitle: TextView = itemView.text_saved_result_title
         val textSavedResultNumber: TextView = itemView.text_saved_result_number
-        val imageDeleteItem: ImageView = itemView.image_delete_item
+//        val imageDeleteItem: ImageView = itemView.image_delete_item
         val frameQuizResultImage = itemView.frame_quiz_result_image
 
         init {
@@ -87,20 +87,20 @@ class QuizRecycleAdapter : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleVi
                 }
             }
 
-            imageDeleteItem.setOnClickListener {
-                if (listener != null) {
-                    val position: Int = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        listener.onDeleteClick(position)
-                    }
-                }
-            }
+//            imageDeleteItem.setOnClickListener {
+//                if (listener != null) {
+//                    val position: Int = adapterPosition
+//                    if (position != RecyclerView.NO_POSITION) {
+//                        listener.onDeleteClick(position)
+//                    }
+//                }
+//            }
         }
     }
 
     interface OnQuizItemClickListener {
         fun onItemClick(position: Int)
-        fun onDeleteClick(position: Int)
+//        fun onDeleteClick(position: Int)
     }
 
     fun setOnItemClickListener(listener: OnQuizItemClickListener) { itemClickListener = listener  }
