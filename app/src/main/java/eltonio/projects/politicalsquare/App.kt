@@ -8,6 +8,9 @@ import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.QuizResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class App : Application() {
 
@@ -21,9 +24,7 @@ class App : Application() {
         lateinit var analytics: FirebaseAnalytics
             private set
 
-        // TODO: Get rid of storing data in App
         var appQuestionsWithAnswers: List<QuestionWithAnswers> = emptyList()
-        var appQuizResults: List<QuizResult> = emptyList()
     }
 
     override fun onCreate() {
@@ -33,7 +34,9 @@ class App : Application() {
 //        crashlytics = FirebaseCrashlytics.getInstance()
         analytics = Firebase.analytics
 
-        AppRepository.Cloud().logSessionStartEvent()
+        CoroutineScope(Dispatchers.IO).launch {
+            AppRepository.Cloud().logSessionStartEvent()
+        }
         AppRepository.Local().clearPref()
         AppRepository.Local().setSplashIsNotAppeared()
 

@@ -11,12 +11,11 @@ import eltonio.projects.politicalsquare.util.getIdeology
 
 
 class InfoViewModel : ViewModel() {
+    private var imageId: MutableLiveData<Int> = MutableLiveData()
+    private var ideology: MutableLiveData<String> = MutableLiveData()
 
     private var horScore = 0
     private var verScore = 0
-
-    private var imageId: MutableLiveData<Int> = MutableLiveData()
-    private var ideology: MutableLiveData<String> = MutableLiveData()
 
     fun getIdeology(x: Float, y: Float): LiveData<String> {
         var step = convertDpToPx(4f)

@@ -43,7 +43,8 @@ class IntroActivity : AppCompatActivity() {
             }
         })
         viewModel.getSplashAnimationTime().observe(this, Observer {
-            splashAnimationTime = it
+            localRepo.setSplashAnimationTime(it)
+
         })
         viewModel.getScreenList().observe(this@IntroActivity, Observer {
             screenList = it

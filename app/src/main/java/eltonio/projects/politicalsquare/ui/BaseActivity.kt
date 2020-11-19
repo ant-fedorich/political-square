@@ -7,9 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.util.mainActivityIsInFront
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.util.pushLeft
-import eltonio.projects.politicalsquare.util.quizIsActive
 import eltonio.projects.politicalsquare.util.showEndQuizDialogLambda
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_base.view.*
@@ -36,17 +35,17 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_main -> {
-                if (quizIsActive) {
+                if (AppRepository.Local().getQuizIsActive()) {
                     activity_container.closeDrawer(GravityCompat.START)
 
                     showEndQuizDialogLambda(this) {
-                        if (mainActivityIsInFront == false) {
+                        if (AppRepository.Local().getMainActivityIsInFront() == false) {
                             startActivity(Intent(this, MainActivity::class.java))
                         }
                     }
 
                 } else {
-                    if (mainActivityIsInFront == false) {
+                    if (AppRepository.Local().getMainActivityIsInFront() == false) {
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }

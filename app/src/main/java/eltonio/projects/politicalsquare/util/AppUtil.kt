@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
 import java.text.SimpleDateFormat
@@ -31,19 +32,19 @@ const val PREF_LANG = "PREF_LANG"
 const val PREF_QUIZ_OPTION = "PREF_QUIZ_OPTION"
 const val PREF_IS_INTRO_OPENED = "PREF_IS_INTRO_OPENED"
 const val PREF_SPLASH_APPEARED = "PREF_SPLASH_APPEARED"
-const val PREF_USER_LOGGED_IN = "PREF_USER_LOGGED_IN"
 const val PREF_SESSION_STARTED = "PREF_SESSION_STARTED"
-const val PREF_ZERO_ANSWER_CNT = "PREF_ZERO_ANSWER_CNT"
 const val PREF_CHOSEN_VIEW_X = "PREF_CHOSEN_VIEW_X"
 const val PREF_CHOSEN_VIEW_Y = "PREF_CHOSEN_VIEW_Y"
 const val PREF_HORIZONTAL_START_SCORE = "PREF_HORIZONTAL_START_SCORE"
 const val PREF_VERTICAL_START_SCORE = "PREF_VERTICAL_START_SCORE"
 const val PREF_CHOSEN_IDEOLOGY = "PREF_CHOSEN_IDEOLOGY"
 const val PREF_STARTED_AT = "PREF_STARTED_AT"
-const val PREF_USER_ID = "PREF_USER_ID"
-const val PREF_QUIZ_ID = "PREF_QUIZ_ID"
+const val PREF_CHOSEN_QUIZ_ID = "PREF_CHOSEN_QUIZ_ID"
 const val PREF_HORIZONTAL_SCORE = "PREF_HORIZONTAL_SCORE"
 const val PREF_VERTICAL_SCORE = "PREF_VERTICAL_SCORE"
+const val PREF_SPLASH_ANIMATION_TIME = "PREF_SPLASH_ANIMATION_TIME"
+const val PREF_QUIZ_IS_ACTIVE = "PREF_QUIZ_IS_ACTIVE"
+const val PREF_MAIN_ACTIVITY_IS_IN_FRONT = "PREF_MAIN_ACTIVITY_IS_IN_FRONT"
 
 const val EXTRA_IDEOLOGY_ID = "EXTRA_IDEOLOGY_ID"
 const val EXTRA_QUIZ_ID = "EXTRA_QUIZ_ID"
@@ -53,7 +54,6 @@ const val EXTRA_VER_START_SCORE = "EXTRA_VER_START_SCORE"
 const val EXTRA_HOR_RESULT_SCORE = "EXTRA_HOR_RESULT_SCORE"
 const val EXTRA_VER_RESULT_SCORE = "EXTRA_VER_RESULT_SCORE"
 const val EXTRA_IDEOLOGY_TITLE = "EXTRA_IDEOLOGY_TITLE"
-const val EXTRA_QUIZ_OWNER = "EXTRA_QUIZ_OWNER"
 
 const val EXTRA_TITLE_TRANSITION_NAME = "EXTRA_TITLE_TRANSITION_NAME"
 const val EXTRA_DATE_TRANSITION_NAME = "EXTRA_DATE_TRANSITION_NAME"
@@ -67,19 +67,8 @@ const val EVENT_QUIZ_COMPLETE = "quiz_complete"
 const val EVENT_DETAILED_INFO = "quiz_detailed_info"
 const val PARAM_LOGIN_DATE = "login_date"
 
-
 /** Variables **/
-// TODO: Is this secure, Not to use Intent to Pass Vars
-// TODO: Should I user App for Global Vars?
-
 var appContext = App.appContext
-var mainActivityIsInFront = false
-var defaultLang = ""
-var quizIsActive = false
-// TODO: Is this secure? Not to use Intent to Pass Vars
-var chosenQuizId = -1
-var splashAnimationTime = 600L
-
 
 /** Functions **/
 
@@ -135,7 +124,8 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
         val dialogTitle = context.getString(R.string.all_dialog_do_you_want_to_end)
         setTitle(dialogTitle)
         setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.all_dialog_yes)) { _, _ ->
-            quizIsActive = false // TODO: V - livedata? or get from Repo directly?
+            AppRepository.Local().setQuizIsActive(false)
+//            quizIsActive = false // TODO: V - livedata? or get from Repo directly?
             onOkBlock()
         }
         setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.all_dialog_no)) { _, _ ->

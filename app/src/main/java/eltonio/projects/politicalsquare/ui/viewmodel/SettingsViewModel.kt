@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import eltonio.projects.politicalsquare.data.AppRepository
-import eltonio.projects.politicalsquare.util.quizIsActive
 
 class SettingsViewModel : ViewModel() {
     private val localRepo = AppRepository.Local()
@@ -28,7 +27,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun getQuizIsActiveState(): LiveData<Boolean> {
-        quizIsActiveState.value = eltonio.projects.politicalsquare.util.quizIsActive
+        quizIsActiveState.value = localRepo.getQuizIsActive()
         return quizIsActiveState
     }
 }

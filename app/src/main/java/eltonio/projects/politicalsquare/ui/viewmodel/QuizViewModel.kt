@@ -3,81 +3,81 @@ package eltonio.projects.politicalsquare.ui.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.Step
 import eltonio.projects.politicalsquare.util.TAG
-import eltonio.projects.politicalsquare.util.defaultLang
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class QuizViewModel(application: Application) : AndroidViewModel(application) {
     // TODO: Refactor
     private var localRepo = AppRepository.Local()
     private var cloudRepo = AppRepository.Cloud()
 
-    var questionCountTotal = 0
-    var questionCounterTotalLiveData: MutableLiveData<Int>
-    var questionCounter = 0
-    var questionCounterLiveData: MutableLiveData<Int>
-    var appQuestionsWithAnswers: MutableLiveData<QuestionWithAnswers>
-    var questionNewVisible: MutableLiveData<Boolean>
-    var questionOldVisible: MutableLiveData<Boolean>
+    private var questionCounterTotalLiveData: MutableLiveData<Int> = MutableLiveData()
+    private var questionCounterLiveData: MutableLiveData<Int> = MutableLiveData()
+    private var questionNew: MutableLiveData<String> = MutableLiveData()
+    private var questionOld: MutableLiveData<String> = MutableLiveData()
+    private var quizFinishedEvent: MutableLiveData<Boolean> = MutableLiveData()
+    private var previousStepLiveData: MutableLiveData<Step> = MutableLiveData()
+    private var FABButtonShowEvent: MutableLiveData<Boolean> = MutableLiveData()
 
-    var questionNew: MutableLiveData<String>
-    var questionOld: MutableLiveData<String>
+    private var questionCountTotal = 0
+    private var questionCounter = 0
+
     private lateinit var currentQuestion: QuestionWithAnswers
 
-    var quizFinishedEvent: MutableLiveData<Boolean>
     private var horizontalScore = 0f
     private var verticalScore = 0f
-    var previousStep: Step? = null
-    var previousStepLiveData: MutableLiveData<Step>
-    var isPreviousStep = false
-
-    var clearCheckTriggerEvent: MutableLiveData<Boolean>
-    var isLastQuestion: MutableLiveData<Boolean>
-    var FABButtonShowEvent: MutableLiveData<Boolean>
-
-    var goForward: MutableLiveData<Boolean>
-
-
+    private var previousStep: Step? = null
+    private var isPreviousStep = false
 
     init {
-        appQuestionsWithAnswers = MutableLiveData()
-        questionNewVisible = MutableLiveData()
-        questionOldVisible = MutableLiveData()
-
-        questionCounterLiveData = MutableLiveData()
-        questionCounterTotalLiveData = MutableLiveData()
-
-        questionNew = MutableLiveData()
-        questionOld = MutableLiveData()
-        FABButtonShowEvent = MutableLiveData()
-
-        clearCheckTriggerEvent = MutableLiveData()
-
-        quizFinishedEvent = MutableLiveData()
-
-        isLastQuestion = MutableLiveData()
-
-        goForward = MutableLiveData()
-
-        previousStepLiveData = MutableLiveData()
-
-        cloudRepo.logQuizBeginEvent()
+        viewModelScope.launch (Dispatchers.IO) {
+            cloudRepo.logQuizBeginEvent()
+        }
         questionCountTotal = App.appQuestionsWithAnswers.size
         questionCounterTotalLiveData.value = questionCountTotal
     }
+    fun getQuestionCounter(): LiveData<Int> {
+        return questionCounterLiveData
+    }
+
+    fun getQuestionCounterTotal(): LiveData<Int> {
+        return questionCounterTotalLiveData
+    }
+
+    fun getQuizFinishedEvent(): LiveData<Boolean> {
+        return quizFinishedEvent
+    }
+
+    fun getQuestionNew(): LiveData<String> {
+        return questionNew
+    }
+
+    fun getQuestionOld(): LiveData<String> {
+        return questionOld
+    }
+
+    fun getFABButtonShowEvent(): LiveData<Boolean> {
+        return FABButtonShowEvent
+    }
+
+    fun getPreviousStep(): LiveData<Step> {
+        return previousStepLiveData
+    }
 
     fun showNextQuestion() {
-        goForward.value = true
-
         if (questionCounter < questionCountTotal) {
             quizFinishedEvent.value = false
             currentQuestion = App.appQuestionsWithAnswers[questionCounter]
 
-            when (defaultLang) {
+            when (localRepo.getLang()) {
                 "uk" -> {
                     if (questionCounter > 0)
                         questionOld.value = App.appQuestionsWithAnswers[questionCounter - 1].questionUk
@@ -99,12 +99,11 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             Log.i(TAG, "VM: questionCounter: $questionCounter")
             questionCounterLiveData.value = questionCounter
         } else {
-            quizFinishedEvent.value = true // todo: VM - livedata
+            quizFinishedEvent.value = true
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
             localRepo.setHorScore(horizontalScore.toInt())
             localRepo.setVerScore(verticalScore.toInt())
-
         }
     }
 
@@ -116,7 +115,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
 
             currentQuestion = App.appQuestionsWithAnswers[questionCounter-1]
 
-            when (defaultLang) {
+            when (localRepo.getLang()) {
                 "uk" -> {
                     questionOld.value = currentQuestion.questionUk
                 }
@@ -156,7 +155,6 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             it.scale = scale
             it.point = point
         }
-
         // Save as a previous step
         previousStep = step
 

@@ -30,10 +30,10 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
-        viewModel.chosenIdeologyLiveData.observe(this, Observer {
+        viewModel.getChosenIdeology().observe(this, Observer {
             title_2_2.text = "$youThoughtText: $it"
         })
-        viewModel.resultIdeologyLiveData.observe(this, Observer {
+        viewModel.getResultIdeology().observe(this, Observer {
             title_2.text = it
         })
 
@@ -48,7 +48,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onBackPressed() {
-        // TODO: How to handle Lambda?
         showEndQuizDialogLambda(this) {
             startActivity(Intent(this, MainActivity::class.java))
         }
@@ -60,7 +59,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             R.id.button_compass_info_2 -> {
                 viewModel.onCompassInfoClick()
                 val intent = Intent(this, ViewInfoActivity::class.java)
-                viewModel.resultIdeologyLiveData.observe(this, Observer {
+                viewModel.getResultIdeology().observe(this, Observer {
                     intent.putExtra(EXTRA_IDEOLOGY_TITLE, it)
                 })
                 startActivity(intent)
@@ -137,7 +136,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     }
 
     companion object {
-        // TODO: V - only for view
         var chosenViewX = 0f
         var chosenViewY = 0f
         var compassX: Int? = 0

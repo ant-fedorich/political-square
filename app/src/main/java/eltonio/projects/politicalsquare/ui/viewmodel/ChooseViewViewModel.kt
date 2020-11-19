@@ -1,19 +1,15 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.Question
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.util.chosenQuizId
-import eltonio.projects.politicalsquare.util.convertDpToPx
-import eltonio.projects.politicalsquare.util.getDateTime
-import eltonio.projects.politicalsquare.util.quizIsActive
+import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,38 +20,51 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
     private val localRepo = AppRepository.Local()
     private var dbRepo: AppRepository.DB
 
-    private var quizId = -1
+    private var ideologyIsChosenEvent: MutableLiveData<Boolean> = MutableLiveData()
+    private var ideologyTitle: MutableLiveData<String> = MutableLiveData()
+    private var quizOptionId: MutableLiveData<Int> = MutableLiveData()
+    private var horStartScore: MutableLiveData<Int> = MutableLiveData()
+    private var verStartScore: MutableLiveData<Int> = MutableLiveData()
 
     private var x = 0f
     private var y = 0f
-    private var horStartScore = 0
-    private var verStartScore = 0
-
-    var ideologyIsChosenEvent: MutableLiveData<Boolean>
-    var ideology: MutableLiveData<String>
+//    private var horStartScore = 0
+//    private var verStartScore = 0
 
     init {
-        ideologyIsChosenEvent = MutableLiveData()
-        ideology = MutableLiveData()
-
         val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
         val questionDao = AppDatabase.getDatabase(application).questionDao()
         dbRepo = AppRepository.DB(quizResultDao, questionDao)
 
         when(localRepo.loadQuizOption()) {
-            QuizOptions.UKRAINE.id -> getQuestionsWithAnswers(QuizOptions.UKRAINE.id)
-            QuizOptions.WORLD.id -> getQuestionsWithAnswers(QuizOptions.WORLD.id)
+            QuizOptions.UKRAINE.id -> getQuestions(QuizOptions.UKRAINE.id)
+            QuizOptions.WORLD.id -> getQuestions(QuizOptions.WORLD.id)
         }
-        Collections.shuffle(App.appQuestionsWithAnswers)
     }
 
     /** METHODS */
-    private fun getQuestionsWithAnswers(quizId: Int) {
-        this.quizId = quizId
-        chosenQuizId = quizId
-        viewModelScope.launch {
+    private fun getQuestions(quizId: Int) {
+        quizOptionId.value = quizId
+        viewModelScope.launch (Dispatchers.IO) {
             App.appQuestionsWithAnswers = dbRepo.getQuestionsWithAnswers(quizId)
+            Collections.shuffle(App.appQuestionsWithAnswers)
         }
+    }
+
+    fun getQuizId(): LiveData<Int> {
+        return quizOptionId
+    }
+
+    fun getHorStartScore(): LiveData<Int> {
+        return horStartScore
+    }
+
+    fun getVerStartScore(): LiveData<Int> {
+        return verStartScore
+    }
+
+    fun setQuizIsActive(isActive: Boolean) {
+        localRepo.setQuizIsActive(isActive)
     }
 
     fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideology: String, quizId: Int) {
@@ -99,16 +108,20 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun getStartScore() {
+    fun getIdeologyTitle(): LiveData<String> {
         val step = convertDpToPx(4f)
-        horStartScore =
+        horStartScore.value =
             (x / step - 40).toInt()
-        verStartScore =
+        verStartScore.value =
             (y / step - 40).toInt()
+        ideologyTitle.value = getIdeology(horStartScore.value!!, verStartScore.value!!)
+        return ideologyTitle
     }
 
-    fun getIdeology() {
-        ideology.value = eltonio.projects.politicalsquare.util.getIdeology(horStartScore, verStartScore)
+    fun setIdeologyIsChosenEvent(isChosen: Boolean) {
+        ideologyIsChosenEvent.value = isChosen
     }
-
+    fun getIdeologyIsChosenEvent(): LiveData<Boolean> {
+        return ideologyIsChosenEvent
+    }
 }

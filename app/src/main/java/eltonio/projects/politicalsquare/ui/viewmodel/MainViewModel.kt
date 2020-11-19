@@ -6,24 +6,27 @@ import com.google.firebase.database.DatabaseReference
 import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.util.getDateTime
-import eltonio.projects.politicalsquare.util.mainActivityIsInFront
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MainViewModel : ViewModel(), LifecycleObserver {
-
     private val localRepo = AppRepository.Local()
     private val cloudRepo = AppRepository.Cloud()
+
+    var splashAppearedEvent = MutableLiveData<Boolean>()
+    var spinnerSelection = MutableLiveData<Int>()
 
     private lateinit var usersRef: DatabaseReference
     private var currentUser: FirebaseUser? = null
     private lateinit var userId: String
     private lateinit var lastSessionStarted: String
 
-    var splashAppearedEvent = MutableLiveData<Boolean>()
-    var spinnerSelection = MutableLiveData<Int>()
-
     init {
-        cloudRepo.setUserLangProperty(localRepo.getLang())
+        viewModelScope.launch(Dispatchers.IO) {
+            cloudRepo.setUserLangProperty(localRepo.getLang())
+        }
 
         if (localRepo.getSplashAppeared() == false) splashAppearedEvent.value = false
 
@@ -37,38 +40,53 @@ class MainViewModel : ViewModel(), LifecycleObserver {
         currentUser = cloudRepo.firebaseUser
         lastSessionStarted = getDateTime()
 
-        if (currentUser == null) {
-            cloudRepo.createAndSignInAnonymously()
-            localRepo.setSessionStarted()
-            userId = currentUser?.uid ?: "none"
-        } else {
-            userId = currentUser?.uid ?: "none"
-            if (localRepo.getSessionStarted() == false) {
-                cloudRepo.updateUser(userId, lastSessionStarted)
+        viewModelScope.launch {
+            if (currentUser == null) {
+                withContext(Dispatchers.IO) {
+                    cloudRepo.createAndSignInAnonymously()
+                }
                 localRepo.setSessionStarted()
+                userId = currentUser?.uid ?: "none"
+            } else {
+                userId = currentUser?.uid ?: "none"
+                if (localRepo.getSessionStarted() == false) {
+                    withContext(Dispatchers.IO) {
+                        cloudRepo.updateUser(userId, lastSessionStarted)
+                    }
+                    localRepo.setSessionStarted()
+                }
+                withContext(Dispatchers.IO) {
+                    cloudRepo.setAnalyticsUserId(userId)
+                    cloudRepo.logAnonymLoginEvent(lastSessionStarted)
+                }
             }
-            cloudRepo.setAnalyticsUserId(userId)
-            cloudRepo.logAnonymLoginEvent(lastSessionStarted)
         }
     }
 
     fun clickSpinnerItem(id: Int) {
-        when (id) {
-            QuizOptions.WORLD.id -> {
-                localRepo.saveQuizOption(QuizOptions.WORLD.id)
-                cloudRepo.logChangeQuizOptionEvent(QuizOptions.WORLD.id)
-            }
-            QuizOptions.UKRAINE.id -> {
-                localRepo.saveQuizOption(QuizOptions.UKRAINE.id)
-                cloudRepo.logChangeQuizOptionEvent(QuizOptions.UKRAINE.id)
+        viewModelScope.launch {
+            when (id) {
+                QuizOptions.WORLD.id -> {
+                    localRepo.saveQuizOption(QuizOptions.WORLD.id)
+                    withContext(Dispatchers.IO) {
+                        cloudRepo.logChangeQuizOptionEvent(QuizOptions.WORLD.id) }
+                }
+                QuizOptions.UKRAINE.id -> {
+                    withContext(Dispatchers.IO) {
+                        localRepo.saveQuizOption(QuizOptions.UKRAINE.id) }
+                }
             }
         }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    private fun onResume() { mainActivityIsInFront = true }// TODO: Refactor - to Repo
+    private fun onResume() {
+        localRepo.setMainActivityIsInFront(true)
+    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    private fun onPause() { mainActivityIsInFront = false }// TODO: Refactor - to Repo
+    private fun onPause() {
+        localRepo.setMainActivityIsInFront(false)
+    }
 
 }

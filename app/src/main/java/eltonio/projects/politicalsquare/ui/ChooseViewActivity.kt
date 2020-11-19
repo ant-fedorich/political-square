@@ -12,18 +12,18 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.Question
 import eltonio.projects.politicalsquare.ui.viewmodel.ChooseViewViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
+import kotlinx.coroutines.*
 
 class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchListener {
     /** DECLARATION */
-    // TODO: Should I use a global var of view model and a scope
     private lateinit var viewModel: ChooseViewViewModel
 
     // TODO: mvvm vars to vm???
@@ -57,12 +57,24 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     private var containerHeight = -1
     private var containerWidth = -1
 
+    private var ideologyIsChosen = false
+
     /** METHODS */
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_view)
         viewModel = ViewModelProvider(this).get(ChooseViewViewModel::class.java)
+
+        viewModel.getQuizId().observe(this, Observer {
+            quizId = it
+        })
+        viewModel.getHorStartScore().observe(this, Observer {
+            horStartScore = it
+        })
+        viewModel.getVerStartScore().observe(this, Observer {
+            verStartScore = it
+        })
 
         // Init listeners
         button_start_quiz.setOnClickListener(this)
@@ -76,7 +88,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-
         containerHeight = frame_1.height
         containerWidth = frame_1.width
 
@@ -101,7 +112,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 startChangeSizePointAnimation()
                 saveOldPointParams(event)
 
-                viewModel.ideologyIsChosenEvent.value = true
+                ideologyIsChosen = true
 
                 v?.performClick()
             }
@@ -116,24 +127,20 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         }
     }
 
-
     /** CUSTOM METHODS */
     @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
     private fun onStartQuizClicked() {
-        viewModel.ideologyIsChosenEvent.observe(this, Observer<Boolean> {
-            if (it != true) {
-                return@Observer toast(getString(R.string.chooseview_toast_choose_first))
-            }
-        })
+        if (ideologyIsChosen != true) {
+            return toast(getString(R.string.chooseview_toast_choose_first))
+        } else {
+            viewModel.setQuizIsActive(true)
+            viewModel.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId)
 
-//        // TODO: VM - to vm Repo, works everywhere
-        quizIsActive = true
-        viewModel.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId)
-
-        startActivity(Intent(this, QuizActivity::class.java))
-        slideLeft(this)
-        MainActivity().finish()
-        finish()
+            startActivity(Intent(this, QuizActivity::class.java))
+            slideLeft(this)
+            MainActivity().finish()
+            finish()
+        }
     }
 
     private fun onCompassInfoClicked() {
@@ -157,10 +164,8 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
         viewModel.getXandYForHover(x, y, endX, endY)
 
-        viewModel.getStartScore()
-        viewModel.getIdeology()
-
-        viewModel.ideology.observe(this, Observer<String> {
+        viewModel.getIdeologyTitle().observe(this, Observer<String> {
+            ideology = it
             when (it) {
                 Ideologies.AUTHORITARIAN_LEFT.title -> showThisIdeologyHover(image_autho_left_hover)
                 Ideologies.RADICAL_NATIONALISM.title -> showThisIdeologyHover(image_nation_hover)
@@ -184,11 +189,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 else -> showThisIdeologyHover(null)
             }
         })
-
-
-        // end
-
-        Log.d(TAG, "Area is touched: x = $x, y = $y")
+        //Log.d(TAG, "Area is touched: x = $x, y = $y")
     }
 
     private fun showThisIdeologyHover(ideologyHover: ImageView?) {
@@ -197,7 +198,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         if (oldIdeologyHover == ideologyHover) {
             return
         }
-
         // Hide this ideology
         if (oldIdeologyHover != null) {
             oldIdeologyHover?.alpha = 0.5f
@@ -258,7 +258,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     }
 
     private fun addOldPointFrame() {
-        // TODO: V - to animation method
         oldPointFrame = ConstraintLayout(this)
         oldLayoutFrameParams?.leftMargin = oldLeftMargin
         oldLayoutFrameParams?.topMargin = oldTopMargin
@@ -267,11 +266,9 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         oldPointFrame?.layoutParams = oldLayoutFrameParams
         frame_1.removeAllViews()
         frame_1.addView(oldPointFrame)
-        // end
     }
 
     private fun startOldPointViewAnimation() {
-        // TODO: V - to animation method
         ObjectAnimator.ofFloat(radiusInDp, 0f).apply {
             interpolator = AccelerateInterpolator()
             addUpdateListener {
@@ -285,7 +282,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
                 oldPointFrame?.addView(oldPointView)
             }
         }.start()
-        //end
     }
 
     private fun addPointFrame(event: MotionEvent) {

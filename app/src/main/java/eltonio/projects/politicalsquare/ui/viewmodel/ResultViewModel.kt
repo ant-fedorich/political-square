@@ -4,15 +4,12 @@ import android.app.Application
 import androidx.lifecycle.*
 import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppRepository
-import eltonio.projects.politicalsquare.data.AppViewModel
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewX
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewY
-import eltonio.projects.politicalsquare.util.chosenQuizId
 import eltonio.projects.politicalsquare.util.getIdeology
 import eltonio.projects.politicalsquare.util.getIdeologyStringId
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -24,8 +21,10 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
     private var cloudRepo = AppRepository.Cloud()
     private var dbRepo: AppRepository.DB
 
-    private lateinit var appViewModel: AppViewModel
-    private lateinit var scope: CoroutineScope
+    private var chosenIdeologyLiveData: MutableLiveData<String>
+    private var resultIdeologyLiveData: MutableLiveData<String>
+    private var compassX: MutableLiveData<Int>
+    private var compassY: MutableLiveData<Int>
 
     private var chosenIdeology = ""
     private var resultIdeology = ""
@@ -42,14 +41,6 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
     var horStartScore = 0
     var verStartScore = 0
 
-
-
-    var chosenIdeologyLiveData: MutableLiveData<String>
-    var resultIdeologyLiveData: MutableLiveData<String>
-    private var compassX: MutableLiveData<Int>
-    private var compassY: MutableLiveData<Int>
-
-
     private var ideologyStringId: String = ""
 
 
@@ -58,11 +49,12 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
         val questionDao = AppDatabase.getDatabase(application).questionDao()
         dbRepo = AppRepository.DB(quizResultDao, questionDao)
         localRepo = AppRepository.Local()
-
-        cloudRepo.logQuizCompleteEvent()
+        viewModelScope.launch(Dispatchers.IO) {
+            cloudRepo.logQuizCompleteEvent()
+        }
 
         // LiveData
-        chosenIdeology = localRepo.getChosenIdeology()
+//        chosenIdeology = localRepo.getChosenIdeology()
         chosenIdeologyLiveData = MutableLiveData()
         resultIdeologyLiveData = MutableLiveData()
 
@@ -74,6 +66,14 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
         compassX = MutableLiveData(horScore.plus(40))
         compassY = MutableLiveData(verScore.plus(40))
         chosenIdeologyLiveData.value = chosenIdeology
+    }
+
+    fun getChosenIdeology(): LiveData<String> {
+        return chosenIdeologyLiveData
+    }
+
+    fun getResultIdeology(): LiveData<String> {
+        return resultIdeologyLiveData
     }
 
     private fun collectAllResultData() {
@@ -118,7 +118,7 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
     private fun addQuizResultToRepository() {
         val quizResult = QuizResult(
             id = 0, //id is autoincrement
-            quizId = chosenQuizId,
+            quizId = quizId,
             ideologyStringId = ideologyStringId,
             horStartScore = horStartScore,
             verStartScore = verStartScore,
@@ -132,8 +132,8 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
 
         viewModelScope.launch(Dispatchers.IO) {
             dbRepo.addQuizResult(quizResult)
+            cloudRepo.addQuizResult(userId, quizResult)
         }
-        cloudRepo.addQuizResult(userId, quizResult)
     }
 
     fun getCompassX(): LiveData<Int> {
@@ -145,6 +145,8 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun onCompassInfoClick() {
-        cloudRepo.logDetailedInfoEvent()
+        viewModelScope.launch(Dispatchers.IO) {
+            cloudRepo.logDetailedInfoEvent()
+        }
     }
 }

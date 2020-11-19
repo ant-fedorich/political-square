@@ -1,20 +1,17 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuizResult
-import eltonio.projects.politicalsquare.util.TAG
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class SaveResultViewModel(application: Application) : AndroidViewModel(application) {
     private var dbRepo: AppRepository.DB
-
-    private var resultList = MutableLiveData<List<QuizResult>>()
 
     init {
         val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
@@ -23,28 +20,26 @@ class SaveResultViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun getResultList(): LiveData<List<QuizResult>> {
-        runBlocking {
-            resultList.value = dbRepo.getQuizResults()
+        return liveData {
+            emit(dbRepo.getQuizResults())
         }
-        return resultList
     }
 
     fun getResultListWithDelay(): LiveData<List<QuizResult>> {
-        runBlocking {
+        return liveData {
             delay(200)
-            resultList.value = dbRepo.getQuizResults()
+            emit(dbRepo.getQuizResults())
         }
-        return resultList
     }
 
     fun deleteQuizResult(quizResult: QuizResult) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dbRepo.deleteQuizResult(quizResult)
         }
     }
 
     fun addQuizResult(quizResult: QuizResult) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dbRepo.addQuizResult(quizResult)
         }
     }

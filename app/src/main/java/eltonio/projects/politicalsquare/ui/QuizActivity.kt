@@ -31,7 +31,6 @@ import kotlinx.coroutines.Dispatchers
 
 class QuizActivity : BaseActivity(), View.OnTouchListener {
     lateinit var viewModel: QuizViewModel
-    lateinit var scope: CoroutineScope
 
     private var questionCountTotal = 0
     private var questionCounter = 0
@@ -41,24 +40,22 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
     private lateinit var radioShapeHover3: GradientDrawable
     private lateinit var radioShapeHover4: GradientDrawable
     private lateinit var radioShapeHover5: GradientDrawable
-
     private lateinit var radioShapeHoverList: MutableList<GradientDrawable>
-    private var rbSelectedIndex = -1
 
+    private var rbSelectedIndex = -1
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
         viewModel = ViewModelProvider(this).get(QuizViewModel::class.java)
-        scope = CoroutineScope(Dispatchers.IO)
 
-        viewModel.questionCounterTotalLiveData.observe(this, Observer {
+        viewModel.getQuestionCounterTotal().observe(this, Observer {
             questionCountTotal = it
             Log.i(TAG, "Activity: QuestionCountTotal = $it")
 
         })
-        viewModel.questionCounterLiveData.observe(this, Observer {
+        viewModel.getQuestionCounter().observe(this, Observer {
             questionCounter = it
             Log.i(TAG, "Activity: questionCounter = $it")
             text_questions_left.text = "${questionCounter} / $questionCountTotal"
@@ -113,7 +110,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         for (item in radioShapeHoverList) {
             item.setColor(ContextCompat.getColor(this@QuizActivity, android.R.color.transparent))
         }
-        viewModel.quizFinishedEvent.observe(this, Observer {
+        viewModel.getQuizFinishedEvent().observe(this, Observer {
             if (it == false) {
                 radio_group_answers.clearCheck()
                 text_question_new.visibility = View.VISIBLE
@@ -129,19 +126,19 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             }
         })
 
-        viewModel.questionNew.observe(this, Observer {
+        viewModel.getQuestionNew().observe(this, Observer {
             text_question_new.text = it
         })
 
-        viewModel.questionOld.observe(this, Observer {
+        viewModel.getQuestionOld().observe(this, Observer {
             text_question_old.text = it
         })
 
-        viewModel.FABButtonShowEvent.observe(this, Observer {
+        viewModel.getFABButtonShowEvent().observe(this, Observer {
             if (it == true)
                 startShowFABAnimation()
         })
-        viewModel.previousStepLiveData.observe(this, Observer {
+        viewModel.getPreviousStep().observe(this, Observer {
             val prevRadioButton = radio_group_answers[it.rbIndex] as RadioButton
             prevRadioButton.isChecked = true
             fadeInOldAnswer(prevRadioButton, radioShapeHoverList[it.rbIndex])
@@ -167,7 +164,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     radio_answer_1.isChecked = true
                     viewModel.checkAnswer(rbSelectedIndex)
                     viewModel.showNextQuestion()
-                    if (fab_undo.isEnabled != true) fab_undo.isEnabled = true // TODO: V
+                    if (fab_undo.isEnabled != true) fab_undo.isEnabled = true
                 }
             }
 
@@ -199,7 +196,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     radio_answer_3.isChecked = true
                     viewModel.checkAnswer(rbSelectedIndex)
                     viewModel.showNextQuestion()
-                    if (fab_undo.isEnabled != true) fab_undo.isEnabled = true // TODO: V
+                    if (fab_undo.isEnabled != true) fab_undo.isEnabled = true
                 }
             }
 
@@ -215,7 +212,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     radio_answer_4.isChecked = true
                     viewModel.checkAnswer(rbSelectedIndex)
                     viewModel.showNextQuestion()
-                    if (fab_undo.isEnabled != true) fab_undo.isEnabled = true // TODO: V
+                    if (fab_undo.isEnabled != true) fab_undo.isEnabled = true
                 }
             }
 
@@ -232,7 +229,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
                     viewModel.checkAnswer(rbSelectedIndex)
                     viewModel.showNextQuestion()
-                    if (fab_undo.isEnabled != true) fab_undo.isEnabled = true // TODO: V
+                    if (fab_undo.isEnabled != true) fab_undo.isEnabled = true
                 }
             }
         }
@@ -240,7 +237,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
     }
 
     override fun onBackPressed() {
-        showEndQuizDialogLambda(this) { // TODO: livedata inside
+        showEndQuizDialogLambda(this) {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }

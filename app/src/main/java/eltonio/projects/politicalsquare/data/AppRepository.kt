@@ -4,19 +4,21 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.util.*
+import kotlinx.coroutines.*
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
 class AppRepository {
 
@@ -54,9 +56,9 @@ class AppRepository {
             // TODO: Deprecated. Change it
             context.resources.updateConfiguration(config, context.resources.displayMetrics)
             prefSettings.edit().putString(PREF_LANG, lang).apply()
-
-            defaultLang = lang
+//            defaultLang = lang
         }
+
 
         fun getLang(): String {
             val defLang = Locale.getDefault().language
@@ -87,7 +89,7 @@ class AppRepository {
                 putInt(PREF_HORIZONTAL_START_SCORE, horStartScore)
                 putInt(PREF_VERTICAL_START_SCORE, verStartScore)
                 putString(PREF_CHOSEN_IDEOLOGY, ideology)
-                putInt(PREF_QUIZ_ID, quizId)
+                putInt(PREF_CHOSEN_QUIZ_ID, quizId)
                 putString(PREF_STARTED_AT, startedAt)
             }.apply()
         }
@@ -98,12 +100,9 @@ class AppRepository {
         fun getVerStartScore() = pref.getInt(PREF_VERTICAL_START_SCORE, 0)
         fun getChosenIdeology() = pref.getString(PREF_CHOSEN_IDEOLOGY, "").toString()
         fun getStartedAt() = pref.getString(PREF_STARTED_AT, "").toString()
-        fun getZeroAnswerCnt() = pref.getInt(PREF_ZERO_ANSWER_CNT, -1)
 
         fun getHorScore() = pref.getInt(PREF_HORIZONTAL_SCORE, -100)
         fun getVerScore() = pref.getInt(PREF_VERTICAL_SCORE, -100)
-
-        fun setZeroAnswerCht(zeroAnswerCnt: Int) = pref.edit().putInt(PREF_ZERO_ANSWER_CNT, zeroAnswerCnt).apply()
 
         fun setHorScore(horizontalScore: Int) = pref.edit().putInt(PREF_HORIZONTAL_SCORE, horizontalScore).apply()
         fun setVerScore(verticalScore: Int) = pref.edit().putInt(PREF_VERTICAL_SCORE, verticalScore).apply()
@@ -113,6 +112,16 @@ class AppRepository {
 
         fun setIntroOpened() = prefSettings.edit().putBoolean(PREF_IS_INTRO_OPENED, true).apply()
         fun getIntroOpened(): Boolean = prefSettings.getBoolean(PREF_IS_INTRO_OPENED, false)
+
+        fun setSplashAnimationTime(animationTime: Long) = pref.edit().putLong(PREF_SPLASH_ANIMATION_TIME, animationTime).apply()
+        fun getSplashAnimationTime() = pref.getLong(PREF_SPLASH_ANIMATION_TIME, 600L)
+
+        fun setQuizIsActive(isActive: Boolean) = pref.edit().putBoolean(PREF_QUIZ_IS_ACTIVE, isActive).apply()
+        fun getQuizIsActive() = pref.getBoolean(PREF_QUIZ_IS_ACTIVE, false)
+
+        fun setMainActivityIsInFront(isInFront: Boolean) = pref.edit().putBoolean(PREF_MAIN_ACTIVITY_IS_IN_FRONT, isInFront).apply()
+        fun getMainActivityIsInFront() = pref.getBoolean(PREF_MAIN_ACTIVITY_IS_IN_FRONT, false)
+
 
         fun getViewPagerScreenList(): MutableList<ScreenItem> {
             return mutableListOf(
@@ -154,8 +163,6 @@ class AppRepository {
         var firebaseAuth: FirebaseAuth? = null
         var firebaseUser: FirebaseUser? = null  // LiveData
         private var userLoggedIn = false // LiveData
-        private var userExists = true // FOR TEST
-        private val localRepo = Local()
 
         init {
             firebaseAuth = Firebase.auth
@@ -166,7 +173,7 @@ class AppRepository {
             }
         }
 
-        fun createAndSignInAnonymously() {
+        suspend fun createAndSignInAnonymously() {
             firebaseAuth?.signInAnonymously()
                 ?.addOnSuccessListener { result ->
                     Log.i(TAG, "signInAnonymously: SUCCESS")
@@ -177,8 +184,10 @@ class AppRepository {
                     val lastSessionStarted = getDateTime()
 
                     if (userId != null) {
-                        setUserCreationDate(userId, lastSessionStarted) //TODO: Does not work
-                        updateUser(userId, lastSessionStarted)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            setUserCreationDate(userId, lastSessionStarted)
+                            updateUser(userId, lastSessionStarted)
+                        }
                     }
                 }
                 ?.addOnFailureListener { e ->
@@ -186,55 +195,54 @@ class AppRepository {
                 }
         }
 
-        fun addQuizResult(userId: String, quizResult: QuizResult) {
+        suspend fun addQuizResult(userId: String, quizResult: QuizResult) {
             val quizResultRef = Firebase.database.getReference("QuizResults").push()
             quizResultRef.setValue(quizResult)
             quizResultRef.child("userId").setValue(userId)
         }
 
-        fun updateUser(userId: String, lastLogInDate: String) {
-            usersRef?.child(userId)?.apply {
+        suspend fun updateUser(userId: String, lastLogInDate: String) {
+            usersRef.child(userId).apply {
                 child("name").setValue("Noname")
                 child("email").setValue("Noname@mail.com")
                 child("lastSessionStarted").setValue(lastLogInDate)
             }
         }
 
-        fun setUserCreationDate(userId: String, userCreationDate: String) =
-            usersRef?.child(userId)?.child("creationDate")?.setValue(userCreationDate)
+        suspend fun setUserCreationDate(userId: String, userCreationDate: String) =
+            usersRef.child(userId).child("creationDate").setValue(userCreationDate)
 
 
-        fun setAnalyticsUserId(userId: String) = App.analytics.setUserId(userId)
+        suspend fun setAnalyticsUserId(userId: String) = App.analytics.setUserId(userId)
 
-        fun setUserLangProperty(loadedLang: String) = App.analytics.setUserProperty(
+        suspend fun setUserLangProperty(loadedLang: String) = App.analytics.setUserProperty(
             EVENT_PREFERRED_LANG, loadedLang)
 
-        fun logSessionStartEvent() = App.analytics.logEvent(EVENT_QUIZ_SESSION_START, null)
+        suspend fun logSessionStartEvent() = App.analytics.logEvent(EVENT_QUIZ_SESSION_START, null)
 
-        fun logAnonymLoginEvent(lastLogInDate: String) = App.analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
+        suspend fun logAnonymLoginEvent(lastLogInDate: String) = App.analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
             param(FirebaseAnalytics.Param.METHOD, "anonymously")
             param(PARAM_LOGIN_DATE, lastLogInDate)
         }
 
-        fun logQuizBeginEvent() = App.analytics.logEvent(EVENT_QUIZ_BEGIN) {
+        suspend fun logQuizBeginEvent() = App.analytics.logEvent(EVENT_QUIZ_BEGIN) {
             param(FirebaseAnalytics.Param.START_DATE, System.currentTimeMillis())
         }
 
-        fun logQuizCompleteEvent() = App.analytics.logEvent(EVENT_QUIZ_COMPLETE) {
+        suspend fun logQuizCompleteEvent() = App.analytics.logEvent(EVENT_QUIZ_COMPLETE) {
             param(FirebaseAnalytics.Param.END_DATE, System.currentTimeMillis())
         }
 
-        fun logDetailedInfoEvent() = App.analytics.logEvent(EVENT_DETAILED_INFO, null)
+        suspend fun logDetailedInfoEvent() = App.analytics.logEvent(EVENT_DETAILED_INFO, null)
 
-        fun logChangeQuizOptionEvent(quizOption: Int) {
+        suspend fun logChangeQuizOptionEvent(quizOption: Int) {
             val bundle = Bundle().apply {
                 putInt(FirebaseAnalytics.Param.CONTENT, quizOption)
                 putString(FirebaseAnalytics.Param.CONTENT_TYPE, "change_quiz_option")
             }
             App.analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
         }
-
-// TODO: Crashlytics disabled
-// fun logCrash(message: String) = App.crashlytics.log(message)
+        // TODO: Crashlytics disabled
+        // fun logCrash(message: String) = App.crashlytics.log(message)
     }
 }
