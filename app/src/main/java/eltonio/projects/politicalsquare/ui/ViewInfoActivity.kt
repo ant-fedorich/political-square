@@ -6,19 +6,27 @@ import android.text.method.ScrollingMovementMethod
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.get
+import dagger.android.support.DaggerAppCompatActivity
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.ui.viewmodel.ViewInfoViewModel
+import eltonio.projects.politicalsquare.ui.viewmodel.ViewModelProviderFactory
 import eltonio.projects.politicalsquare.util.EXTRA_IDEOLOGY_TITLE
 import eltonio.projects.politicalsquare.util.pushRight
 import kotlinx.android.synthetic.main.activity_view_info.*
+import javax.inject.Inject
 
-class ViewInfoActivity : AppCompatActivity() {
+class ViewInfoActivity : DaggerAppCompatActivity() {
     private lateinit var viewModel: ViewInfoViewModel
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_info)
-        viewModel = ViewModelProvider(this).get(ViewInfoViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, providerFactory)[ViewInfoViewModel::class.java]
 
         setSupportActionBar(toolbar_collapsing)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

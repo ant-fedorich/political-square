@@ -1,14 +1,18 @@
 package eltonio.projects.politicalsquare.adapter
 
 import android.content.Context
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.ScreenItem
 import eltonio.projects.politicalsquare.util.playGif
 import kotlinx.android.synthetic.main.layout_screen_item.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 
 class IntroViewPagerAdapter(var context: Context, var screenList: MutableList<ScreenItem>) : PagerAdapter(){
 
@@ -26,6 +30,7 @@ class IntroViewPagerAdapter(var context: Context, var screenList: MutableList<Sc
         val title = screenLayout.text_intro_title
         val image = screenLayout.image_intro_animation
         val imageBackground = screenLayout.image_intro_background
+
 
         // Tags to have an access to views
         image.tag = "tag_image_intro_animation_$position"

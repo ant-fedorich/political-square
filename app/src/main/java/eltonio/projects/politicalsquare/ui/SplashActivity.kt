@@ -33,10 +33,6 @@ class SplashActivity : DaggerAppCompatActivity() {
 
         setCompassImage()
 
-/*        Glide.with(appContext)
-            .load(R.drawable.img_compass_only_strokes)
-            .into(image_compass_only_strokes)*/
-
         // Fading
         startFadingAnimation()
         doActionAfterFading()

@@ -1,13 +1,20 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.util.TAG
+import javax.inject.Inject
 
-class ViewInfoViewModel : ViewModel() {
+class ViewInfoViewModel @Inject constructor(): ViewModel() {
+    init {
+        Log.i(TAG, "ViewInfo: viewmodel is working...")
+    }
+
 
     private var ideology: MutableLiveData<String> = MutableLiveData()
     private var imageId: MutableLiveData<Int> = MutableLiveData()

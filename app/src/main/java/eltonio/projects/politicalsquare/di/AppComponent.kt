@@ -7,12 +7,14 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import eltonio.projects.politicalsquare.App
+import javax.inject.Singleton
 
+@Singleton //AppComponent owns the Singleton scope, and all dependencies with this annotation will be owned by that scope
 @Component(
     modules = [
         AndroidSupportInjectionModule::class,
         ActivityBuilderModule::class,
-        AppModule::class
+        AppModule::class, ViewModelFactoryModule::class
     ])
 
 interface AppComponent : AndroidInjector<App> {
