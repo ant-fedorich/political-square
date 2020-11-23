@@ -5,14 +5,18 @@ import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.di.AppComponent
+import eltonio.projects.politicalsquare.di.DaggerAppComponent
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import eltonio.projects.politicalsquare.models.QuizResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class App : Application() {
+class App : DaggerApplication() {
 
     companion object {
         lateinit var appContext: Context
@@ -26,6 +30,11 @@ class App : Application() {
 
         var appQuestionsWithAnswers: List<QuestionWithAnswers> = emptyList()
     }
+
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication>? {
+        return DaggerAppComponent.builder().application(this).build()
+    }
+    // components = services, Activities = clients
 
     override fun onCreate() {
         super.onCreate()

@@ -8,11 +8,19 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.*
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import dagger.android.support.DaggerAppCompatActivity
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.util.appContext
 import kotlinx.android.synthetic.main.activity_splash.*
+import javax.inject.Inject
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : DaggerAppCompatActivity() {
+//    @JvmField
+    @Inject
+    lateinit var glideRequestManager: RequestManager
+
     private val localRepo = AppRepository.Local()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,9 +31,11 @@ class SplashActivity : AppCompatActivity() {
 
         Log.e(eltonio.projects.politicalsquare.util.TAG, "loadIsIntroOpened(): " + localRepo.getIntroOpened())
 
-        Glide.with(this)
+        setCompassImage()
+
+/*        Glide.with(appContext)
             .load(R.drawable.img_compass_only_strokes)
-            .into(image_compass_only_strokes)
+            .into(image_compass_only_strokes)*/
 
         // Fading
         startFadingAnimation()
@@ -36,6 +46,13 @@ class SplashActivity : AppCompatActivity() {
     }
 
    /** CUSTOM METHODS */
+   private fun setCompassImage() {
+       glideRequestManager
+           ?.load(R.drawable.img_compass_only_strokes)
+           ?.into(image_compass_only_strokes)
+   }
+
+
     private fun startFadingAnimation() {
        //splashAnimationTime = 600L // For Test without Into
        val fadingAnimation = AnimationUtils.loadAnimation(this, R.anim.splash_fading)
