@@ -35,7 +35,7 @@
         android:id="@+id/title_view_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="28dp"
         android:layout_marginBottom="24dp"
         android:text="Либертарианство"
         android:textAppearance="@style/TextAppearance.MyApp.Headline4"
@@ -61,9 +61,8 @@
         android:id="@+id/scroll_nested"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_ideology_info">
@@ -73,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:layout_marginTop="16dp"
             android:text="@string/viewinfo_desc_template"
             android:textAppearance="@style/TextAppearance.MyApp.Body1" />
     </androidx.core.widget.NestedScrollView>
