@@ -45,19 +45,5 @@ abstract class AppDatabase : RoomDatabase() {
                 return instance
             }
         }
-
-        fun checkDBExists(): Boolean {
-            dbFullPath = DB_PATH + DB_NAME
-            var check: SQLiteDatabase? = null
-            try {
-                check = SQLiteDatabase.openDatabase(dbFullPath, null, SQLiteDatabase.OPEN_READWRITE)
-            } catch (e: Exception) {
-                // TODO: Crashlytics disabled
-                //App.crashlytics.log("ERROR while checking to open DB. DB does not exist (this time): $e")
-                Log.e(TAG, "ERROR while checking to open DB. DB does not exist (this time)")
-            }
-            check?.close()
-            return check != null
-        }
     }
 }
