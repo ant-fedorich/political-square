@@ -20,34 +20,36 @@ class ViewInfoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_view_info)
         viewModel = ViewModelProvider(this).get(ViewInfoViewModel::class.java)
 
-        setSupportActionBar(toolbar_collapsing)
+//        setSupportActionBar(toolbar_collapsing)
+        setSupportActionBar(toolbar_view_info)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // Set color, because is transparent by style
         window.statusBarColor = ContextCompat.getColor(this, R.color.primary_dark)
+        title = ""
 
-        layout_collapsing_toolbar.apply {
-            setContentScrimColor(resources.getColor(R.color.collapsing_image_сollapsed))
-            setCollapsedTitleTextColor(resources.getColor(R.color.on_primary_bright))
-            setExpandedTitleColor(resources.getColor(R.color.on_primary_bright))
-        }
+//        layout_collapsing_toolbar.apply {
+//            setContentScrimColor(resources.getColor(R.color.collapsing_image_сollapsed))
+//            setCollapsedTitleTextColor(resources.getColor(R.color.on_primary_bright))
+//            setExpandedTitleColor(resources.getColor(R.color.on_primary_bright))
+//        }
 
         text_ideology_description.movementMethod = ScrollingMovementMethod()
 
         val ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
 
         viewModel.updateData(ideology)
-        viewModel.getIdeology().observe(this, Observer {
-            toolbar_collapsing.title = it
-        })
+//        viewModel.getIdeology().observe(this, Observer {
+//            toolbar_collapsing.title = it
+//        })
         viewModel.getImageId().observe(this, Observer {
             image_ideology_info.setImageResource(it)
         })
         viewModel.getDescriptionId().observe(this, Observer {
             text_ideology_description.text = getString(it)
         })
-        viewModel.getStyleId().observe(this, Observer {
-            layout_collapsing_toolbar.setExpandedTitleTextAppearance(it)
-        })
+//        viewModel.getStyleId().observe(this, Observer {
+//            layout_collapsing_toolbar.setExpandedTitleTextAppearance(it)
+//        })
     }
 
     override fun onSupportNavigateUp(): Boolean {
