@@ -8,6 +8,21 @@
         motion:constraintSetStart="@id/start"
         motion:duration="1000">
        <KeyFrameSet>
+           <KeyAttribute
+               motion:motionTarget="@+id/view_hover"
+               motion:framePosition="50" >
+               <CustomAttribute
+                   motion:attributeName="backgroundColor"
+                   motion:customColorValue="@color/collapsing_image_expanded" />
+           </KeyAttribute>
+           <KeyAttribute
+               motion:motionTarget="@+id/title_view_info"
+               motion:framePosition="85"
+               android:scaleX="0.7" />
+           <KeyAttribute
+               motion:motionTarget="@+id/title_view_info"
+               motion:framePosition="85"
+               android:scaleY="0.7" />
        </KeyFrameSet>
         <OnSwipe motion:touchAnchorId="@+id/scroll_nested" />
     </Transition>
@@ -26,6 +41,14 @@
                 motion:attributeName="backgroundColor"
                 motion:customColorValue="@color/collapsing_image_expanded" />
         </Constraint>
+        <Constraint
+            android:id="@+id/title_view_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/image_ideology_info"
+            android:layout_marginBottom="24dp"
+            android:layout_marginStart="28dp"
+            motion:layout_constraintStart_toStartOf="parent"></Constraint>
     </ConstraintSet>
 
 
@@ -48,11 +71,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             motion:layout_constraintBottom_toBottomOf="@+id/image_ideology_info"
-            android:layout_marginBottom="6dp"
-            android:layout_marginStart="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="28dp"
             motion:layout_constraintStart_toStartOf="parent"
-            android:scaleX="0.6"
-            android:scaleY="0.6">
+            android:scaleX="0.7"
+            android:scaleY="0.7">
+            <CustomAttribute
+                motion:attributeName="textStyle"
+                motion:customStringValue="bold" />
         </Constraint>
         <Constraint
             android:id="@+id/image_ideology_info"

@@ -8,6 +8,7 @@ import android.graphics.Point
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.motion.widget.MotionLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -226,4 +227,11 @@ fun playGif(screenImage: Int, containerImageView: ImageView) {
 fun refreshAllСatalogs(context: Context) {
     Ideologies.refreshAll(context)
     QuizOptions.refreshAll(context)
+}
+
+object EmptyTransitionListener : MotionLayout.TransitionListener {
+    override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {}
+    override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
+    override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {}
+    override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {}
 }
