@@ -38,9 +38,9 @@ class ViewInfoActivity : AppCompatActivity() {
         val ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
 
         viewModel.updateData(ideology)
-//        viewModel.getIdeology().observe(this, Observer {
-//            toolbar_collapsing.title = it
-//        })
+        viewModel.getIdeology().observe(this, Observer {
+            title_view_info.text = it
+        })
         viewModel.getImageId().observe(this, Observer {
             image_ideology_info.setImageResource(it)
         })
