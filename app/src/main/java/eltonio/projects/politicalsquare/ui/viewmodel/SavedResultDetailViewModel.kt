@@ -13,6 +13,8 @@ class SavedResultDetailViewModel : ViewModel() {
     private var owner =  MutableLiveData<String>()
     private var ideology = MutableLiveData<String>()
 
+
+    // TODO: Do local unit test with LD
     fun getOwner(quizId: Int): LiveData<String> {
         owner.value = when(quizId) {
             QuizOptions.UKRAINE.id -> QuizOptions.UKRAINE.owner
@@ -22,6 +24,8 @@ class SavedResultDetailViewModel : ViewModel() {
         return owner
     }
 
+
+    // TODO: Do local unit test with LD
     fun getIdeology(ideologyId: String): LiveData<String> {
         for (ideo in Ideologies.values()) {
             if (ideo.stringId == ideologyId) {

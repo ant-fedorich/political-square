@@ -100,6 +100,7 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
         ideologyStringId = getIdeologyStringId(resultIdeology)
     }
 
+    // TODO: Do Local Unit test
     private fun getTimeData() {
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val endDate = Date()

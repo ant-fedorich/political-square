@@ -74,9 +74,7 @@ var appContext = App.appContext
 /** Functions **/
 
 fun toast(msg: String) = Toast.makeText(appContext, msg, Toast.LENGTH_SHORT).show()
-
 fun toastLong(msg: String) = Toast.makeText(appContext, msg, Toast.LENGTH_LONG).show()
-
 fun getDateTime(): String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
 
 // Transitions between activities
@@ -136,8 +134,10 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
     }
 }
 
+// TODO: Instrumented unit test with context
 fun convertDpToPx(dp: Float): Float = dp * appContext.resources.displayMetrics.density
 
+// TODO: Instr unit test with context
 fun getScreenResolution(context: Context): Point {
     context as Activity
     val display = context.windowManager.defaultDisplay
@@ -188,6 +188,7 @@ fun getIdeology(horScore: Int, verScore: Int): String {
     }
 }
 
+// TODO: DO Local unit test
 fun getIdeologyStringId(ideologyName: String): String {
     var stringId = "none"
 
@@ -224,6 +225,8 @@ fun playGif(screenImage: Int, containerImageView: ImageView) {
         .into(containerImageView)
 }
 
+
+// TODO: Instr unit test with context
 fun refreshAllСatalogs(context: Context) {
     Ideologies.refreshAll(context)
     QuizOptions.refreshAll(context)
