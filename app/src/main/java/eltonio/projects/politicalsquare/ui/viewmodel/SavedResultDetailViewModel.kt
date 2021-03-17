@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.skydoves.balloon.createBalloon
+import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
 import kotlinx.android.synthetic.main.activity_saved_result_detail.*
 
 class SavedResultDetailViewModel : ViewModel() {
-
     private var owner =  MutableLiveData<String>()
     private var ideology = MutableLiveData<String>()
 

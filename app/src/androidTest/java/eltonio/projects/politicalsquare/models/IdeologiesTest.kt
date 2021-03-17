@@ -3,9 +3,8 @@ package eltonio.projects.politicalsquare.models
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
-import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.data.MainAppRepository
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 class IdeologiesTest {
@@ -16,12 +15,12 @@ class IdeologiesTest {
     private val ruTitle = "Анархизм"
     private val ukTitle = "Анархізм"
     private lateinit var context: Context
-    private lateinit var localRepo: AppRepository.Local
+    private lateinit var localRepo: MainAppRepository.Local
 
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
-        localRepo = AppRepository.Local()
+        localRepo = MainAppRepository.Local()
     }
 
     @Test

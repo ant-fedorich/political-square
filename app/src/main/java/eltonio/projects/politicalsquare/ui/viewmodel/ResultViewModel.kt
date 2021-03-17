@@ -1,9 +1,9 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
-import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
-import eltonio.projects.politicalsquare.data.AppDatabase
-import eltonio.projects.politicalsquare.data.AppRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import eltonio.projects.politicalsquare.data.MainAppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewX
@@ -15,11 +15,16 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class ResultViewModel(application: Application) : AndroidViewModel(application) {
-    private var localRepo = AppRepository.Local()
-    private var cloudRepo = AppRepository.Cloud()
-    private var dbRepo: AppRepository.DB
+@HiltViewModel
+class ResultViewModel @Inject constructor(
+    repository: MainAppRepository
+) : ViewModel() {
+    private var localRepo = repository.Local()
+    private var cloudRepo = repository.Cloud()
+    private var dbRepo = repository.DB()
+    private var interfaceRepo = repository.UI()
 
     private var chosenIdeologyLiveData: MutableLiveData<String>
     private var resultIdeologyLiveData: MutableLiveData<String>
@@ -45,10 +50,6 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
 
 
     init {
-        val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
-        val questionDao = AppDatabase.getDatabase(application).questionDao()
-        dbRepo = AppRepository.DB(quizResultDao, questionDao)
-        localRepo = AppRepository.Local()
         viewModelScope.launch(Dispatchers.IO) {
             cloudRepo.logQuizCompleteEvent()
         }
@@ -149,5 +150,9 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             cloudRepo.logDetailedInfoEvent()
         }
+    }
+
+    fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
+        interfaceRepo.showEndQuizDialogLambda(context, onOkBlock)
     }
 }

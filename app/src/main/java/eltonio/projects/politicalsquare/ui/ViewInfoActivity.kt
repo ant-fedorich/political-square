@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.ui.viewmodel.ViewInfoViewModel
 import eltonio.projects.politicalsquare.util.EXTRA_IDEOLOGY_TITLE
@@ -18,13 +20,13 @@ import eltonio.projects.politicalsquare.util.pushRight
 import kotlinx.android.synthetic.main.activity_view_info.*
 import eltonio.projects.politicalsquare.util.*
 
+@AndroidEntryPoint
 class ViewInfoActivity : AppCompatActivity() {
-    private lateinit var viewModel: ViewInfoViewModel
+    private val viewModel: ViewInfoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_info)
-        viewModel = ViewModelProvider(this).get(ViewInfoViewModel::class.java)
 
 //        setSupportActionBar(toolbar_collapsing)
         setSupportActionBar(toolbar_view_info)

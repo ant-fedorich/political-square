@@ -12,23 +12,25 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.RadioButton
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.ui.viewmodel.SettingsViewModel
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_base.view.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
-    private val localRepo = AppRepository.Local()
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModels()
+
+    //private val localRepo = AppRepository.Local()
 
     private lateinit var langBorderShapeUkr: GradientDrawable
     private lateinit var langBorderShapeRus: GradientDrawable
@@ -39,7 +41,6 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
         title = getString(R.string.settings_title_actionbar)
 
@@ -80,7 +81,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
                     val baseActivity = layoutInflater.inflate(R.layout.activity_base, null)
                     baseActivity.activity_container.closeDrawer(GravityCompat.START)
 
-                    showEndQuizDialogLambda(this) {
+                    viewModel.showEndQuizDialogLambda(this) {
                         checkRadioButton(checkedId)
                     }
                 } else {
@@ -260,7 +261,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
 
     private fun setLangAndStartMain(radioButton: RadioButton, lang: String) {
         radioButton.isChecked
-        localRepo.setLang(this, lang)
+        viewModel.setLang(this, lang)
         refreshAllСatalogs(this)
 
         startActivity(Intent(this, MainActivity::class.java))

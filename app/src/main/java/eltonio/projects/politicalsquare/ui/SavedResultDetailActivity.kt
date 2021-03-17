@@ -4,11 +4,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.ui.viewmodel.SavedResultDetailViewModel
 import eltonio.projects.politicalsquare.util.*
@@ -16,9 +18,9 @@ import eltonio.projects.politicalsquare.views.ResultDetailPointView
 import kotlinx.android.synthetic.main.activity_saved_result_detail.*
 import kotlinx.android.synthetic.main.activity_saved_result_detail.view.*
 
-
+@AndroidEntryPoint
 class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var viewModel: SavedResultDetailViewModel
+    private val viewModel: SavedResultDetailViewModel by viewModels()
 
     private var resultIdeology = ""
     private var ideologyId = ""
@@ -39,7 +41,6 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_result_detail)
-        viewModel = ViewModelProvider(this).get(SavedResultDetailViewModel::class.java)
 
         title = getString(R.string.savedresultdetail_title_actionbar)
 

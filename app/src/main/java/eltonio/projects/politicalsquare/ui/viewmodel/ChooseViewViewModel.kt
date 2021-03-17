@@ -1,24 +1,22 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.App
-import eltonio.projects.politicalsquare.data.AppDatabase
-import eltonio.projects.politicalsquare.data.AppRepository
-import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.Question
-import eltonio.projects.politicalsquare.models.QuestionWithAnswers
+import eltonio.projects.politicalsquare.data.MainAppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.util.*
-import kotlinx.android.synthetic.main.activity_choose_view.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class ChooseViewViewModel(application: Application) : AndroidViewModel(application) {
-    private val localRepo = AppRepository.Local()
-    private var dbRepo: AppRepository.DB
+@HiltViewModel
+class ChooseViewViewModel @Inject constructor(
+    repository: MainAppRepository
+) : ViewModel() {
+    private val localRepo = repository.Local()
+    private var dbRepo = repository.DB()
 
     private var ideologyIsChosenEvent: MutableLiveData<Boolean> = MutableLiveData()
     private var ideologyTitle: MutableLiveData<String> = MutableLiveData()
@@ -32,9 +30,8 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
 //    private var verStartScore = 0
 
     init {
-        val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
-        val questionDao = AppDatabase.getDatabase(application).questionDao()
-        dbRepo = AppRepository.DB(quizResultDao, questionDao)
+//        val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
+//        val questionDao = AppDatabase.getDatabase(application).questionDao()
 
         when(localRepo.loadQuizOption()) {
             QuizOptions.UKRAINE.id -> getQuestions(QuizOptions.UKRAINE.id)

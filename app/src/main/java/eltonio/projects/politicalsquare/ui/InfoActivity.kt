@@ -8,23 +8,24 @@ import android.view.MotionEvent
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.ui.viewmodel.InfoViewModel
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_info.*
 
+@AndroidEntryPoint
 class InfoActivity : AppCompatActivity() {
-    private lateinit var viewModel: InfoViewModel
-
+    private val viewModel: InfoViewModel by viewModels()
     private var oldIdeologyHover: ImageView? = null
     private var intentToViewInfo: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
-        viewModel = ViewModelProvider(this).get(InfoViewModel::class.java)
 
         title = getString(R.string.info_title_actionbar)
 

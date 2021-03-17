@@ -3,17 +3,21 @@ package eltonio.projects.politicalsquare.ui.viewmodel
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
-import eltonio.projects.politicalsquare.data.AppRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import eltonio.projects.politicalsquare.data.MainAppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.util.getDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-
-class MainViewModel : ViewModel(), LifecycleObserver {
-    private val localRepo = AppRepository.Local()
-    private val cloudRepo = AppRepository.Cloud()
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    repository: MainAppRepository
+) : ViewModel(), LifecycleObserver {
+    private val localRepo = repository.Local()
+    private val cloudRepo = repository.Cloud()
 
     var splashAppearedEvent = MutableLiveData<Boolean>()
     var spinnerSelection = MutableLiveData<Int>()

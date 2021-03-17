@@ -2,6 +2,7 @@ package eltonio.projects.politicalsquare.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.util.pushRight
 
@@ -11,7 +12,6 @@ class AboutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_about)
 
         title = getString(R.string.about_title_actionbar)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

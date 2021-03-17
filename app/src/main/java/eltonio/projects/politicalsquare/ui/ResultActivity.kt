@@ -6,8 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.animation.*
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.ui.viewmodel.ResultViewModel
@@ -16,13 +17,13 @@ import eltonio.projects.politicalsquare.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
 
+@AndroidEntryPoint
 class ResultActivity : BaseActivity(), View.OnClickListener {
-    private lateinit var viewModel: ResultViewModel
+    private val viewmodel: ResultViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
-        viewModel = ViewModelProvider(this).get(ResultViewModel::class.java)
 
         title = getString(R.string.result_title_actionbar)
 
@@ -30,25 +31,25 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
-        viewModel.getChosenIdeology().observe(this, Observer {
+        viewmodel.getChosenIdeology().observe(this, Observer {
             title_2_2.text = "$youThoughtText: $it"
         })
-        viewModel.getResultIdeology().observe(this, Observer {
+        viewmodel.getResultIdeology().observe(this, Observer {
             title_2.text = it
         })
 
         startResultPointsAnimation()
 
-        viewModel.getCompassX().observe(this, Observer {
+        viewmodel.getCompassX().observe(this, Observer {
             compassX = it
         })
-        viewModel.getCompassY().observe(this, Observer {
+        viewmodel.getCompassY().observe(this, Observer {
             compassY = it
         })
     }
 
     override fun onBackPressed() {
-        showEndQuizDialogLambda(this) {
+        viewmodel.showEndQuizDialogLambda(this) {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
@@ -57,9 +58,9 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_compass_info_2 -> {
-                viewModel.onCompassInfoClick()
+                viewmodel.onCompassInfoClick()
                 val intent = Intent(this, ViewInfoActivity::class.java)
-                viewModel.getResultIdeology().observe(this, Observer {
+                viewmodel.getResultIdeology().observe(this, Observer {
                     intent.putExtra(EXTRA_IDEOLOGY_TITLE, it)
                 })
                 startActivity(intent)

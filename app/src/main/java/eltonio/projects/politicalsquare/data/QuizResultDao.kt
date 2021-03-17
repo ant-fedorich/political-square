@@ -13,5 +13,5 @@ interface QuizResultDao {
     suspend fun deleteQuizResult(quizResult: QuizResult)
 
     @Query("SELECT * FROM QuizResult")
-    suspend fun getQuizResults(): List<QuizResult>
+    fun getQuizResults(): LiveData<List<QuizResult>>
 }

@@ -5,26 +5,27 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.Question
 import eltonio.projects.politicalsquare.ui.viewmodel.ChooseViewViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.*
 
-class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchListener {
+@AndroidEntryPoint
+class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchListener {
     /** DECLARATION */
-    private lateinit var viewModel: ChooseViewViewModel
+    private val viewModel: ChooseViewViewModel by viewModels()
 
     // TODO: mvvm vars to vm???
     private var horStartScore = 0
@@ -64,7 +65,6 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_view)
-        viewModel = ViewModelProvider(this).get(ChooseViewViewModel::class.java)
 
         viewModel.getQuizId().observe(this, Observer {
             quizId = it
@@ -138,6 +138,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
             startActivity(Intent(this, QuizActivity::class.java))
             slideLeft(this)
+            // TODO: 03/17/2021 Get rid of this
             MainActivity().finish()
             finish()
         }

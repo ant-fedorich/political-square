@@ -8,12 +8,17 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.*
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppRepository
+import eltonio.projects.politicalsquare.data.MainAppRepository
 import kotlinx.android.synthetic.main.activity_splash.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
-    private val localRepo = AppRepository.Local()
+
+    @Inject lateinit var repository: MainAppRepository
+    private val localRepo: MainAppRepository.Local by lazy { repository.Local() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -6,21 +6,21 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.ScreenItem
 import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
-import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.ui.viewmodel.IntroViewModel
 import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_intro.*
 
+@AndroidEntryPoint
 class IntroActivity : AppCompatActivity() {
-    private lateinit var viewModel: IntroViewModel
-    private var localRepo = AppRepository.Local()
+    private val viewmodel: IntroViewModel by viewModels()
 
     private lateinit var screenList: MutableList<ScreenItem>
     private lateinit var introViewPagerAdapter: IntroViewPagerAdapter
@@ -29,24 +29,26 @@ class IntroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_intro)
-        viewModel = ViewModelProvider(this).get(IntroViewModel::class.java)
 
-        viewModel.loadLang().observe(this, Observer {
-            localRepo.setLang(this, it)
+        // TODO: 03/17/2021 : Get rid of this. Make it in viewmodel  with Livedata
+        viewmodel.loadLang().observe(this, Observer {
+            viewmodel.setLang(this, it)
         })
-        viewModel.checkIntroOpened()
-        viewModel.getIntroOpened().observe(this, Observer {
+        viewmodel.checkIntroOpened()
+        viewmodel.getIntroOpened().observe(this, Observer {
             if (it == true) {
                 startActivity(Intent(this, MainActivity::class.java))
                 fadeIn(this)
                 finish()
             }
         })
-        viewModel.getSplashAnimationTime().observe(this, Observer {
-            localRepo.setSplashAnimationTime(it)
+
+        // TODO: 03/17/2021 : Get rid of this. Make it in viewmodel with Livedata
+        viewmodel.getSplashAnimationTime().observe(this, Observer {
+            viewmodel.setSplashAnimationTime(it)
 
         })
-        viewModel.getScreenList().observe(this@IntroActivity, Observer {
+        viewmodel.getScreenList().observe(this@IntroActivity, Observer {
             screenList = it
             initViewPager()
         })

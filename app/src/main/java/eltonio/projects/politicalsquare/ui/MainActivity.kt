@@ -6,8 +6,9 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.AdapterView
 import android.widget.Spinner
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.adapter.QuizOptionAdapter
@@ -16,8 +17,9 @@ import eltonio.projects.politicalsquare.util.*
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity() {
-    private lateinit var viewModel: MainViewModel
+@AndroidEntryPoint
+class MainActivity: BaseActivity() {
+    private val viewModel: MainViewModel by viewModels()
 
     companion object {
         lateinit var spinnerView: Spinner // To use it in Settings
@@ -25,10 +27,9 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         lifecycle.addObserver(viewModel)
 
-        viewModel.splashAppearedEvent.observe(this, Observer<Boolean> {
+        viewModel.splashAppearedEvent.observe(this, {
             if (it == false) {
                 val splashActivityIntent = Intent(this@MainActivity, SplashActivity::class.java)
                 startActivity(splashActivityIntent)

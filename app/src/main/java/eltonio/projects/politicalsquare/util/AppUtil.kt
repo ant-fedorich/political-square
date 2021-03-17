@@ -2,12 +2,10 @@ package eltonio.projects.politicalsquare.util
 
 import android.app.Activity
 //import android.app.AlertDialog
-import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.graphics.Point
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -17,7 +15,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppRepository
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizOptions
 import java.text.SimpleDateFormat
@@ -67,6 +64,8 @@ const val EVENT_QUIZ_BEGIN = "quiz_begin"
 const val EVENT_QUIZ_COMPLETE = "quiz_complete"
 const val EVENT_DETAILED_INFO = "quiz_detailed_info"
 const val PARAM_LOGIN_DATE = "login_date"
+
+const val DB_NAME = "PoliticalSquare.db"
 
 /** Variables **/
 var appContext = App.appContext
@@ -118,21 +117,21 @@ fun fadeIn(context: Context) {
     )
 }
 
-fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
-    AlertDialog.Builder(context).create().apply {
-        val dialogTitle = context.getString(R.string.all_dialog_do_you_want_to_end)
-        setTitle(dialogTitle)
-        setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.all_dialog_yes)) { _, _ ->
-            AppRepository.Local().setQuizIsActive(false)
-//            quizIsActive = false // TODO: V - livedata? or get from Repo directly?
-            onOkBlock()
-        }
-        setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.all_dialog_no)) { _, _ ->
-            return@setButton
-        }
-        show()
-    }
-}
+//fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
+//    AlertDialog.Builder(context).create().apply {
+//        val dialogTitle = context.getString(R.string.all_dialog_do_you_want_to_end)
+//        setTitle(dialogTitle)
+//        setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.all_dialog_yes)) { _, _ ->
+//            AppRepository.Local().setQuizIsActive(false)
+////            quizIsActive = false // TODO: V - livedata? or get from Repo directly?
+//            onOkBlock()
+//        }
+//        setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.all_dialog_no)) { _, _ ->
+//            return@setButton
+//        }
+//        show()
+//    }
+//}
 
 // TODO: Instrumented unit test with context
 fun convertDpToPx(dp: Float): Float = dp * appContext.resources.displayMetrics.density

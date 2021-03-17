@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,15 +19,16 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.layout_result_item.view.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.*
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.ui.viewmodel.SaveResultViewModel
 import eltonio.projects.politicalsquare.util.*
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
-
+@AndroidEntryPoint
 class SavedResultsActivity : AppCompatActivity() {
-    private lateinit var viewModel: SaveResultViewModel
+    private val viewmodel: SaveResultViewModel by viewModels()
 
     private lateinit var resultList: List<QuizResult>
     private lateinit var quizAdapter: QuizRecycleAdapter
@@ -38,12 +40,11 @@ class SavedResultsActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_results)
-        viewModel = ViewModelProvider(this).get(SaveResultViewModel::class.java)
 
         title = getString(R.string.saved_title_actionbar)
 
         resultList = emptyList()
-        viewModel.getResultList().observe(this, Observer {
+        viewmodel.getResultList().observe(this, Observer {
             // TODO: How to get resultList imidiatly? Not in Observer or onResume
             resultList = it
             initRecycler()
@@ -83,9 +84,9 @@ class SavedResultsActivity : AppCompatActivity() {
 
                 if (direction == ItemTouchHelper.LEFT) {
                     deletedResultItem = quizAdapter.getQuizResultAt(position)
-                    viewModel.deleteQuizResult(deletedResultItem)
+                    viewmodel.deleteQuizResult(deletedResultItem)
                     // TODO: VM
-                    viewModel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
+                    viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
                         resultList = it // TODO: How to get resultList immediately?
                         quizAdapter.setQuizResults(resultList)
                     })
@@ -99,8 +100,8 @@ class SavedResultsActivity : AppCompatActivity() {
                     // Add Snackbar
                     Snackbar.make(recycler_results_list, "$ideologyTitle удален", Snackbar.LENGTH_LONG)
                         .setAction("Undo") {
-                            viewModel.addQuizResult(deletedResultItem)
-                            viewModel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
+                            viewmodel.addQuizResult(deletedResultItem)
+                            viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
                                 resultList = it
                                 quizAdapter.setQuizResults(resultList)
                             })
