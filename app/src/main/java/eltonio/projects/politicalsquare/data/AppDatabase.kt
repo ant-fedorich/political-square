@@ -18,6 +18,7 @@ import java.lang.Exception
 abstract class AppDatabase : RoomDatabase() {
     abstract fun quizResultDao(): QuizResultDao
     abstract fun questionDao(): QuestionDao
+    abstract fun quizTestingDao(): QuizDao
 
     companion object {
         @Volatile
