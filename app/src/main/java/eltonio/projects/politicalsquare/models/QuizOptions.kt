@@ -2,7 +2,7 @@ package eltonio.projects.politicalsquare.models
 
 import android.content.Context
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.util.appContext
+import eltonio.projects.politicalsquare.util.AppUtil.appContext
 
 enum class QuizOptions(
     id: Int,

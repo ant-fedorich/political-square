@@ -16,6 +16,8 @@ import eltonio.projects.politicalsquare.models.ScreenItem
 import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
 import eltonio.projects.politicalsquare.ui.viewmodel.IntroViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.fadeIn
+import eltonio.projects.politicalsquare.util.AppUtil.playGif
 import kotlinx.android.synthetic.main.activity_intro.*
 
 @AndroidEntryPoint

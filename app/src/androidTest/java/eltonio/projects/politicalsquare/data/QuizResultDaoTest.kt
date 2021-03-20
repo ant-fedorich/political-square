@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.models.Quiz
 import eltonio.projects.politicalsquare.models.QuizResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,6 +15,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+
 
 @ExperimentalCoroutinesApi
 @SmallTest
@@ -27,6 +29,8 @@ class QuizResultDaoTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
 
+    // TODO:  @MyRule context
+    // TODO:  @MyRule database
     @Before
     fun setup() {
         applicationContext = ApplicationProvider.getApplicationContext()
@@ -62,7 +66,7 @@ class QuizResultDaoTest {
         quizResultDao.addQuizResult(quizResult)
         val allQuizResults = quizResultDao.getQuizResults()
         // verify
-        assertThat(allQuizResults).contains(quizResult)
+        assertThat(allQuizResults.value).contains(quizResult)
     }
 
     @Test
@@ -88,6 +92,6 @@ class QuizResultDaoTest {
         val allQuizResults = quizResultDao.getQuizResults()
 
         // verify
-        assertThat(allQuizResults).doesNotContain(quizItem)
+        assertThat(allQuizResults.value).doesNotContain(quizItem)
     }
 }

@@ -16,9 +16,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.ui.viewmodel.ViewInfoViewModel
 import eltonio.projects.politicalsquare.util.EXTRA_IDEOLOGY_TITLE
-import eltonio.projects.politicalsquare.util.pushRight
 import kotlinx.android.synthetic.main.activity_view_info.*
-import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.EmptyTransitionListener
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 
 @AndroidEntryPoint
 class ViewInfoActivity : AppCompatActivity() {
@@ -59,7 +59,7 @@ class ViewInfoActivity : AppCompatActivity() {
 //            layout_collapsing_toolbar.setExpandedTitleTextAppearance(it)
 //        })
 
-        motion_viewinfo.setTransitionListener(object : MotionLayout.TransitionListener by EmptyTransitionListener{
+        motion_viewinfo.setTransitionListener(object : MotionLayout.TransitionListener by EmptyTransitionListener {
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
                 if (progress >= 0.95f) title_view_info.typeface = Typeface.createFromAsset(assets, "font/roboto_medium.ttf")
                 if (progress < 0.95f) title_view_info.typeface = Typeface.createFromAsset(assets, "font/roboto_regular.ttf")

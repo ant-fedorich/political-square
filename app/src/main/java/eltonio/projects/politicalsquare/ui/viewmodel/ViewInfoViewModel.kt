@@ -4,9 +4,10 @@ package eltonio.projects.politicalsquare.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.IdeologiesWithHilt
+import eltonio.projects.politicalsquare.models.IdeologiesWithHilt.Companion.getTit
 
 class ViewInfoViewModel : ViewModel() {
 
@@ -18,6 +19,7 @@ class ViewInfoViewModel : ViewModel() {
     fun updateData(ideologyTitle: String) {
         when (ideologyTitle) {
             Ideologies.AUTHORITARIAN_LEFT.title -> {
+                IdeologiesWithHilt.ANARCHY.titleRes.getTit()
                 ideology.value = Ideologies.AUTHORITARIAN_LEFT.title
                 imageId.value = R.drawable.img_info_1_autho_left
                 descriptionId.value = R.string.desc_authoritarian_left

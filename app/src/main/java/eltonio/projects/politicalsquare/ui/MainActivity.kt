@@ -14,6 +14,8 @@ import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.adapter.QuizOptionAdapter
 import eltonio.projects.politicalsquare.ui.viewmodel.MainViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.refreshAllСatalogs
+import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
 

@@ -9,7 +9,7 @@ import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.MainAppRepository
-import eltonio.projects.politicalsquare.util.pushLeft
+import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_base.view.*
 import javax.inject.Inject

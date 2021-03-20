@@ -6,6 +6,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.data.MainAppRepository
 import eltonio.projects.politicalsquare.models.QuestionWithAnswers
 import kotlinx.coroutines.CoroutineScope
@@ -16,13 +17,17 @@ import javax.inject.Inject
 @HiltAndroidApp
 class App : Application() {
 
+
     @Inject lateinit var repository: MainAppRepository
     private lateinit var localRepo: MainAppRepository.Local
     private lateinit var cloudRepo: MainAppRepository.Cloud
 
     companion object {
-        lateinit var appContext: Context
-            private set
+//        @Inject
+//        @ApplicationContext lateinit var _appContext: Context
+
+//        lateinit var appContext: Context
+//            private set
 
         // TODO: Crashlytics disabled
 //        lateinit var crashlytics: FirebaseCrashlytics
@@ -35,7 +40,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appContext = applicationContext
+//        appContext = _appContext
         localRepo = repository.Local()
         cloudRepo = repository.Cloud()
 

@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
-
-import eltonio.projects.politicalsquare.util.convertDpToPx
-import eltonio.projects.politicalsquare.util.getIdeology
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 
 class InfoViewModel : ViewModel() {
     private var imageId: MutableLiveData<Int> = MutableLiveData()

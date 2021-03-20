@@ -15,6 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.ui.viewmodel.InfoViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import kotlinx.android.synthetic.main.activity_info.*
 
 @AndroidEntryPoint
@@ -36,13 +38,13 @@ class InfoActivity : AppCompatActivity() {
 
         // Set listeners
         frame_3.setOnTouchListener { v, event ->
-            viewModel.getIdeology(event.x, event.y).observe(this, Observer { ideology ->
+            viewModel.getIdeology(event.x, event.y).observe(this, { ideology ->
                 text_ideology_selected.text = ideology
 
                 intentToViewInfo = Intent(this, ViewInfoActivity::class.java)
                 intentToViewInfo?.putExtra(EXTRA_IDEOLOGY_TITLE, ideology)
 
-                viewModel.getImageHoverId(ideology).observe(this, Observer {
+                viewModel.getImageHoverId(ideology).observe(this, {
                     val imageHover = findViewById<ImageView>(it)
                     showThisIdeologyHover(imageHover)
                 })

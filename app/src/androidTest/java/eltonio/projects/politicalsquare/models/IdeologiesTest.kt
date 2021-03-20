@@ -3,10 +3,16 @@ package eltonio.projects.politicalsquare.models
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.data.MainAppRepository
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
+@HiltAndroidTest
 class IdeologiesTest {
     private val enLocale = "en"
     private val ruLocale = "ru"
@@ -14,13 +20,20 @@ class IdeologiesTest {
     private val enTitle = "Anarchy"
     private val ruTitle = "Анархизм"
     private val ukTitle = "Анархізм"
-    private lateinit var context: Context
+    @ApplicationContext lateinit var context: Context
     private lateinit var localRepo: MainAppRepository.Local
+    @Inject lateinit var mainRepo: MainAppRepository
+
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
+    // TODO:  @MyRule Context
 
     @Before
     fun setup() {
-        context = ApplicationProvider.getApplicationContext()
-        localRepo = MainAppRepository.Local()
+        hiltRule.inject()
+//        context =
+        localRepo = mainRepo.Local()
     }
 
     @Test
@@ -44,7 +57,7 @@ class IdeologiesTest {
         // VERIFY
         assertThat(resultOne).contains(enTitle)
         assertThat(resultTwo).contains(ruTitle)
-        assertThat(resultThree).contains(ukTitle)
+       assertThat(resultThree).contains(ukTitle)
     }
 
     @Test

@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.ui.viewmodel.QuizViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
 
 import kotlinx.android.synthetic.main.activity_quiz.*
 

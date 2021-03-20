@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.data.MainAppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.util.getDateTime
+import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

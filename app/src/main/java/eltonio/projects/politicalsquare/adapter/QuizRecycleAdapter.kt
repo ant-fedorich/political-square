@@ -1,5 +1,6 @@
 package eltonio.projects.politicalsquare.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizResult
-import eltonio.projects.politicalsquare.util.appContext
 import eltonio.projects.politicalsquare.views.ResultListPointView
 import kotlinx.android.synthetic.main.layout_result_item.view.*
 
-class QuizRecycleAdapter : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleViewHolder>() {
+class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleViewHolder>() {
 
     private var resultList: List<QuizResult> = emptyList()
     private lateinit var itemClickListener: OnQuizItemClickListener
@@ -34,9 +34,6 @@ class QuizRecycleAdapter : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleVi
         holder.textSavedResultDate.text = currentItem.endedAt
 
         holder.itemView.layout_item_container.transitionName = "transition_item_containter_$position"
-/*        holder.itemView.text_saved_result_title.transitionName = "transition_title_$position"
-        holder.itemView.text_saved_result_date.transitionName = "transition_date_$position"
-        holder.itemView.image_compass_saved_result.transitionName = "transition_image_$position"*/
 
         Ideologies.AUTHORITARIAN_LEFT.title
 
@@ -54,7 +51,7 @@ class QuizRecycleAdapter : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleVi
         verResultScore = currentItem.verResultScore
 
         val myView = ResultListPointView(
-            appContext,
+            context,
             horResultScore,
             verResultScore
         )
@@ -86,21 +83,11 @@ class QuizRecycleAdapter : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleVi
                     }
                 }
             }
-
-//            imageDeleteItem.setOnClickListener {
-//                if (listener != null) {
-//                    val position: Int = adapterPosition
-//                    if (position != RecyclerView.NO_POSITION) {
-//                        listener.onDeleteClick(position)
-//                    }
-//                }
-//            }
         }
     }
 
     interface OnQuizItemClickListener {
         fun onItemClick(position: Int)
-//        fun onDeleteClick(position: Int)
     }
 
     fun setOnItemClickListener(listener: OnQuizItemClickListener) { itemClickListener = listener  }

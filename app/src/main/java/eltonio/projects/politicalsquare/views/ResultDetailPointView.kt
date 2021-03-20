@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
-import eltonio.projects.politicalsquare.util.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 
 class ResultDetailPointView(
     context: Context,

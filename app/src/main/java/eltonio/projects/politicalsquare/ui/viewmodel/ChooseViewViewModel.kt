@@ -6,6 +6,9 @@ import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.data.MainAppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeology
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*

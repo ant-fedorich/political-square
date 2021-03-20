@@ -8,8 +8,9 @@ import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewX
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewY
-import eltonio.projects.politicalsquare.util.getIdeology
-import eltonio.projects.politicalsquare.util.getIdeologyStringId
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeology
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyStringId
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat

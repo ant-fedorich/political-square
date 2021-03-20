@@ -23,14 +23,14 @@ class SaveResultViewModel @Inject constructor(
 
     fun getResultList(): LiveData<List<QuizResult>> {
         return liveData {
-            emit(dbRepo.getQuizResults())
+            dbRepo.getQuizResults().value?.let { emit(it) }
         }
     }
 
     fun getResultListWithDelay(): LiveData<List<QuizResult>> {
         return liveData {
             delay(200)
-            emit(dbRepo.getQuizResults())
+            dbRepo.getQuizResults().value?.let { emit(it) }
         }
     }
 

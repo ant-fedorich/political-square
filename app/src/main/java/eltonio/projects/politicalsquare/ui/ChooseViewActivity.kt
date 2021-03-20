@@ -18,6 +18,10 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.ui.viewmodel.ChooseViewViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
+import eltonio.projects.politicalsquare.util.AppUtil.slideRight
+import eltonio.projects.politicalsquare.util.AppUtil.toast
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.*

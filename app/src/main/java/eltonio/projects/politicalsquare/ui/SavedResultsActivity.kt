@@ -24,6 +24,7 @@ import eltonio.projects.politicalsquare.models.Ideologies
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.ui.viewmodel.SaveResultViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 @AndroidEntryPoint
@@ -131,7 +132,7 @@ class SavedResultsActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        quizAdapter = QuizRecycleAdapter()
+        quizAdapter = QuizRecycleAdapter(this)
         recycler_results_list.apply {
             adapter = quizAdapter
             layoutManager = LinearLayoutManager(this.context)

@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 import eltonio.projects.politicalsquare.ui.ResultActivity
-import eltonio.projects.politicalsquare.util.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 
 class ResultPointView (context: Context, var radiusInDp: Float, var radiusResultInDp: Float) : View(context) {
 

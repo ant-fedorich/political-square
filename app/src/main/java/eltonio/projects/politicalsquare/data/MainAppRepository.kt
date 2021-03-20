@@ -13,23 +13,27 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.appContext
+import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
 import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
 
 class MainAppRepository @Inject constructor(
     private val questionDao: QuestionDao,
-    private val quizResultDao: QuizResultDao
+    private val quizResultDao: QuizResultDao,
+    @ApplicationContext private val context: Context
 ) : AppRepository {
     inner class Local : AppRepository.Local {
 
         // TODO: DI: Inject appContext
         private val prefSettings =
-            appContext.getSharedPreferences(PREF_SETTINGS, Context.MODE_PRIVATE)
+            context.getSharedPreferences(PREF_SETTINGS, Context.MODE_PRIVATE)
 
         private val pref =
             appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
