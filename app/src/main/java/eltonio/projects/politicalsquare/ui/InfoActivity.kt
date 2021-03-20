@@ -15,13 +15,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.ui.viewmodel.InfoViewModel
 import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
-import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import kotlinx.android.synthetic.main.activity_info.*
 
 @AndroidEntryPoint
 class InfoActivity : AppCompatActivity() {
     private val viewModel: InfoViewModel by viewModels()
+    private val appUtil = AppUtil(this)
     private var oldIdeologyHover: ImageView? = null
     private var intentToViewInfo: Intent? = null
 
@@ -54,7 +53,7 @@ class InfoActivity : AppCompatActivity() {
                 Handler().postDelayed({
                     v.performClick()
                     startActivity(intentToViewInfo)
-                    pushLeft(this)
+                    appUtil.pushLeft(this)
                 }, 80)
             }
             return@setOnTouchListener true
@@ -63,13 +62,13 @@ class InfoActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
-        pushRight(this) // info out
+        appUtil.pushRight(this) // info out
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        pushRight(this) // info out
+        appUtil.pushRight(this) // info out
     }
 
     /** CUSTOM METHODS */

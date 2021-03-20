@@ -1,12 +1,10 @@
 package eltonio.projects.politicalsquare.util
 
-import android.annotation.SuppressLint
 import android.app.Activity
 //import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Point
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -15,27 +13,19 @@ import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import dagger.hilt.android.qualifiers.ApplicationContext
-import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.AppDatabase
 import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.QuizOptions
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 
-@SuppressLint("StaticFieldLeak")
-object AppUtil : BaseUtil() {
-
-
-    /** Variables **/
-    var appContext = baseContext
+class AppUtil @Inject constructor(
+   @ApplicationContext context: Context
+) {
+    val context: Context = context
 
     /** Functions **/
-
-    fun toast(msg: String) = Toast.makeText(appContext, msg, Toast.LENGTH_SHORT).show()
-    fun toastLong(msg: String) = Toast.makeText(appContext, msg, Toast.LENGTH_LONG).show()
     fun getDateTime(): String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
 
     // Transitions between activities
@@ -96,7 +86,7 @@ object AppUtil : BaseUtil() {
 //}
 
     // TODO: Instrumented unit test with context
-    fun convertDpToPx(dp: Float): Float = dp * appContext.resources.displayMetrics.density
+    fun convertDpToPx(dp: Float): Float = dp * context.resources.displayMetrics.density
 
     // TODO: Instr unit test with context
     fun getScreenResolution(context: Context): Point {
@@ -108,43 +98,43 @@ object AppUtil : BaseUtil() {
     }
 
     // Get an ideology from a Compass score
-    fun getIdeology(horScore: Int, verScore: Int): String {
+    fun getIdeologyFromScore(horScore: Int, verScore: Int): String {
         return when {
             // border
             (horScore in -40..-20 && verScore in -40..-35) || (horScore in -40..-35 && verScore in -35..-20) ->
-                Ideologies.AUTHORITARIAN_LEFT.title
+                Ideologies.AUTHORITARIAN_LEFT.titleRes.resString()
 
             horScore in -20..20 && verScore in -40..-35 ->
-                Ideologies.RADICAL_NATIONALISM.title
+                Ideologies.RADICAL_NATIONALISM.titleRes.resString()
 
             (horScore in 20..40 && verScore in -40..-35) || (horScore in 35..40 && verScore in -35..-20) ->
-                Ideologies.AUTHORITARIAN_RIGHT.title
+                Ideologies.AUTHORITARIAN_RIGHT.titleRes.resString()
 
             horScore in 35..40 && verScore in -20..20 ->
-                Ideologies.RADICAL_CAPITALISM.title
+                Ideologies.RADICAL_CAPITALISM.titleRes.resString()
 
             (horScore in 35..40 && verScore in 20..40) || (horScore in 20..40 && verScore in 35..40) ->
-                Ideologies.RIGHT_ANARCHY.title
+                Ideologies.RIGHT_ANARCHY.titleRes.resString()
 
             horScore in -20..20 && verScore in 35..40 ->
-                Ideologies.ANARCHY.title
+                Ideologies.ANARCHY.titleRes.resString()
 
             (horScore in -40..-20 && verScore in 35..40) || (horScore in -40..-35 && verScore in 20..40) ->
-                Ideologies.LEFT_ANARCHY.title
+                Ideologies.LEFT_ANARCHY.titleRes.resString()
 
             horScore in -40..-35 && verScore in -20..20 ->
-                Ideologies.SOCIALISM.title
+                Ideologies.SOCIALISM.titleRes.resString()
 
             // main
-            horScore in -35..0 && verScore in -35..-20 -> Ideologies.POWER_CENTRISM.title
-            horScore in -35..0 && verScore in -20..0 -> Ideologies.SOCIAL_DEMOCRACY.title
+            horScore in -35..0 && verScore in -35..-20 -> Ideologies.POWER_CENTRISM.titleRes.resString()
+            horScore in -35..0 && verScore in -20..0 -> Ideologies.SOCIAL_DEMOCRACY.titleRes.resString()
 
-            horScore in 0..35 && verScore in -35..-20 -> Ideologies.CONSERVATISM.title
-            horScore in 0..35 && verScore in -20..0 -> Ideologies.PROGRESSIVISM.title
+            horScore in 0..35 && verScore in -35..-20 -> Ideologies.CONSERVATISM.titleRes.resString()
+            horScore in 0..35 && verScore in -20..0 -> Ideologies.PROGRESSIVISM.titleRes.resString()
 
-            horScore in 0..35 && verScore in 20..35 -> Ideologies.LIBERTARIANISM.title
-            horScore in -35..0 && verScore in 20..35 -> Ideologies.LIBERTARIAN_SOCIALISM.title
-            horScore in -35..35 && verScore in 0..20 -> Ideologies.LIBERALISM.title
+            horScore in 0..35 && verScore in 20..35 -> Ideologies.LIBERTARIANISM.titleRes.resString()
+            horScore in -35..0 && verScore in 20..35 -> Ideologies.LIBERTARIAN_SOCIALISM.titleRes.resString()
+            horScore in -35..35 && verScore in 0..20 -> Ideologies.LIBERALISM.titleRes.resString()
             else -> "none"
         }
     }
@@ -154,13 +144,13 @@ object AppUtil : BaseUtil() {
         var stringId = "none"
 
         for (ideo in Ideologies.values()) {
-            if (ideologyName == ideo.title) stringId = ideo.stringId
+            if (ideologyName == ideo.titleRes.resString()) stringId = ideo.stringId
         }
         return stringId
     }
 
     fun playGif(screenImage: Int, containerImageView: ImageView) {
-        Glide.with(appContext)
+        Glide.with(context)
             .asGif()
             .load(screenImage)
             // Setup to play only once
@@ -188,14 +178,14 @@ object AppUtil : BaseUtil() {
 
 
     // TODO: Instr unit test with context
-    fun refreshAllСatalogs(context: Context) {
-        Ideologies.refreshAll(context)
-        QuizOptions.refreshAll(context)
-    }
+//    fun refreshAllСatalogs(context: Context) {
+//        Ideologies.refreshAll(context)
+//        QuizOptions.refreshAll(context)
+//    }
 
-//fun Int.getTitle(): String {
-//    return appContext.getString(R.string.about_desc_1)
-//}
+    fun Int.resString(): String {
+        return context.getString(this)
+    }
 
     object EmptyTransitionListener : MotionLayout.TransitionListener {
         override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {}

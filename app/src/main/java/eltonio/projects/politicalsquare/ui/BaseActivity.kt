@@ -9,15 +9,17 @@ import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.data.MainAppRepository
-import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
+import eltonio.projects.politicalsquare.util.AppUtil
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_base.view.*
 import javax.inject.Inject
 
 // TODO: DI: Get rid of transfer repo here
 @AndroidEntryPoint
-open class BaseActivity () : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     @Inject lateinit var repository: MainAppRepository
+    @Inject lateinit var appUtil: AppUtil
+
     private lateinit var localRepo: MainAppRepository.Local
     private lateinit var interfaceRepo: MainAppRepository.UI
 
@@ -62,22 +64,22 @@ open class BaseActivity () : AppCompatActivity(), NavigationView.OnNavigationIte
             }
             R.id.nav_saved -> {
                 startActivity(Intent(this, SavedResultsActivity::class.java))
-                pushLeft(this) // info in
+                appUtil.pushLeft(this) // info in
             }
 
             R.id.nav_info -> {
                 startActivity(Intent(this, InfoActivity::class.java))
-                pushLeft(this) // info in
+                appUtil.pushLeft(this) // info in
             }
 
             R.id.nav_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
-                pushLeft(this) // info in
+                appUtil.pushLeft(this) // info in
             }
 
             R.id.nav_about -> {
                 startActivity(Intent(this, AboutActivity::class.java))
-                pushLeft(this) // info in
+                appUtil.pushLeft(this) // info in
             }
         }
         activity_container.closeDrawer(GravityCompat.START)

@@ -4,11 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.views.ResultListPointView
 import kotlinx.android.synthetic.main.layout_result_item.view.*
@@ -35,11 +35,9 @@ class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycl
 
         holder.itemView.layout_item_container.transitionName = "transition_item_containter_$position"
 
-        Ideologies.AUTHORITARIAN_LEFT.title
-
         for (ideology in Ideologies.values()) {
             if (ideology.stringId == currentItem.ideologyStringId) {
-                holder.textSavedResultTitle.text = ideology.title.toString()
+                holder.textSavedResultTitle.text = ideology.titleRes.resString(context)
             }
         }
 

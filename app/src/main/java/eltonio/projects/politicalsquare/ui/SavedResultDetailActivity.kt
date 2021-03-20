@@ -14,8 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.ui.viewmodel.SavedResultDetailViewModel
 import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
-import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import eltonio.projects.politicalsquare.views.ResultDetailPointView
 import kotlinx.android.synthetic.main.activity_saved_result_detail.*
 import kotlinx.android.synthetic.main.activity_saved_result_detail.view.*
@@ -23,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_saved_result_detail.view.*
 @AndroidEntryPoint
 class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
     private val viewModel: SavedResultDetailViewModel by viewModels()
+    private val appUtil = AppUtil(this)
 
     private var resultIdeology = ""
     private var ideologyId = ""
@@ -74,18 +73,18 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
                 val intent = Intent(this, ViewInfoActivity::class.java)
                 intent.putExtra(EXTRA_IDEOLOGY_TITLE, resultIdeology)
                 startActivity(intent)
-                pushLeft(this) // info in
+                appUtil.pushLeft(this) // info in
             }
         }
     }
     override fun onSupportNavigateUp(): Boolean {
         super.onBackPressed()
-        pushRight(this) // info out
+        appUtil.pushRight(this) // info out
         return true
     }
     override fun onBackPressed() {
         super.onBackPressed()
-        pushRight(this) // info out
+        appUtil.pushRight(this) // info out
     }
 
     /** CUSTOM METHODS */
@@ -132,6 +131,7 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    // todo use applicationContext or From Hilt Context
     private fun addPointsOnCompass() {
         val resultDetailPoint =
             ResultDetailPointView(

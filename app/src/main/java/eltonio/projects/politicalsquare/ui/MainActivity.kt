@@ -14,14 +14,13 @@ import eltonio.projects.politicalsquare.models.*
 import eltonio.projects.politicalsquare.adapter.QuizOptionAdapter
 import eltonio.projects.politicalsquare.ui.viewmodel.MainViewModel
 import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.refreshAllСatalogs
-import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 @AndroidEntryPoint
 class MainActivity: BaseActivity() {
     private val viewModel: MainViewModel by viewModels()
+    private val appLocalUtil = AppUtil(this)
 
     companion object {
         lateinit var spinnerView: Spinner // To use it in Settings
@@ -40,7 +39,7 @@ class MainActivity: BaseActivity() {
 
         Thread.sleep(300) // Needs to load Splash Activity Correctly
 
-        refreshAllСatalogs(this)
+        //todo refreshAllСatalogs(this)
         this.title = getString(R.string.main_title_actionbar)
 
         setContentView(R.layout.activity_main)
@@ -66,7 +65,7 @@ class MainActivity: BaseActivity() {
     /** INTERFACE METHODS */
     private fun onStartClicked() {
         startActivity(Intent(this, ChooseViewActivity::class.java))
-        slideLeft(this)
+        appLocalUtil.slideLeft(this)
     }
 
     /** CUSTOM METHODS */

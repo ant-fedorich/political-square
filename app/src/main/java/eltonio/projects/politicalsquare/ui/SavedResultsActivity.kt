@@ -1,5 +1,6 @@
 package eltonio.projects.politicalsquare.ui
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
@@ -21,15 +22,16 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.*
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.ui.viewmodel.SaveResultViewModel
 import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 @AndroidEntryPoint
 class SavedResultsActivity : AppCompatActivity() {
     private val viewmodel: SaveResultViewModel by viewModels()
+    private val appUtil = AppUtil(this)
 
     private lateinit var resultList: List<QuizResult>
     private lateinit var quizAdapter: QuizRecycleAdapter
@@ -55,23 +57,23 @@ class SavedResultsActivity : AppCompatActivity() {
             })
         })
 
-        val itemTouchHelper = ItemTouchHelper(getSwipeCallback())
+        val itemTouchHelper = ItemTouchHelper(getSwipeCallback(this))
         itemTouchHelper.attachToRecyclerView(recycler_results_list)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
-        pushRight(this) // info out
+        appUtil.pushRight(this) // info out
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        pushRight(this) //info out
+        appUtil.pushRight(this) //info out
     }
 
     /** CUSTOM METHODS */
-    private fun getSwipeCallback(): ItemTouchHelper.SimpleCallback {
+    private fun getSwipeCallback(context: Context): ItemTouchHelper.SimpleCallback {
         // Add swiping actions
         return object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -94,7 +96,7 @@ class SavedResultsActivity : AppCompatActivity() {
 
                     for (ideo in Ideologies.values()) {
                         if (ideo.stringId == deletedResultItem.ideologyStringId) {
-                            ideologyTitle = ideo.title
+                            ideologyTitle = ideo.titleRes.resString(context)
                         }
                     }
 

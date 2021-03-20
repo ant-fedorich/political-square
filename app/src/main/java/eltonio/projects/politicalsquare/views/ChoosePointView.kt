@@ -6,13 +6,12 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.Log
 import android.view.View
-import eltonio.projects.politicalsquare.App
-import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil
 import eltonio.projects.politicalsquare.util.TAG
 
 class ChoosePointView(context: Context, var inputX: Float, var inputY: Float, var radiusInDp: Float): View(context) {
-
     private var paint = Paint()
+    private val appUtil = AppUtil(context)
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         val pointX = inputX
@@ -20,8 +19,8 @@ class ChoosePointView(context: Context, var inputX: Float, var inputY: Float, va
 
         Log.i(TAG, "Canvas: " + canvas?.height + " " + canvas?.width)
 
-        val radius = convertDpToPx(radiusInDp) //10f
-        val strokeWidthPx = convertDpToPx(2f)
+        val radius = appUtil.convertDpToPx(radiusInDp) //10f
+        val strokeWidthPx = appUtil.convertDpToPx(2f)
 
         paint.apply {
             style = Paint.Style.FILL

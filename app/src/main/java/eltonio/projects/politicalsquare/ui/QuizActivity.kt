@@ -25,13 +25,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.ui.viewmodel.QuizViewModel
 import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
-
 import kotlinx.android.synthetic.main.activity_quiz.*
 
 @AndroidEntryPoint
 class QuizActivity : BaseActivity(), View.OnTouchListener {
     private val viewmodel: QuizViewModel by viewModels()
+
+    // TODO: Get rid of application context
+    private val appLocalUtil = AppUtil(this)
 
     private var questionCountTotal = 0
     private var questionCounter = 0
@@ -122,7 +123,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             } else {
                 val intent = Intent(this, ResultActivity::class.java)
                 startActivity(intent)
-                slideLeft(this) //quiz in
+                appLocalUtil.slideLeft(this) //quiz in
             }
         })
 

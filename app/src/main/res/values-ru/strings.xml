@@ -151,8 +151,8 @@
     </string>
 
 
-<!--    <string name="title_result_view_info">Анархизм</string>-->
-<!--    <string name="imagedesc_info_compass">Информация о компасе</string>-->
+<!--    <string getResString="title_result_view_info">Анархизм</string>-->
+<!--    <string getResString="imagedesc_info_compass">Информация о компасе</string>-->
 
 
 

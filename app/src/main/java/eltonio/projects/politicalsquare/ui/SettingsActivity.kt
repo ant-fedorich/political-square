@@ -23,14 +23,13 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.ui.viewmodel.SettingsViewModel
 import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.pushRight
-import eltonio.projects.politicalsquare.util.AppUtil.refreshAllСatalogs
 import kotlinx.android.synthetic.main.activity_base.view.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     private val viewModel: SettingsViewModel by viewModels()
+    private val appUtil = AppUtil(this)
 
     //private val localRepo = AppRepository.Local()
 
@@ -190,13 +189,13 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
-        pushRight(this) // info out
+        appUtil.pushRight(this) // info out
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        pushRight(this) // info out
+        appUtil.pushRight(this) // info out
     }
 
     /** CUSTOM METHODS */
@@ -264,7 +263,7 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     private fun setLangAndStartMain(radioButton: RadioButton, lang: String) {
         radioButton.isChecked
         viewModel.setLang(this, lang)
-        refreshAllСatalogs(this)
+        //refreshAllСatalogs(this)
 
         startActivity(Intent(this, MainActivity::class.java))
         finish()

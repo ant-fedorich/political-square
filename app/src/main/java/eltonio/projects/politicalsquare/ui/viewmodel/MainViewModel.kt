@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.data.MainAppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
+import eltonio.projects.politicalsquare.util.AppUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    repository: MainAppRepository
+    repository: MainAppRepository,
+    val appUtil: AppUtil
 ) : ViewModel(), LifecycleObserver {
     private val localRepo = repository.Local()
     private val cloudRepo = repository.Cloud()
@@ -42,7 +43,7 @@ class MainViewModel @Inject constructor(
     private fun initUser() {
         usersRef = cloudRepo.usersRef
         currentUser = cloudRepo.firebaseUser
-        lastSessionStarted = getDateTime()
+        lastSessionStarted = appUtil.getDateTime()
 
         viewModelScope.launch {
             if (currentUser == null) {

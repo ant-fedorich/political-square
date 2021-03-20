@@ -16,20 +16,19 @@ import androidx.lifecycle.*
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.Ideologies
+import eltonio.projects.politicalsquare.models.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.ui.viewmodel.ChooseViewViewModel
 import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
-import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
-import eltonio.projects.politicalsquare.util.AppUtil.slideRight
-import eltonio.projects.politicalsquare.util.AppUtil.toast
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchListener {
-    /** DECLARATION */
     private val viewModel: ChooseViewViewModel by viewModels()
+    private val appLocalUtil = AppUtil(this)
+    //private val context = appUtil.context
+
 
     // TODO: mvvm vars to vm???
     private var horStartScore = 0
@@ -57,7 +56,7 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
 
     private val bigRadiusInDp = 16f
     private val radiusInDp = 12f
-    private val diameterInPx = convertDpToPx(bigRadiusInDp).toInt()*2
+    private var diameterInPx = -1
 
     private var containerHeight = -1
     private var containerWidth = -1
@@ -69,6 +68,7 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_view)
+        diameterInPx = appLocalUtil.convertDpToPx(bigRadiusInDp).toInt()*2
 
         viewModel.getQuizId().observe(this, Observer {
             quizId = it
@@ -88,7 +88,7 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
 
     override fun onBackPressed() {
         super.onBackPressed()
-        slideRight(this)
+        appUtil.slideRight(this)
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
@@ -135,13 +135,13 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
     @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
     private fun onStartQuizClicked() {
         if (ideologyIsChosen != true) {
-            return toast(getString(R.string.chooseview_toast_choose_first))
+            return toast(appUtil.context, getString(R.string.chooseview_toast_choose_first))
         } else {
             viewModel.setQuizIsActive(true)
             viewModel.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId)
 
             startActivity(Intent(this, QuizActivity::class.java))
-            slideLeft(this)
+            appUtil.slideLeft(this)
             // TODO: 03/17/2021 Get rid of this
             MainActivity().finish()
             finish()
@@ -169,27 +169,32 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
 
         viewModel.getXandYForHover(x, y, endX, endY)
 
-        viewModel.getIdeologyTitle().observe(this, Observer<String> {
+        viewModel.getIdeologyTitle().observe(this, Observer {
             ideology = it
             when (it) {
-                Ideologies.AUTHORITARIAN_LEFT.title -> showThisIdeologyHover(image_autho_left_hover)
-                Ideologies.RADICAL_NATIONALISM.title -> showThisIdeologyHover(image_nation_hover)
-                Ideologies.POWER_CENTRISM.title -> showThisIdeologyHover(image_gov_hover)
-                Ideologies.SOCIAL_DEMOCRACY.title -> showThisIdeologyHover(image_soc_demo_hover)
-                Ideologies.SOCIALISM.title -> showThisIdeologyHover(image_soc_hover)
+                // TODO: Crutch: Change titleRes to StringId
+                Ideologies.AUTHORITARIAN_LEFT.titleRes.resString(this) -> showThisIdeologyHover(
+                    image_autho_left_hover
+                )
+                Ideologies.RADICAL_NATIONALISM.titleRes.resString(this)  -> showThisIdeologyHover(image_nation_hover)
+                Ideologies.POWER_CENTRISM.titleRes.resString(this)  -> showThisIdeologyHover(image_gov_hover)
+                Ideologies.SOCIAL_DEMOCRACY.titleRes.resString(this)  -> showThisIdeologyHover(image_soc_demo_hover)
+                Ideologies.SOCIALISM.titleRes.resString(this)  -> showThisIdeologyHover(image_soc_hover)
 
-                Ideologies.AUTHORITARIAN_RIGHT.title -> showThisIdeologyHover(image_autho_right_hover)
-                Ideologies.RADICAL_CAPITALISM.title -> showThisIdeologyHover(image_radical_cap_hover)
-                Ideologies.CONSERVATISM.title -> showThisIdeologyHover(image_cons_hover)
-                Ideologies.PROGRESSIVISM.title -> showThisIdeologyHover(image_prog_hover)
+                Ideologies.AUTHORITARIAN_RIGHT.titleRes.resString(this)  -> showThisIdeologyHover(
+                    image_autho_right_hover
+                )
+                Ideologies.RADICAL_CAPITALISM.titleRes.resString(this)  -> showThisIdeologyHover(image_radical_cap_hover)
+                Ideologies.CONSERVATISM.titleRes.resString(this)  -> showThisIdeologyHover(image_cons_hover)
+                Ideologies.PROGRESSIVISM.titleRes.resString(this)  -> showThisIdeologyHover(image_prog_hover)
 
-                Ideologies.RIGHT_ANARCHY.title -> showThisIdeologyHover(image_right_anar_hover)
-                Ideologies.ANARCHY.title -> showThisIdeologyHover(image_anar_hover)
-                Ideologies.LIBERALISM.title -> showThisIdeologyHover(image_lib_hover)
-                Ideologies.LIBERTARIANISM.title -> showThisIdeologyHover(image_libertar_hover)
+                Ideologies.RIGHT_ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(image_right_anar_hover)
+                Ideologies.ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(image_anar_hover)
+                Ideologies.LIBERALISM.titleRes.resString(this)  -> showThisIdeologyHover(image_lib_hover)
+                Ideologies.LIBERTARIANISM.titleRes.resString(this)  -> showThisIdeologyHover(image_libertar_hover)
 
-                Ideologies.LEFT_ANARCHY.title -> showThisIdeologyHover(image_left_anar_hover)
-                Ideologies.LIBERTARIAN_SOCIALISM.title -> showThisIdeologyHover(image_lib_soc)
+                Ideologies.LEFT_ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(image_left_anar_hover)
+                Ideologies.LIBERTARIAN_SOCIALISM.titleRes.resString(this)  -> showThisIdeologyHover(image_lib_soc)
 
                 else -> showThisIdeologyHover(null)
             }

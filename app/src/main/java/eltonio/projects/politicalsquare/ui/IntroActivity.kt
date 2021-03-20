@@ -15,14 +15,14 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.ScreenItem
 import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
 import eltonio.projects.politicalsquare.ui.viewmodel.IntroViewModel
-import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.fadeIn
-import eltonio.projects.politicalsquare.util.AppUtil.playGif
+import eltonio.projects.politicalsquare.util.AppUtil
 import kotlinx.android.synthetic.main.activity_intro.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class IntroActivity : AppCompatActivity() {
     private val viewmodel: IntroViewModel by viewModels()
+    @Inject lateinit var appUtil: AppUtil
 
     private lateinit var screenList: MutableList<ScreenItem>
     private lateinit var introViewPagerAdapter: IntroViewPagerAdapter
@@ -40,7 +40,7 @@ class IntroActivity : AppCompatActivity() {
         viewmodel.getIntroOpened().observe(this, Observer {
             if (it == true) {
                 startActivity(Intent(this, MainActivity::class.java))
-                fadeIn(this)
+                appUtil.fadeIn(this)
                 finish()
             }
         })
@@ -62,7 +62,7 @@ class IntroActivity : AppCompatActivity() {
 
         button_get_started.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
-            fadeIn(this)
+            appUtil.fadeIn(this)
             finish()
         }
 
@@ -122,7 +122,7 @@ class IntroActivity : AppCompatActivity() {
                 currentBackgroundItem.visibility = View.INVISIBLE
             }
             .start()
-        playGif(screenList[position].screenImage, currentImageItem)
+        appUtil.playGif(screenList[position].screenImage, currentImageItem)
     }
 
     private fun initViewPager() {

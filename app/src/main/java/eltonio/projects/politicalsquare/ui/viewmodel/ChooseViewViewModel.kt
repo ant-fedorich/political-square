@@ -5,10 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.App
 import eltonio.projects.politicalsquare.data.MainAppRepository
 import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
-import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
-import eltonio.projects.politicalsquare.util.AppUtil.getIdeology
+import eltonio.projects.politicalsquare.util.AppUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -16,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseViewViewModel @Inject constructor(
-    repository: MainAppRepository
+    val repository: MainAppRepository,
+    val appUtil: AppUtil
 ) : ViewModel() {
     private val localRepo = repository.Local()
     private var dbRepo = repository.DB()
@@ -67,9 +65,9 @@ class ChooseViewViewModel @Inject constructor(
         localRepo.setQuizIsActive(isActive)
     }
 
-    fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideology: String, quizId: Int) {
-        val startedAt = getDateTime()
-        localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt) // TODO: put an object instead of attributes
+    fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideologyId: String, quizId: Int) {
+        val startedAt = appUtil.getDateTime()
+        localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideologyId, quizId, startedAt) // TODO: put an object instead of attributes
     }
 
     fun getXandYForHover(inputX: Float, inputY: Float, endX: Int, endY: Int) {
@@ -109,12 +107,12 @@ class ChooseViewViewModel @Inject constructor(
     }
 
     fun getIdeologyTitle(): LiveData<String> {
-        val step = convertDpToPx(4f)
+        val step = appUtil.convertDpToPx(4f)
         horStartScore.value =
             (x / step - 40).toInt()
         verStartScore.value =
             (y / step - 40).toInt()
-        ideologyTitle.value = getIdeology(horStartScore.value!!, verStartScore.value!!)
+        ideologyTitle.value = appUtil.getIdeologyFromScore(horStartScore.value!!, verStartScore.value!!)
         return ideologyTitle
     }
 

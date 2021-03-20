@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaveResultViewModel @Inject constructor(
-    repository: MainAppRepository
+    val repository: MainAppRepository
 ) : ViewModel() {
     private var dbRepo = repository.DB()
 

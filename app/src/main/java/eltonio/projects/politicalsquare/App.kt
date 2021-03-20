@@ -17,17 +17,16 @@ import javax.inject.Inject
 @HiltAndroidApp
 class App : Application() {
 
+    @Inject
+    @ApplicationContext lateinit var _appContext: Context
 
     @Inject lateinit var repository: MainAppRepository
     private lateinit var localRepo: MainAppRepository.Local
     private lateinit var cloudRepo: MainAppRepository.Cloud
 
     companion object {
-//        @Inject
-//        @ApplicationContext lateinit var _appContext: Context
-
-//        lateinit var appContext: Context
-//            private set
+        lateinit var globalContext: Context
+            private set
 
         // TODO: Crashlytics disabled
 //        lateinit var crashlytics: FirebaseCrashlytics
@@ -40,7 +39,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-//        appContext = _appContext
+        globalContext = _appContext
         localRepo = repository.Local()
         cloudRepo = repository.Cloud()
 

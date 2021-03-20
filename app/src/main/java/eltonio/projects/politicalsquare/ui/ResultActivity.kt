@@ -13,7 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.ui.viewmodel.ResultViewModel
 import eltonio.projects.politicalsquare.util.*
-import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
 import eltonio.projects.politicalsquare.views.ResultPointView
 
 import kotlinx.android.synthetic.main.activity_result.*
@@ -21,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_result.*
 @AndroidEntryPoint
 class ResultActivity : BaseActivity(), View.OnClickListener {
     private val viewmodel: ResultViewModel by viewModels()
+    private val appLocalUtil = AppUtil(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
 
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
-        viewmodel.getChosenIdeology().observe(this, Observer {
+        viewmodel.getChosenIdeology().observe(this, {
             title_2_2.text = "$youThoughtText: $it"
         })
         viewmodel.getResultIdeology().observe(this, Observer {
@@ -65,7 +65,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
                     intent.putExtra(EXTRA_IDEOLOGY_TITLE, it)
                 })
                 startActivity(intent)
-                pushLeft(this) // info in
+                appLocalUtil.pushLeft(this) // info in
             }
         }
     }

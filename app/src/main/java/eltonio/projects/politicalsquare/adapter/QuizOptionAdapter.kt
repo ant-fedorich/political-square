@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.models.QuizOptions
+import eltonio.projects.politicalsquare.models.QuizOptions.Companion.resString
 
 class QuizOptionAdapter(context: Context, quizOptionList: Array<QuizOptions>)
     : ArrayAdapter<QuizOptions>(context, 0, quizOptionList) {
@@ -32,8 +33,8 @@ class QuizOptionAdapter(context: Context, quizOptionList: Array<QuizOptions>)
 
         val currentItem = getItem(position)
         if (currentItem != null) {
-            title?.text = currentItem.title
-            desc?.text = currentItem.desc
+            title?.text = currentItem.titleRes.resString(context)
+            desc?.text = currentItem.descRes.resString(context)
             image?.setImageResource(currentItem.image)
         }
         return itemView!! // only that way, with non-null assertion

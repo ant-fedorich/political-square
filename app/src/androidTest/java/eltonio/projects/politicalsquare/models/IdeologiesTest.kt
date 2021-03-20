@@ -20,6 +20,7 @@ class IdeologiesTest {
     private val enTitle = "Anarchy"
     private val ruTitle = "Анархизм"
     private val ukTitle = "Анархізм"
+    @Inject
     @ApplicationContext lateinit var context: Context
     private lateinit var localRepo: MainAppRepository.Local
     @Inject lateinit var mainRepo: MainAppRepository
@@ -32,7 +33,6 @@ class IdeologiesTest {
     @Before
     fun setup() {
         hiltRule.inject()
-//        context =
         localRepo = mainRepo.Local()
     }
 

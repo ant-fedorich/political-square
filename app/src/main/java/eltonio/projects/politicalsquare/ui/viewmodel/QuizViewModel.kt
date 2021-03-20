@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
-    repository: MainAppRepository
+    val repository: MainAppRepository
 ) : ViewModel() {
     // TODO: Refactor
     private var localRepo = repository.Local()

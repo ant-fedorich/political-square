@@ -15,14 +15,17 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.ui.viewmodel.ViewInfoViewModel
+import eltonio.projects.politicalsquare.util.AppUtil
 import eltonio.projects.politicalsquare.util.EXTRA_IDEOLOGY_TITLE
 import kotlinx.android.synthetic.main.activity_view_info.*
 import eltonio.projects.politicalsquare.util.AppUtil.EmptyTransitionListener
-import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 
 @AndroidEntryPoint
 class ViewInfoActivity : AppCompatActivity() {
     private val viewModel: ViewInfoViewModel by viewModels()
+
+    // TODO: Use only context for AppUtil, not method?
+    private val appUtil = AppUtil(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,14 +48,14 @@ class ViewInfoActivity : AppCompatActivity() {
 
         val ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
 
-        viewModel.updateData(ideology)
-        viewModel.getIdeology().observe(this, Observer {
+        viewModel.updateData(ideology.length) //fixme ONLY TEST ideology.length
+        viewModel.getIdeology().observe(this, {
             title_view_info.text = it
         })
-        viewModel.getImageId().observe(this, Observer {
+        viewModel.getImageId().observe(this, {
             image_ideology_info.setImageResource(it)
         })
-        viewModel.getDescriptionId().observe(this, Observer {
+        viewModel.getDescriptionId().observe(this, {
             text_ideology_description.text = getString(it)
         })
 //        viewModel.getStyleId().observe(this, Observer {
@@ -69,13 +72,13 @@ class ViewInfoActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
-        pushRight(this)
+        appUtil.pushRight(this)
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        pushRight(this)
+        appUtil.pushRight(this)
     }
 
 }

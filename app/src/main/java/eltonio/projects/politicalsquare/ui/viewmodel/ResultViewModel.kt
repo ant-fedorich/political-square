@@ -8,9 +8,7 @@ import eltonio.projects.politicalsquare.models.QuizOptions
 import eltonio.projects.politicalsquare.models.QuizResult
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewX
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewY
-import eltonio.projects.politicalsquare.util.AppUtil.getIdeology
-import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyStringId
-
+import eltonio.projects.politicalsquare.util.AppUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -20,12 +18,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResultViewModel @Inject constructor(
-    repository: MainAppRepository
+    val repository: MainAppRepository
 ) : ViewModel() {
     private var localRepo = repository.Local()
     private var cloudRepo = repository.Cloud()
     private var dbRepo = repository.DB()
     private var interfaceRepo = repository.UI()
+    private val appUtil = AppUtil(repository.context)
 
     private var chosenIdeologyLiveData: MutableLiveData<String>
     private var resultIdeologyLiveData: MutableLiveData<String>
@@ -96,10 +95,10 @@ class ResultViewModel @Inject constructor(
 
     private fun getIdeologyData() {
         if (horScore != null && verScore != null) {
-            resultIdeology = getIdeology(horScore, verScore)
+            resultIdeology = appUtil.getIdeologyFromScore(horScore, verScore)
             resultIdeologyLiveData.value = resultIdeology
         }
-        ideologyStringId = getIdeologyStringId(resultIdeology)
+        ideologyStringId = appUtil.getIdeologyStringId(resultIdeology)
     }
 
     // TODO: Do Local Unit test

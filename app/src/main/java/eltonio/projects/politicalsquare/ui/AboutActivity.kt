@@ -4,9 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.util.AppUtil.pushRight
+import eltonio.projects.politicalsquare.util.AppUtil
+import javax.inject.Inject
 
-class AboutActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class AboutActivity: AppCompatActivity() {
+    private val appUtil = AppUtil(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
@@ -17,13 +21,13 @@ class AboutActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
-        pushRight(this)
+        appUtil.pushRight(this)
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-        pushRight(this)
+        appUtil.pushRight(this)
     }
 }
