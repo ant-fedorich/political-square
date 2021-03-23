@@ -11,27 +11,31 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import eltonio.projects.politicalsquare.adapter.QuizRecycleAdapter
 import eltonio.projects.politicalsquare.R
-import kotlinx.android.synthetic.main.activity_saved_results.*
+
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.layout_result_item.view.*
+
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.*
 import dagger.hilt.android.AndroidEntryPoint
-import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.Ideologies.Companion.resString
-import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.databinding.ActivitySavedResultsBinding
+import eltonio.projects.politicalsquare.util.Ideologies
+import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
+import eltonio.projects.politicalsquare.model.QuizResult
 import eltonio.projects.politicalsquare.ui.viewmodel.SaveResultViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+
+// FIXME: how to get rid of sintetic
+import kotlinx.android.synthetic.main.layout_result_item.view.*
 
 @AndroidEntryPoint
 class SavedResultsActivity : AppCompatActivity() {
     private val viewmodel: SaveResultViewModel by viewModels()
-    private val appUtil = AppUtil(this)
+    private val binding: ActivitySavedResultsBinding by lazy { ActivitySavedResultsBinding.inflate(layoutInflater)}
 
     private lateinit var resultList: List<QuizResult>
     private lateinit var quizAdapter: QuizRecycleAdapter
@@ -42,7 +46,6 @@ class SavedResultsActivity : AppCompatActivity() {
         setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_saved_results)
 
         title = getString(R.string.saved_title_actionbar)
 
@@ -58,18 +61,20 @@ class SavedResultsActivity : AppCompatActivity() {
         })
 
         val itemTouchHelper = ItemTouchHelper(getSwipeCallback(this))
-        itemTouchHelper.attachToRecyclerView(recycler_results_list)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerResultsList)
+
+        setContentView(binding.root)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
-        appUtil.pushRight(this) // info out
+        pushRight(this) // info out
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        appUtil.pushRight(this) //info out
+        pushRight(this) //info out
     }
 
     /** CUSTOM METHODS */
@@ -101,7 +106,7 @@ class SavedResultsActivity : AppCompatActivity() {
                     }
 
                     // Add Snackbar
-                    Snackbar.make(recycler_results_list, "$ideologyTitle удален", Snackbar.LENGTH_LONG)
+                    Snackbar.make(binding.recyclerResultsList, "$ideologyTitle удален", Snackbar.LENGTH_LONG)
                         .setAction("Undo") {
                             viewmodel.addQuizResult(deletedResultItem)
                             viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
@@ -135,7 +140,7 @@ class SavedResultsActivity : AppCompatActivity() {
 
     private fun initRecycler() {
         quizAdapter = QuizRecycleAdapter(this)
-        recycler_results_list.apply {
+        binding.recyclerResultsList.apply {
             adapter = quizAdapter
             layoutManager = LinearLayoutManager(this.context)
             setHasFixedSize(true)
@@ -144,7 +149,7 @@ class SavedResultsActivity : AppCompatActivity() {
     }
 
     private fun goToResultDetail(position: Int) {
-        val itemView = recycler_results_list.layoutManager?.findViewByPosition(position) as ConstraintLayout
+        val itemView = binding.recyclerResultsList.layoutManager?.findViewByPosition(position) as ConstraintLayout
         val itemContainerTransitionName = itemView.layout_item_container.transitionName
         val titleTransitionName = itemView.text_saved_result_title.transitionName
         val dateTransitionName = itemView.text_saved_result_date.transitionName

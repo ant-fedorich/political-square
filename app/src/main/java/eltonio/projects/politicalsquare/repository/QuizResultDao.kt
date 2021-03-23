@@ -1,8 +1,8 @@
-package eltonio.projects.politicalsquare.data
+package eltonio.projects.politicalsquare.repository
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.model.QuizResult
 
 @Dao
 interface QuizResultDao {

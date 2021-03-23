@@ -1,14 +1,19 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eltonio.projects.politicalsquare.data.MainAppRepository
-import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.models.QuizResult
+import dagger.hilt.android.qualifiers.ApplicationContext
+import eltonio.projects.politicalsquare.util.QuizOptions
+import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.CloudRepository
+import eltonio.projects.politicalsquare.repository.DBRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewX
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewY
-import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyFromScore
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyStringId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -18,14 +23,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResultViewModel @Inject constructor(
-    val repository: MainAppRepository
+    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context,
+    private var localRepo: LocalRepository,
+    private var dbRepo: DBRepository,
+    private var cloudRepo: CloudRepository
 ) : ViewModel() {
-    private var localRepo = repository.Local()
-    private var cloudRepo = repository.Cloud()
-    private var dbRepo = repository.DB()
-    private var interfaceRepo = repository.UI()
-    private val appUtil = AppUtil(repository.context)
-
     private var chosenIdeologyLiveData: MutableLiveData<String>
     private var resultIdeologyLiveData: MutableLiveData<String>
     private var compassX: MutableLiveData<Int>
@@ -95,10 +97,10 @@ class ResultViewModel @Inject constructor(
 
     private fun getIdeologyData() {
         if (horScore != null && verScore != null) {
-            resultIdeology = appUtil.getIdeologyFromScore(horScore, verScore)
+            resultIdeology = getIdeologyFromScore(context, horScore, verScore)
             resultIdeologyLiveData.value = resultIdeology
         }
-        ideologyStringId = appUtil.getIdeologyStringId(resultIdeology)
+        ideologyStringId = getIdeologyStringId(context, resultIdeology)
     }
 
     // TODO: Do Local Unit test
@@ -150,9 +152,5 @@ class ResultViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             cloudRepo.logDetailedInfoEvent()
         }
-    }
-
-    fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
-        interfaceRepo.showEndQuizDialogLambda(context, onOkBlock)
     }
 }

@@ -4,9 +4,10 @@ import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eltonio.projects.politicalsquare.data.MainAppRepository
-import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.repository.CloudRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
+import eltonio.projects.politicalsquare.util.QuizOptions
+import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,12 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    repository: MainAppRepository,
-    val appUtil: AppUtil
+    private val localRepo: LocalRepository,
+    private val cloudRepo: CloudRepository
 ) : ViewModel(), LifecycleObserver {
-    private val localRepo = repository.Local()
-    private val cloudRepo = repository.Cloud()
-
     var splashAppearedEvent = MutableLiveData<Boolean>()
     var spinnerSelection = MutableLiveData<Int>()
 
@@ -43,7 +41,7 @@ class MainViewModel @Inject constructor(
     private fun initUser() {
         usersRef = cloudRepo.usersRef
         currentUser = cloudRepo.firebaseUser
-        lastSessionStarted = appUtil.getDateTime()
+        lastSessionStarted = getDateTime()
 
         viewModelScope.launch {
             if (currentUser == null) {

@@ -10,19 +10,18 @@ import android.view.animation.*
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.MainAppRepository
-import kotlinx.android.synthetic.main.activity_splash.*
+import eltonio.projects.politicalsquare.databinding.ActivitySplashBinding
+import eltonio.projects.politicalsquare.repository.LocalRepository
+
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
-
-    @Inject lateinit var repository: MainAppRepository
-    private val localRepo: MainAppRepository.Local by lazy { repository.Local() }
+    @Inject lateinit var localRepo: LocalRepository
+    private val binding: ActivitySplashBinding by lazy { ActivitySplashBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
@@ -30,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
 
         Glide.with(this)
             .load(R.drawable.img_compass_only_strokes)
-            .into(image_compass_only_strokes)
+            .into(binding.imageCompassOnlyStrokes)
 
         // Fading
         startFadingAnimation()
@@ -38,6 +37,8 @@ class SplashActivity : AppCompatActivity() {
         // Moving
         startMovingAnimation()
         doActionAfterMoving()
+
+        setContentView(binding.root)
     }
 
    /** CUSTOM METHODS */
@@ -48,12 +49,12 @@ class SplashActivity : AppCompatActivity() {
            duration = localRepo.getSplashAnimationTime()
            interpolator = DecelerateInterpolator(2f)
        }
-       view_foreground.startAnimation(fadingAnimation)
+       binding.viewForeground.startAnimation(fadingAnimation)
    }
 
     private fun doActionAfterFading() {
         Handler().postDelayed({
-            view_foreground.visibility = View.INVISIBLE
+            binding.viewForeground.visibility = View.INVISIBLE
         }, localRepo.getSplashAnimationTime()) //600
     }
 
@@ -76,7 +77,7 @@ class SplashActivity : AppCompatActivity() {
             addAnimation(moveLeftAnimation)
         }
         // Start animation
-        image_compass_only_strokes.startAnimation(animationSet)
+        binding.imageCompassOnlyStrokes.startAnimation(animationSet)
     }
 
     private fun doActionAfterMoving() {

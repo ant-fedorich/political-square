@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.models.ScreenItem
+import eltonio.projects.politicalsquare.model.ScreenItem
 import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.util.AppUtil.playGif
 import kotlinx.android.synthetic.main.layout_screen_item.view.*
 
 class IntroViewPagerAdapter(var context: Context, var screenList: MutableList<ScreenItem>) : PagerAdapter(){
-    private val appUtil = AppUtil(context)
     private var currentView: View? = null
 
     override fun getCount(): Int  = screenList.size
@@ -38,7 +38,7 @@ class IntroViewPagerAdapter(var context: Context, var screenList: MutableList<Sc
         // For the first screen, load animation immediately
         if (position == 0) {
             imageBackground.visibility = View.INVISIBLE
-            appUtil.playGif(screenList[position].screenImage, image)
+            playGif(context, screenList[position].screenImage, image)
         }
 
         container.addView(screenLayout)

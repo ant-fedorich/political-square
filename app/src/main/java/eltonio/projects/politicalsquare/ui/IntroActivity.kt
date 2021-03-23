@@ -12,23 +12,31 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.models.ScreenItem
+import eltonio.projects.politicalsquare.model.ScreenItem
 import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
+import eltonio.projects.politicalsquare.databinding.ActivityIntroBinding
 import eltonio.projects.politicalsquare.ui.viewmodel.IntroViewModel
-import eltonio.projects.politicalsquare.util.AppUtil
-import kotlinx.android.synthetic.main.activity_intro.*
-import javax.inject.Inject
+import eltonio.projects.politicalsquare.util.AppUtil.fadeIn
+import eltonio.projects.politicalsquare.util.AppUtil.playGif
 
 @AndroidEntryPoint
 class IntroActivity : AppCompatActivity() {
     private val viewmodel: IntroViewModel by viewModels()
-    @Inject lateinit var appUtil: AppUtil
+    private val binding: ActivityIntroBinding by lazy { ActivityIntroBinding.inflate(layoutInflater) }
+
+
+//    var appQuestionsWithAnswers: List<QuestionWithAnswers> = emptyList()
+
 
     private lateinit var screenList: MutableList<ScreenItem>
     private lateinit var introViewPagerAdapter: IntroViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // We have to set a lang before loading UI, cause it will take a lang by system default
+        val loadedLang = viewmodel.loadLang().value as String
+        viewmodel.setLang(this, loadedLang)
+
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_intro)
 
@@ -40,7 +48,7 @@ class IntroActivity : AppCompatActivity() {
         viewmodel.getIntroOpened().observe(this, Observer {
             if (it == true) {
                 startActivity(Intent(this, MainActivity::class.java))
-                appUtil.fadeIn(this)
+                fadeIn(this)
                 finish()
             }
         })
@@ -56,17 +64,17 @@ class IntroActivity : AppCompatActivity() {
         })
 
         // Listeners
-        button_next.setOnClickListener {
+        binding.buttonNext.setOnClickListener {
             showNextPage()
         }
 
-        button_get_started.setOnClickListener {
+        binding.buttonGetStarted.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
-            appUtil.fadeIn(this)
+            fadeIn(this)
             finish()
         }
 
-        tab_indicator.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabIndicator.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 changeButtonsIfLastPage(tab?.position!!)
             }
@@ -74,38 +82,40 @@ class IntroActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        pager_intro.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+        binding.pagerIntro.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 val currentImageItem =
-                    pager_intro.findViewWithTag<ImageView>("tag_image_intro_animation_$position")
+                    binding.pagerIntro.findViewWithTag<ImageView>("tag_image_intro_animation_$position")
                 val currentBackgroundItem =
-                    pager_intro.findViewWithTag<ImageView>("tag_image_intro_background_$position")
+                    binding.pagerIntro.findViewWithTag<ImageView>("tag_image_intro_background_$position")
 
                 startPlayingPager(position, currentImageItem, currentBackgroundItem)
             }
         })
+
+        setContentView(binding.root)
     }
     /** CUSTOM METHODS **/
     private fun showNextPage() {
-        var position = pager_intro.currentItem
+        var position = binding.pagerIntro.currentItem
         if (position < screenList.size) {
             position++
-            pager_intro.currentItem = position
+            binding.pagerIntro.currentItem = position
         }
         if (position == screenList.size-1) {
-            button_next.visibility = View.INVISIBLE
-            button_get_started.visibility = View.VISIBLE
+            binding.buttonNext.visibility = View.INVISIBLE
+            binding.buttonGetStarted.visibility = View.VISIBLE
         }
     }
 
     private fun changeButtonsIfLastPage(tabPosition: Int) {
         if (tabPosition < screenList.size) {
-            button_next.visibility = View.VISIBLE
-            button_get_started.visibility = View.INVISIBLE
+            binding.buttonNext.visibility = View.VISIBLE
+            binding.buttonGetStarted.visibility = View.INVISIBLE
         }
         if (tabPosition == screenList.size - 1) {
-            button_next.visibility = View.INVISIBLE
-            button_get_started.visibility = View.VISIBLE
+            binding.buttonNext.visibility = View.INVISIBLE
+            binding.buttonGetStarted.visibility = View.VISIBLE
         }
     }
 
@@ -122,14 +132,14 @@ class IntroActivity : AppCompatActivity() {
                 currentBackgroundItem.visibility = View.INVISIBLE
             }
             .start()
-        appUtil.playGif(screenList[position].screenImage, currentImageItem)
+        playGif(this, screenList[position].screenImage, currentImageItem)
     }
 
     private fun initViewPager() {
         introViewPagerAdapter = IntroViewPagerAdapter(this, screenList)
-        pager_intro.adapter = introViewPagerAdapter
-        pager_intro.offscreenPageLimit = 2
-        tab_indicator.setupWithViewPager(pager_intro)
+        binding.pagerIntro.adapter = introViewPagerAdapter
+        binding.pagerIntro.offscreenPageLimit = 2
+        binding.tabIndicator.setupWithViewPager(binding.pagerIntro)
     }
 
 }

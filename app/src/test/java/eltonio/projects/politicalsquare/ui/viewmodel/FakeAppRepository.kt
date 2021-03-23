@@ -1,11 +1,21 @@
-package eltonio.projects.politicalsquare.data
+package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.AppRepository
+import eltonio.projects.politicalsquare.repository.QuestionDao
+import eltonio.projects.politicalsquare.repository.QuizResultDao
+import eltonio.projects.politicalsquare.util.AppUtil
+import javax.inject.Inject
 
-class FakeAppRepository : AppRepository {
+class FakeAppRepository (
+    private val questionDao: QuestionDao,
+    private val quizResultDao: QuizResultDao,
+    private val appUtil: AppUtil
+) : AppRepository {
+    val context = appUtil.context
 
     private val quizResultList = mutableListOf<QuizResult>() // Imitation DB
     private val quizResultListLiveData = MutableLiveData<List<QuizResult>>(quizResultList)

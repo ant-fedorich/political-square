@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.Ideologies.Companion.resString
-import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.util.Ideologies
+import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
+import eltonio.projects.politicalsquare.model.QuizResult
 import eltonio.projects.politicalsquare.views.ResultListPointView
 import kotlinx.android.synthetic.main.layout_result_item.view.*
 

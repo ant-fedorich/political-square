@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.models
+package eltonio.projects.politicalsquare.util
 
 import android.app.Activity
 import android.content.Context

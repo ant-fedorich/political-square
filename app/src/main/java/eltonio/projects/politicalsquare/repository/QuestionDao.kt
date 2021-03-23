@@ -1,11 +1,9 @@
-package eltonio.projects.politicalsquare.data
+package eltonio.projects.politicalsquare.repository
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
-import eltonio.projects.politicalsquare.models.Question
-import eltonio.projects.politicalsquare.models.QuestionWithAnswers
+import eltonio.projects.politicalsquare.model.Question
+import eltonio.projects.politicalsquare.model.QuestionWithAnswers
 
 @Dao
 interface QuestionDao {

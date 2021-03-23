@@ -5,15 +5,12 @@ import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.util.AppUtil
-import javax.inject.Inject
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 
 @AndroidEntryPoint
-class AboutActivity: AppCompatActivity() {
-    private val appUtil = AppUtil(this)
-
+class AboutActivity: AppCompatActivity(R.layout.activity_about) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about)
 
         title = getString(R.string.about_title_actionbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -21,13 +18,13 @@ class AboutActivity: AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
-        appUtil.pushRight(this)
+        pushRight(this)
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-        appUtil.pushRight(this)
+        pushRight(this)
     }
 }

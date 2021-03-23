@@ -20,16 +20,19 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.models.QuizOptions
+import eltonio.projects.politicalsquare.databinding.ActivitySettingsBinding
+import eltonio.projects.politicalsquare.util.QuizOptions
 import eltonio.projects.politicalsquare.ui.viewmodel.SettingsViewModel
 import eltonio.projects.politicalsquare.util.*
-import kotlinx.android.synthetic.main.activity_base.view.*
-import kotlinx.android.synthetic.main.activity_settings.*
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
+import eltonio.projects.politicalsquare.util.AppUtil.showEndQuizDialogLambda
+import kotlinx.android.synthetic.main.activity_base.view.* // FIXME: How to get rid ot synthetic
+
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     private val viewModel: SettingsViewModel by viewModels()
-    private val appUtil = AppUtil(this)
+    private val binding: ActivitySettingsBinding by lazy { ActivitySettingsBinding.inflate(layoutInflater) }
 
     //private val localRepo = AppRepository.Local()
 
@@ -41,7 +44,6 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
         title = getString(R.string.settings_title_actionbar)
 
@@ -54,35 +56,35 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
 
         viewModel.getLang().observe(this, Observer {
             when(it) {
-                "uk" -> loadLangForSettings(radio_ukr, langBorderShapeUkr)
-                "ru" -> loadLangForSettings(radio_rus, langBorderShapeRus)
-                "en" -> loadLangForSettings(radio_eng, langBorderShapeEng)
+                "uk" -> loadLangForSettings(binding.radioUkr, langBorderShapeUkr)
+                "ru" -> loadLangForSettings(binding.radioRus, langBorderShapeRus)
+                "en" -> loadLangForSettings(binding.radioEng, langBorderShapeEng)
             }
         })
 
         viewModel.getQuizOption().observe(this, Observer {
             when(it) {
                 QuizOptions.WORLD.id -> {
-                    setQuizOptionToSelectedAnimation(layout_quiz_option_1)
-                    title_quiz_option_1.setTypeface(null, Typeface.BOLD)
-                    setQuizOptionToDefaultAnimation(layout_quiz_option_2)
+                    setQuizOptionToSelectedAnimation(binding.layoutQuizOption1)
+                    binding.titleQuizOption1.setTypeface(null, Typeface.BOLD)
+                    setQuizOptionToDefaultAnimation(binding.layoutQuizOption2)
                 }
                 QuizOptions.UKRAINE.id -> {
-                    setQuizOptionToSelectedAnimation(layout_quiz_option_2)
-                    title_quiz_option_2.setTypeface(null, Typeface.BOLD)
-                    setQuizOptionToDefaultAnimation(layout_quiz_option_1)
+                    setQuizOptionToSelectedAnimation(binding.layoutQuizOption2)
+                    binding.titleQuizOption2.setTypeface(null, Typeface.BOLD)
+                    setQuizOptionToDefaultAnimation(binding.layoutQuizOption1)
                 }
             }
         })
 
         // Init listeners
-        radio_group_lang.setOnCheckedChangeListener { _, checkedId ->
+        binding.radioGroupLang.setOnCheckedChangeListener { _, checkedId ->
             viewModel.getQuizIsActiveState().observe(this, Observer {
                 if (it == true) {
                     val baseActivity = layoutInflater.inflate(R.layout.activity_base, null)
                     baseActivity.activity_container.closeDrawer(GravityCompat.START)
 
-                    viewModel.showEndQuizDialogLambda(this) {
+                    showEndQuizDialogLambda(this) {
                         checkRadioButton(checkedId)
                     }
                 } else {
@@ -91,16 +93,18 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
             })
         }
         // Use onTouch for visual effects
-        radio_ukr.setOnTouchListener(this)
-        radio_rus.setOnTouchListener(this)
-        radio_eng.setOnTouchListener(this)
+        binding.radioUkr.setOnTouchListener(this)
+        binding.radioRus.setOnTouchListener(this)
+        binding.radioEng.setOnTouchListener(this)
 
-        image_ukr.setOnTouchListener(this)
-        image_rus.setOnTouchListener(this)
-        image_eng.setOnTouchListener(this)
+        binding.imageUkr.setOnTouchListener(this)
+        binding.imageRus.setOnTouchListener(this)
+        binding.imageEng.setOnTouchListener(this)
 
-        card_quiz_option_1.setOnTouchListener(this)
-        card_quiz_option_2.setOnTouchListener(this)
+        binding.cardQuizOption1.setOnTouchListener(this)
+        binding.cardQuizOption2.setOnTouchListener(this)
+
+        setContentView(binding.root)
     }
 
     private fun initAllLangBorderShapes() {
@@ -108,9 +112,9 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         langBorderShapeRus = ContextCompat.getDrawable(this, R.drawable.shape_lang_radio_border) as GradientDrawable
         langBorderShapeEng = ContextCompat.getDrawable(this, R.drawable.shape_lang_radio_border) as GradientDrawable
 
-        (image_ukr.background as LayerDrawable).setDrawableByLayerId(R.id.shape_lang_radio_border, langBorderShapeUkr)
-        (image_rus.background as LayerDrawable).setDrawableByLayerId(R.id.shape_lang_radio_border, langBorderShapeRus)
-        (image_eng.background as LayerDrawable).setDrawableByLayerId(R.id.shape_lang_radio_border, langBorderShapeEng)
+        (binding.imageUkr.background as LayerDrawable).setDrawableByLayerId(R.id.shape_lang_radio_border, langBorderShapeUkr)
+        (binding.imageRus.background as LayerDrawable).setDrawableByLayerId(R.id.shape_lang_radio_border, langBorderShapeRus)
+        (binding.imageEng.background as LayerDrawable).setDrawableByLayerId(R.id.shape_lang_radio_border, langBorderShapeEng)
 
         langBorderShapeList = mutableListOf(
             langBorderShapeUkr,
@@ -122,19 +126,19 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when (v) {
-            radio_ukr -> {
+            binding.radioUkr -> {
                 if (event?.action == MotionEvent.ACTION_DOWN)
                     changeLangRadioImageAnimation(langBorderShapeUkr)
                 if (event?.action == MotionEvent.ACTION_UP)
                     resetAllLangRadioImageExcept(langBorderShapeUkr)
             }
-            radio_rus -> {
+            binding.radioRus -> {
                 if (event?.action == MotionEvent.ACTION_DOWN)
                     changeLangRadioImageAnimation(langBorderShapeRus)
                 if (event?.action == MotionEvent.ACTION_UP)
                     resetAllLangRadioImageExcept(langBorderShapeRus)
             }
-            radio_eng -> {
+            binding.radioEng -> {
                 if (event?.action == MotionEvent.ACTION_DOWN)
                     changeLangRadioImageAnimation(langBorderShapeEng)
                 if (event?.action == MotionEvent.ACTION_UP)
@@ -142,41 +146,41 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
             }
 
             // Delegate OnTouch Event
-            image_ukr -> {
-                radio_ukr.dispatchTouchEvent(event)
-                radio_ukr.performClick()
+            binding.imageUkr -> {
+                binding.radioUkr.dispatchTouchEvent(event)
+                binding.radioUkr.performClick()
             }
-            image_rus -> {
-                radio_rus.dispatchTouchEvent(event)
-                radio_rus.performClick()
+            binding.imageRus -> {
+                binding.radioRus.dispatchTouchEvent(event)
+                binding.radioRus.performClick()
             }
-            image_eng -> {
-                radio_eng.dispatchTouchEvent(event)
-                radio_eng.performClick()
+            binding.imageEng -> {
+                binding.radioEng.dispatchTouchEvent(event)
+                binding.radioEng.performClick()
             }
 
-            card_quiz_option_1 -> {
+            binding.cardQuizOption1 -> {
                 if (event?.action == MotionEvent.ACTION_DOWN) {
-                    setQuizOptionToSelectedAnimation(layout_quiz_option_1)
+                    setQuizOptionToSelectedAnimation(binding.layoutQuizOption1)
                 }
                 if (event?.action == MotionEvent.ACTION_UP) {
-                    title_quiz_option_1.setTypeface(null, Typeface.BOLD)
-                    title_quiz_option_2.setTypeface(null, Typeface.NORMAL)
-                    setQuizOptionToDefaultAnimation(layout_quiz_option_2)
+                    binding.titleQuizOption1.setTypeface(null, Typeface.BOLD)
+                    binding.titleQuizOption2.setTypeface(null, Typeface.NORMAL)
+                    setQuizOptionToDefaultAnimation(binding.layoutQuizOption2)
 
                     viewModel.saveQuizOption(QuizOptions.WORLD.id)
                     MainActivity.spinnerView.setSelection(0)
                 }
                 return true
             }
-            card_quiz_option_2 -> {
+            binding.cardQuizOption2 -> {
                 if (event?.action == MotionEvent.ACTION_DOWN) {
-                    setQuizOptionToSelectedAnimation(layout_quiz_option_2)
+                    setQuizOptionToSelectedAnimation(binding.layoutQuizOption2)
                 }
                 if (event?.action == MotionEvent.ACTION_UP) {
-                    title_quiz_option_2.setTypeface(null, Typeface.BOLD)
-                    title_quiz_option_1.setTypeface(null, Typeface.NORMAL)
-                    setQuizOptionToDefaultAnimation(layout_quiz_option_1)
+                    binding.titleQuizOption2.setTypeface(null, Typeface.BOLD)
+                    binding.titleQuizOption1.setTypeface(null, Typeface.NORMAL)
+                    setQuizOptionToDefaultAnimation(binding.layoutQuizOption1)
 
                     viewModel.saveQuizOption(QuizOptions.WORLD.id)
                     MainActivity.spinnerView.setSelection(1)
@@ -189,22 +193,22 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
-        appUtil.pushRight(this) // info out
+        pushRight(this) // info out
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        appUtil.pushRight(this) // info out
+        pushRight(this) // info out
     }
 
     /** CUSTOM METHODS */
 
     private fun checkRadioButton(checkedId: Int) {
         when (checkedId) {
-            R.id.radio_ukr -> setLangAndStartMain(radio_ukr, "uk")
-            R.id.radio_rus -> setLangAndStartMain(radio_rus, "ru")
-            R.id.radio_eng -> setLangAndStartMain(radio_eng, "en")
+            R.id.radio_ukr -> setLangAndStartMain(binding.radioUkr, "uk")
+            R.id.radio_rus -> setLangAndStartMain(binding.radioRus, "ru")
+            R.id.radio_eng -> setLangAndStartMain(binding.radioEng, "en")
         }
     }
 

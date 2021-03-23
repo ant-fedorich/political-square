@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 
 class ResultDetailPointView(
     context: Context,
@@ -14,17 +15,16 @@ class ResultDetailPointView(
     var horResultScore: Int,
     var verResultScore: Int
 ) : View(context) {
-    private val appUtil = AppUtil(context)
 
     private var paint = Paint()
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        val step = appUtil.convertDpToPx(4f) // a cell size
-        val radius = appUtil.convertDpToPx(10f)
-        val radiusResult = appUtil.convertDpToPx(12f)
-        val stokeWidthPx = appUtil.convertDpToPx(2f)
+        val step = convertDpToPx(context, 4f) // a cell size
+        val radius = convertDpToPx(context, 10f)
+        val radiusResult = convertDpToPx(context, 12f)
+        val stokeWidthPx = convertDpToPx(context, 2f)
 
         val startX = (horStartScore + 40).toFloat()
         val startY = (verStartScore + 40).toFloat()

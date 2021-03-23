@@ -5,16 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eltonio.projects.politicalsquare.data.MainAppRepository
-import eltonio.projects.politicalsquare.models.ScreenItem
+import eltonio.projects.politicalsquare.model.ScreenItem
+import eltonio.projects.politicalsquare.repository.LocalRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
-    repository: MainAppRepository
+    private val localRepo: LocalRepository
 ) : ViewModel() {
-    private val localRepo = repository.Local()
-
     private var splashAnimationTime: MutableLiveData<Long> = MutableLiveData()
     private var introOpenEvent: MutableLiveData<Boolean> = MutableLiveData()
     private var lang: MutableLiveData<String> = MutableLiveData()

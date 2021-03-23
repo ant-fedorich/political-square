@@ -1,12 +1,13 @@
-package eltonio.projects.politicalsquare.models
+package eltonio.projects.politicalsquare.model
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import eltonio.projects.politicalsquare.data.MainAppRepository
+import eltonio.projects.politicalsquare.repository.MainAppRepository
+import eltonio.projects.politicalsquare.util.Ideologies
+import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,10 +21,9 @@ class IdeologiesTest {
     private val enTitle = "Anarchy"
     private val ruTitle = "Анархизм"
     private val ukTitle = "Анархізм"
-    @Inject
-    @ApplicationContext lateinit var context: Context
-    private lateinit var localRepo: MainAppRepository.Local
+    lateinit var context: Context
     @Inject lateinit var mainRepo: MainAppRepository
+    private lateinit var localRepo: MainAppRepository.Local
 
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
@@ -33,52 +33,48 @@ class IdeologiesTest {
     @Before
     fun setup() {
         hiltRule.inject()
+        context = ApplicationProvider.getApplicationContext()
         localRepo = mainRepo.Local()
     }
 
     @Test
-    fun testRefreshAll_ChangeLang_withRefreshing_returnsTrue() {
+    fun testChangeLang_andGetIdeologyTitle_returnsTrue() {
         // ACTION
         // First lang setup
         localRepo.setLang(context, enLocale)
-        Ideologies.refreshAll(context) // TODO: crutch: include MockK for mocking Enum/Objects to isolate Ideologies
-        val resultOne = Ideologies.ANARCHY.title
+        val resultOne = Ideologies.ANARCHY.titleRes.resString(context)
 
         // Lang changing
         localRepo.setLang(context, ruLocale)
-        Ideologies.refreshAll(context)
-        val resultTwo = Ideologies.ANARCHY.title
+        val resultTwo = Ideologies.ANARCHY.titleRes.resString(context)
 
         // Lang changing
         localRepo.setLang(context, ukLocale)
-        Ideologies.refreshAll(context)
-        val resultThree = Ideologies.ANARCHY.title
+        val resultThree = Ideologies.ANARCHY.titleRes.resString(context)
 
         // VERIFY
         assertThat(resultOne).contains(enTitle)
         assertThat(resultTwo).contains(ruTitle)
-       assertThat(resultThree).contains(ukTitle)
+        assertThat(resultThree).contains(ukTitle)
     }
 
     @Test
-    fun testRefreshAll_ChangeLang_withoutRefreshing_returnsFalse() {
+    fun testChangeLang_andGetLocale_returnsTrue() {
         // ACTION
         // First lang setup
         localRepo.setLang(context, enLocale)
-        Ideologies.refreshAll(context) // TODO: crutch: include MockK for mocking Enum/Objects for isolating Ideologies
-        val resultOne = Ideologies.ANARCHY.title
+        val resultOne = localRepo.getLang()
 
         // Lang changing
         localRepo.setLang(context, ruLocale)
-        val resultTwo = Ideologies.ANARCHY.title
-
+        val resultTwo = localRepo.getLang()
         // Lang changing
         localRepo.setLang(context, ukLocale)
-        val resultThree = Ideologies.ANARCHY.title
+        val resultThree = localRepo.getLang()
 
         // VERIFY
-        assertThat(resultOne).contains(enTitle)
-        assertThat(resultTwo).doesNotContain(ruTitle)
-        assertThat(resultThree).doesNotContain(ukTitle)
+        assertThat(resultOne).contains(enLocale)
+        assertThat(resultTwo).contains(ruLocale)
+        assertThat(resultThree).contains(ukLocale)
     }
 }

@@ -6,10 +6,10 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 
 class ResultListPointView(context: Context, var horScore: Int, var verScore: Int) : View(context) {
     private var paint = Paint()
-    private val appUtil = AppUtil(context)
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -18,12 +18,12 @@ class ResultListPointView(context: Context, var horScore: Int, var verScore: Int
         val verResultScore = verScore
 
         val compassX =
-            appUtil.convertDpToPx((horResultScore + 40).toFloat())
+            convertDpToPx(context, (horResultScore + 40).toFloat())
         val compassY =
-            appUtil.convertDpToPx((verResultScore + 40).toFloat())
-        val step = appUtil.convertDpToPx(1f)
-        val radius = appUtil.convertDpToPx(6f)
-        val strokeWidthPx = appUtil.convertDpToPx(2f)
+            convertDpToPx(context, (verResultScore + 40).toFloat())
+        val step = convertDpToPx(context, 1f)
+        val radius = convertDpToPx(context, 6f)
+        val strokeWidthPx = convertDpToPx(context, 2f)
 
         paint.apply {
             style = Paint.Style.FILL

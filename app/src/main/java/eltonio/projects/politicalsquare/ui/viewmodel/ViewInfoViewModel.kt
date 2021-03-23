@@ -1,21 +1,22 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.data.MainAppRepository
-import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.Ideologies.Companion.resString
+import eltonio.projects.politicalsquare.util.Ideologies
+import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import javax.inject.Inject
 
 @HiltViewModel
 class ViewInfoViewModel @Inject constructor(
-    private val repository: MainAppRepository
+    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context
 ) : ViewModel() {
-    private val context = repository.context
     private var ideology: MutableLiveData<String> = MutableLiveData()
     private var imageId: MutableLiveData<Int> = MutableLiveData()
     private var descriptionId: MutableLiveData<Int> = MutableLiveData()

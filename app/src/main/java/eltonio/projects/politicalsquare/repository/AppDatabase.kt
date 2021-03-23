@@ -1,8 +1,8 @@
-package eltonio.projects.politicalsquare.data
+package eltonio.projects.politicalsquare.repository
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import eltonio.projects.politicalsquare.models.*
+import eltonio.projects.politicalsquare.model.*
 
 @Database(
     entities = [Question::class, QuestionAnswer::class, Answer::class, Quiz::class, QuizResult::class],
@@ -11,5 +11,5 @@ import eltonio.projects.politicalsquare.models.*
 abstract class AppDatabase : RoomDatabase() {
     abstract fun quizResultDao(): QuizResultDao
     abstract fun questionDao(): QuestionDao
-    abstract fun quizTestingDao(): QuizDao
+    abstract fun quizDaoForTesting(): QuizDao
 }

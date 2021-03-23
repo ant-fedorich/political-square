@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.models
+package eltonio.projects.politicalsquare.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

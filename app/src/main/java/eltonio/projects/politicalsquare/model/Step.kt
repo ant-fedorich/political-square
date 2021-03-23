@@ -1,6 +1,4 @@
-package eltonio.projects.politicalsquare.models
-
-import android.widget.RadioButton
+package eltonio.projects.politicalsquare.model
 
 data class Step (
     var questionIndex: Int = 0,

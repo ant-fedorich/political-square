@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare.models
+package eltonio.projects.politicalsquare.model
 
 data class ScreenItem(
     var title: String,

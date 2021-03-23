@@ -1,20 +1,26 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
+import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.Ideologies.Companion.resString
+import eltonio.projects.politicalsquare.util.Ideologies
+import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyFromScore
 import javax.inject.Inject
 
 @HiltViewModel
-class InfoViewModel @Inject constructor(
-    val appUtil: AppUtil
+class InfoViewModel @Inject constructor (
+    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context
 ): ViewModel() {
-    private val context = appUtil.context
     private var imageId: MutableLiveData<Int> = MutableLiveData()
     private var ideology: MutableLiveData<String> = MutableLiveData()
 
@@ -22,10 +28,10 @@ class InfoViewModel @Inject constructor(
     private var verScore = 0
 
     fun getIdeology(x: Float, y: Float): LiveData<String> {
-        var step = appUtil.convertDpToPx(4f)
+        var step = convertDpToPx(context, 4f)
         horScore = (x/step - 40).toInt()
         verScore = (y/step - 40).toInt()
-        ideology.value = appUtil.getIdeologyFromScore(horScore, verScore)
+        ideology.value = getIdeologyFromScore(context, horScore, verScore)
         return ideology
     }
     

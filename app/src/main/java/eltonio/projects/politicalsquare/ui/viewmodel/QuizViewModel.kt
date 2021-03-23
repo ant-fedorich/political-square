@@ -5,9 +5,10 @@ import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.App
-import eltonio.projects.politicalsquare.data.MainAppRepository
-import eltonio.projects.politicalsquare.models.QuestionWithAnswers
-import eltonio.projects.politicalsquare.models.Step
+import eltonio.projects.politicalsquare.model.QuestionWithAnswers
+import eltonio.projects.politicalsquare.model.Step
+import eltonio.projects.politicalsquare.repository.CloudRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,12 +16,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
-    val repository: MainAppRepository
+    private var localRepo: LocalRepository,
+    private var cloudRepo: CloudRepository
 ) : ViewModel() {
     // TODO: Refactor
-    private var localRepo = repository.Local()
-    private var cloudRepo = repository.Cloud()
-    private var interfaceRepo = repository.UI()
+
 
     private var questionCounterTotalLiveData: MutableLiveData<Int> = MutableLiveData()
     private var questionCounterLiveData: MutableLiveData<Int> = MutableLiveData()
@@ -163,12 +163,4 @@ class QuizViewModel @Inject constructor(
 
         FABButtonShowEvent.value = true
     }
-
-
-
-    fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
-        interfaceRepo.showEndQuizDialogLambda(context, onOkBlock)
-    }
-
-
 }

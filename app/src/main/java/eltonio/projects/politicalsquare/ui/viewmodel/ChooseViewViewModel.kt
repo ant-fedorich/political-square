@@ -1,11 +1,19 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
+import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.App
-import eltonio.projects.politicalsquare.data.MainAppRepository
-import eltonio.projects.politicalsquare.models.QuizOptions
+import eltonio.projects.politicalsquare.repository.DBRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
+import eltonio.projects.politicalsquare.util.QuizOptions
 import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyFromScore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -13,12 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseViewViewModel @Inject constructor(
-    val repository: MainAppRepository,
-    val appUtil: AppUtil
+    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context,
+    private val localRepo: LocalRepository,
+    private val dbRepo: DBRepository,
 ) : ViewModel() {
-    private val localRepo = repository.Local()
-    private var dbRepo = repository.DB()
-
     private var ideologyIsChosenEvent: MutableLiveData<Boolean> = MutableLiveData()
     private var ideologyTitle: MutableLiveData<String> = MutableLiveData()
     private var quizOptionId: MutableLiveData<Int> = MutableLiveData()
@@ -66,7 +72,7 @@ class ChooseViewViewModel @Inject constructor(
     }
 
     fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideologyId: String, quizId: Int) {
-        val startedAt = appUtil.getDateTime()
+        val startedAt = getDateTime()
         localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideologyId, quizId, startedAt) // TODO: put an object instead of attributes
     }
 
@@ -107,12 +113,12 @@ class ChooseViewViewModel @Inject constructor(
     }
 
     fun getIdeologyTitle(): LiveData<String> {
-        val step = appUtil.convertDpToPx(4f)
+        val step = convertDpToPx(context, 4f)
         horStartScore.value =
             (x / step - 40).toInt()
         verStartScore.value =
             (y / step - 40).toInt()
-        ideologyTitle.value = appUtil.getIdeologyFromScore(horStartScore.value!!, verStartScore.value!!)
+        ideologyTitle.value = getIdeologyFromScore(context, horStartScore.value!!, verStartScore.value!!)
         return ideologyTitle
     }
 

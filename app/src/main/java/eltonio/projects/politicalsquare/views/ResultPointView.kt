@@ -7,10 +7,10 @@ import android.graphics.Paint
 import android.view.View
 import eltonio.projects.politicalsquare.ui.ResultActivity
 import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 
 class ResultPointView (context: Context, var radiusInDp: Float, var radiusResultInDp: Float) : View(context) {
     private var paint = Paint()
-    private val appUtil = AppUtil(context)
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -20,10 +20,10 @@ class ResultPointView (context: Context, var radiusInDp: Float, var radiusResult
         val compassX = ResultActivity.compassX
         val compassY = ResultActivity.compassY
 
-        val step = appUtil.convertDpToPx(4f) // a cell size
-        val radius = appUtil.convertDpToPx(radiusInDp)
-        val radiusResult = appUtil.convertDpToPx(radiusResultInDp)
-        val stokeWidthPx = appUtil.convertDpToPx(2f)
+        val step = convertDpToPx(context, 4f) // a cell size
+        val radius = convertDpToPx(context, radiusInDp)
+        val radiusResult = convertDpToPx(context, radiusResultInDp)
+        val stokeWidthPx = convertDpToPx(context, 2f)
         //val centerCoeff = step * 0.5f // coefficient to center the point in a cell
 
         // Draw a chosen view point

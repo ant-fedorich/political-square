@@ -1,48 +1,32 @@
-package eltonio.projects.politicalsquare.data
+package eltonio.projects.politicalsquare.repository
 
-import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
-import eltonio.projects.politicalsquare.models.Quiz
-import eltonio.projects.politicalsquare.models.QuizResult
+import eltonio.projects.politicalsquare.DatabaseRule
+import eltonio.projects.politicalsquare.getOrAwaitValue
+import eltonio.projects.politicalsquare.model.Quiz
+import eltonio.projects.politicalsquare.model.QuizResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 
 
 @ExperimentalCoroutinesApi
 @SmallTest
 class QuizResultDaoTest {
-    lateinit var applicationContext: Context
-    lateinit var database: AppDatabase
-    lateinit var quizResultDao: QuizResultDao
-    lateinit var quizDao: QuizDao
+    private lateinit var quizResultDao: QuizResultDao
+    private lateinit var quizDao: QuizDao
 
     @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    @get:Rule
+    val databaseRule = DatabaseRule()
 
-
-    // TODO:  @MyRule context
-    // TODO:  @MyRule database
     @Before
     fun setup() {
-        applicationContext = ApplicationProvider.getApplicationContext()
-        database = Room.inMemoryDatabaseBuilder(applicationContext, AppDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
-        quizResultDao = database.quizResultDao()
-        quizDao = database.quizTestingDao()
-    }
-    @After
-    fun teardown() {
-        database.close()
+        quizResultDao = databaseRule.database.quizResultDao()
+        quizDao = databaseRule.database.quizDaoForTesting()
     }
 
     @Test
@@ -64,9 +48,9 @@ class QuizResultDaoTest {
             avgAnswerTime = 10.0)
         // action
         quizResultDao.addQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults()
+        val allQuizResults = quizResultDao.getQuizResults().getOrAwaitValue()
         // verify
-        assertThat(allQuizResults.value).contains(quizResult)
+        assertThat(allQuizResults).contains(quizResult)
     }
 
     @Test
@@ -89,9 +73,9 @@ class QuizResultDaoTest {
         // action
         quizResultDao.addQuizResult(quizResult)
         quizResultDao.deleteQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults()
+        val allQuizResults = quizResultDao.getQuizResults().getOrAwaitValue()
 
         // verify
-        assertThat(allQuizResults.value).doesNotContain(quizItem)
+        assertThat(allQuizResults).doesNotContain(quizItem)
     }
 }

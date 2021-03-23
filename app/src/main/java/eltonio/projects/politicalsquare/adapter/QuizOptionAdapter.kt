@@ -8,11 +8,10 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.models.QuizOptions.Companion.resString
+import eltonio.projects.politicalsquare.util.QuizOptions
+import eltonio.projects.politicalsquare.util.QuizOptions.Companion.resString
 
-class QuizOptionAdapter(context: Context, quizOptionList: Array<QuizOptions>)
-    : ArrayAdapter<QuizOptions>(context, 0, quizOptionList) {
+class QuizOptionAdapter(context: Context, quizOptionList: Array<QuizOptions>) : ArrayAdapter<QuizOptions>(context, 0, quizOptionList) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return initView(position, convertView, parent)
