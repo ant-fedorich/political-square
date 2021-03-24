@@ -3,9 +3,10 @@ package eltonio.projects.politicalsquare.model
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import eltonio.projects.politicalsquare.repository.MainAppRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.Ideologies
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import org.junit.Before
@@ -22,8 +23,7 @@ class IdeologiesTest {
     private val ruTitle = "Анархизм"
     private val ukTitle = "Анархізм"
     lateinit var context: Context
-    @Inject lateinit var mainRepo: MainAppRepository
-    private lateinit var localRepo: MainAppRepository.Local
+    @Inject lateinit var localRepo: LocalRepository
 
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
@@ -34,7 +34,6 @@ class IdeologiesTest {
     fun setup() {
         hiltRule.inject()
         context = ApplicationProvider.getApplicationContext()
-        localRepo = mainRepo.Local()
     }
 
     @Test

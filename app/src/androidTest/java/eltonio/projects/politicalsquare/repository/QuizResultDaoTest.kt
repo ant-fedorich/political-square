@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
 import eltonio.projects.politicalsquare.DatabaseRule
-import eltonio.projects.politicalsquare.getOrAwaitValue
+import eltonio.projects.politicalsquare.getOrAwait
 import eltonio.projects.politicalsquare.model.Quiz
 import eltonio.projects.politicalsquare.model.QuizResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,7 +48,7 @@ class QuizResultDaoTest {
             avgAnswerTime = 10.0)
         // action
         quizResultDao.addQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults().getOrAwaitValue()
+        val allQuizResults = quizResultDao.getQuizResults().getOrAwait()
         // verify
         assertThat(allQuizResults).contains(quizResult)
     }
@@ -73,7 +73,7 @@ class QuizResultDaoTest {
         // action
         quizResultDao.addQuizResult(quizResult)
         quizResultDao.deleteQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults().getOrAwaitValue()
+        val allQuizResults = quizResultDao.getQuizResults().getOrAwait()
 
         // verify
         assertThat(allQuizResults).doesNotContain(quizItem)

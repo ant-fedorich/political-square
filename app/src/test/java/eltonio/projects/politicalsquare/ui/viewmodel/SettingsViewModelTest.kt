@@ -1,35 +1,30 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.content.Context
+import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
-import eltonio.projects.politicalsquare.repository.AppRepository
-import eltonio.projects.politicalsquare.repository.QuestionDao
-import eltonio.projects.politicalsquare.repository.QuizResultDao
-import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.FakeLocalRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.O_MR1])
 class SettingsViewModelTest {
     private lateinit var context: Context
-    private lateinit var questionDaoMock: QuestionDao
-    private lateinit var quizResultDaoMock: QuizResultDao
-    private lateinit var appUtil: AppUtil
-    private lateinit var localRepo: AppRepository.Local
+    private lateinit var localRepo: LocalRepository
     private lateinit var viewmodel: SettingsViewModel
-
 
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
-        quizResultDaoMock = mock(QuizResultDao::class.java)
-        questionDaoMock = mock(QuestionDao::class.java)
-        appUtil = AppUtil(context)
-        val repository = FakeAppRepository(questionDaoMock, quizResultDaoMock, appUtil)
-        localRepo = repository.Local()
-        viewmodel = SettingsViewModel(repository)
+        localRepo = FakeLocalRepository(context)
+        viewmodel = SettingsViewModel(localRepo)
     }
 
     @Test
@@ -43,7 +38,10 @@ class SettingsViewModelTest {
     @Test
     fun `change Lang in settings, returns uk`() {
         val langDefault = "en"
-        val resultOne =
-    }
 
+        localRepo.setLang(context, "uk")
+        val result = localRepo.getLang()
+
+        assertThat(result).isEqualTo("uk")
+    }
 }

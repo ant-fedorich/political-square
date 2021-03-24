@@ -1,19 +1,11 @@
 package eltonio.projects.politicalsquare.repository
 
-import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.room.Room
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.components.SingletonComponent
-import dagger.hilt.testing.TestInstallIn
-import eltonio.projects.politicalsquare.di.DBModule
-import eltonio.projects.politicalsquare.getOrAwaitValue
+import eltonio.projects.politicalsquare.getOrAwait
 import eltonio.projects.politicalsquare.model.Quiz
 import eltonio.projects.politicalsquare.model.QuizResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +33,7 @@ class QuizResultDaoWithHiltTest {
     }
 
     @Test
-    fun testAddQuizResult() = runBlockingTest{
+    fun test_addQuizResult_and_getQuizResults() = runBlockingTest{
         val quizItem = Quiz(1, "NewQuiz", "Developer", "Test quiz")
         quizDao.addQuiz(quizItem)
 
@@ -59,7 +51,7 @@ class QuizResultDaoWithHiltTest {
             avgAnswerTime = 10.0)
         // action
         quizResultDao.addQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults().getOrAwaitValue()
+        val allQuizResults = quizResultDao.getQuizResults().getOrAwait()
         // verify
         assertThat(allQuizResults).contains(quizResult)
     }
@@ -84,38 +76,9 @@ class QuizResultDaoWithHiltTest {
         // action
         quizResultDao.addQuizResult(quizResult)
         quizResultDao.deleteQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults().getOrAwaitValue()
+        val allQuizResults = quizResultDao.getQuizResults().getOrAwait()
 
         // verify
         assertThat(allQuizResults).doesNotContain(quizItem)
     }
-}
-
-@TestInstallIn(
-    components = [SingletonComponent::class],
-    replaces = [DBModule::class]
-)
-@Module
-object FakeAppModule {
-    @Singleton
-    @Provides
-    fun provideFakeDatabase(@ApplicationContext context: Context)
-        = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
-
-    @Singleton
-    @Provides
-    fun provideFakeQuizResultDao(database: AppDatabase): QuizResultDao
-        = database.quizResultDao()
-
-    @Singleton
-    @Provides
-    fun provideFakeQuizDao(database: AppDatabase): QuizDao
-        = database.quizDaoForTesting()
-
-    @Singleton
-    @Provides
-    fun provideFakeQuestionDao(database: AppDatabase): QuestionDao
-        = database.questionDao()
 }

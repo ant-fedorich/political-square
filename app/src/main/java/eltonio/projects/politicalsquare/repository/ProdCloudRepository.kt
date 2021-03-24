@@ -20,6 +20,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+// TODO: 03/24/2021 Get rif open, change to Mockk
+open
 class ProdCloudRepository @Inject constructor(
     private val analytics: FirebaseAnalytics,
     private var firebaseAuth: FirebaseAuth,

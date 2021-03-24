@@ -40,5 +40,4 @@ class DBModule {
         quizResultDao: QuizResultDao,
         questionDao: QuestionDao
     ): DBRepository = ProdDBRepository(quizResultDao, questionDao)
-
 }
