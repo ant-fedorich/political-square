@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare
+package eltonio.projects.politicalsquare.repository
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,7 @@ import eltonio.projects.politicalsquare.model.QuizResult
 import eltonio.projects.politicalsquare.model.ScreenItem
 import eltonio.projects.politicalsquare.repository.LocalRepository
 
-class FakeLocalRepository (
+class FakeAndroidTestLocalRepository (
     private val context: Context
 ) : LocalRepository {
 

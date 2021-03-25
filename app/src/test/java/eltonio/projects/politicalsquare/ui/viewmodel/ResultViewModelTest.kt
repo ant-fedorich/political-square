@@ -27,7 +27,6 @@ import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
-@LooperMode(LooperMode.Mode.PAUSED)
 class ResultViewModelTest {
     private lateinit var context: Context
     private lateinit var localRepo: LocalRepository

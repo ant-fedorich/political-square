@@ -10,20 +10,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SaveResultViewModel @Inject constructor(
+class SavedResultViewModel @Inject constructor(
     private var dbRepo: DBRepository
 ) : ViewModel() {
 
-    fun getResultList(): LiveData<List<QuizResult>> {
-        return liveData {
-            dbRepo.getQuizResults().value?.let { emit(it) }
-        }
-    }
+    fun getResultList(): LiveData<List<QuizResult>> = dbRepo.getQuizResults()
+
 
     fun getResultListWithDelay(): LiveData<List<QuizResult>> {
         return liveData {
             delay(200)
-            dbRepo.getQuizResults().value?.let { emit(it) }
+            dbRepo.getQuizResults()
         }
     }
 

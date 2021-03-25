@@ -45,6 +45,7 @@ interface LocalRepository {
     fun getSplashAnimationTime(): Long
     fun getMainActivityIsInFront(): Boolean
     fun setSplashIsAppeared()
+    fun clearPref()
 }
 
 interface DBRepository

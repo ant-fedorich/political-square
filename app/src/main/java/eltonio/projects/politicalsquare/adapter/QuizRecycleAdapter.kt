@@ -19,8 +19,7 @@ class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycl
     private lateinit var itemClickListener: OnQuizItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizRecycleViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_result_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.layout_result_item, parent, false)
 
         return QuizRecycleViewHolder(
             itemView,

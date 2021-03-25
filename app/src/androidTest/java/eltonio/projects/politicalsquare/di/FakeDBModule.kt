@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare
+package eltonio.projects.politicalsquare.di
 
 import android.content.Context
 import androidx.room.Room
@@ -7,7 +7,6 @@ import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import eltonio.projects.politicalsquare.di.DBModule
 import eltonio.projects.politicalsquare.repository.*
 import javax.inject.Singleton
 
@@ -17,7 +16,7 @@ import javax.inject.Singleton
 )
 
 @Module
-class FakeDBModule {
+object FakeDBModule {
     @Singleton
     @Provides
     fun provideFakeDatabase(@ApplicationContext context: Context)

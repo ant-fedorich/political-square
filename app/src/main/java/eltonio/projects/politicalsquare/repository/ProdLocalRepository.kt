@@ -21,9 +21,9 @@ class ProdLocalRepository @Inject constructor(
         context.getSharedPreferences(PREF_SETTINGS, Context.MODE_PRIVATE)
 
     private val pref =
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        context.getSharedPreferences(PREF_QUIZ_FOR_TEST, Context.MODE_PRIVATE)  // FIXME:
 
-    fun clearPref() = pref.edit().clear().apply()
+    override fun clearPref() = pref.edit().clear().apply()
 
     override fun setSplashIsAppeared() {
         prefSettings.edit()

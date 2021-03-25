@@ -24,46 +24,46 @@ import eltonio.projects.politicalsquare.databinding.ActivitySavedResultsBinding
 import eltonio.projects.politicalsquare.util.Ideologies
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.model.QuizResult
-import eltonio.projects.politicalsquare.ui.viewmodel.SaveResultViewModel
+import eltonio.projects.politicalsquare.ui.viewmodel.SavedResultViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 // FIXME: how to get rid of sintetic
 import kotlinx.android.synthetic.main.layout_result_item.view.*
+import org.jetbrains.annotations.TestOnly
 
 @AndroidEntryPoint
 class SavedResultsActivity : AppCompatActivity() {
-    private val viewmodel: SaveResultViewModel by viewModels()
+    private val viewmodel by viewModels<SavedResultViewModel>()
     private val binding: ActivitySavedResultsBinding by lazy { ActivitySavedResultsBinding.inflate(layoutInflater)}
 
-    private lateinit var resultList: List<QuizResult>
-    private lateinit var quizAdapter: QuizRecycleAdapter
-
+    private val quizAdapter: QuizRecycleAdapter by lazy { QuizRecycleAdapter(this) }
+    private var resultList: List<QuizResult> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-
         super.onCreate(savedInstanceState)
 
         title = getString(R.string.saved_title_actionbar)
 
-        resultList = emptyList()
-        viewmodel.getResultList().observe(this, Observer {
-            // TODO: How to get resultList imidiatly? Not in Observer or onResume
-            resultList = it
-            initRecycler()
-            quizAdapter.setOnItemClickListener(object :
-                QuizRecycleAdapter.OnQuizItemClickListener {
-                override fun onItemClick(position: Int) = goToResultDetail(position)
-            })
-        })
+        subscribeToObservers()
+        setupRecycler()
 
         val itemTouchHelper = ItemTouchHelper(getSwipeCallback(this))
         itemTouchHelper.attachToRecyclerView(binding.recyclerResultsList)
 
         setContentView(binding.root)
+    }
+
+
+
+    private fun subscribeToObservers() {
+        viewmodel.getResultList().observe(this, Observer {
+            // TODO: How to get resultList imidiatly? Not in Observer or onResume
+            resultList = it
+            quizAdapter.setQuizResults(resultList)
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -138,15 +138,30 @@ class SavedResultsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initRecycler() {
-        quizAdapter = QuizRecycleAdapter(this)
+    // TODO: ??? use this or not?
+//    private fun initRecycler() {
+//        quizAdapter = QuizRecycleAdapter(this)
+//        binding.recyclerResultsList.apply {
+//            adapter = quizAdapter
+//            layoutManager = LinearLayoutManager(this.context)
+//            setHasFixedSize(true)
+//        }
+//        quizAdapter.setQuizResults(resultList)
+//    }
+//
+    private fun setupRecycler() {
+        quizAdapter.setOnItemClickListener(object :
+            QuizRecycleAdapter.OnQuizItemClickListener {
+            override fun onItemClick(position: Int) = goToResultDetail(position)
+        })
+
         binding.recyclerResultsList.apply {
             adapter = quizAdapter
-            layoutManager = LinearLayoutManager(this.context)
-            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@SavedResultsActivity)
         }
-        quizAdapter.setQuizResults(resultList)
     }
+
+
 
     private fun goToResultDetail(position: Int) {
         val itemView = binding.recyclerResultsList.layoutManager?.findViewByPosition(position) as ConstraintLayout
@@ -175,5 +190,7 @@ class SavedResultsActivity : AppCompatActivity() {
         startActivity(intent, options.toBundle())
     }
 
+    @TestOnly
+    fun getResultList() = resultList
 }
 

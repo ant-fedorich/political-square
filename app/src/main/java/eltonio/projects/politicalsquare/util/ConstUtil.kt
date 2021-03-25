@@ -2,7 +2,8 @@ package eltonio.projects.politicalsquare.util
 
 const val TAG = "MyApp"
 
-const val PREF_NAME = "QuizData"
+const val PREF_QUIZ = "app_pref"
+const val PREF_QUIZ_FOR_TEST = "test_app_pref"
 const val PREF_SETTINGS = "PREF_SETTINGS"
 
 const val PREF_LANG = "PREF_LANG"

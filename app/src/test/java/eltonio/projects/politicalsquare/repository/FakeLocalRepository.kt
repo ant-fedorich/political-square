@@ -1,4 +1,4 @@
-package eltonio.projects.politicalsquare
+package eltonio.projects.politicalsquare.repository
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
