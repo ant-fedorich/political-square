@@ -2,11 +2,12 @@ package eltonio.projects.politicalsquare.ui.viewmodel
 
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import eltonio.projects.politicalsquare.FakeDBRepository
 import eltonio.projects.politicalsquare.getOrAwaitForUnitTest
 import eltonio.projects.politicalsquare.model.QuizResult
 import eltonio.projects.politicalsquare.repository.DBRepository
+import eltonio.projects.politicalsquare.repository.FakeDBRepository
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -15,7 +16,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class SavedResultViewModelTest {
     private lateinit var dbRepo: DBRepository

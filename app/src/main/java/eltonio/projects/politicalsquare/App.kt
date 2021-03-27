@@ -16,6 +16,7 @@ import javax.inject.Inject
 @HiltAndroidApp
 class App : Application() {
     // TODO: get rid or appQuestionsWithAnswers in APP
+    // FIXME:
     companion object {
         var appQuestionsWithAnswers: List<QuestionWithAnswers> = emptyList()
     }

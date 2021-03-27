@@ -46,3 +46,4 @@ const val EVENT_DETAILED_INFO = "quiz_detailed_info"
 const val PARAM_LOGIN_DATE = "login_date"
 
 const val DB_NAME = "PoliticalSquare.db"
+const val TEST_DB_NAME = "test_database.db"

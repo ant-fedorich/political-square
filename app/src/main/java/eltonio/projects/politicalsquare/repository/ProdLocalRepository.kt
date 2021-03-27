@@ -10,8 +10,6 @@ import eltonio.projects.politicalsquare.util.*
 import java.util.*
 import javax.inject.Inject
 
-// TODO: 03/24/2021 Get rif open, change to Mockk
-open
 class ProdLocalRepository @Inject constructor(
         @ApplicationContext private val context: Context
     ) : LocalRepository {

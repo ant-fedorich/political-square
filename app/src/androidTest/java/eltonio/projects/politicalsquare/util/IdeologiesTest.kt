@@ -37,8 +37,8 @@ class IdeologiesTest {
     }
 
     @Test
-    fun testChangeLang_andGetIdeologyTitle_returnsTrue() {
-        // ACTION
+    fun changeLang_getIdeologyTitle_returnsTitlesChanged() {
+        // action
         // First lang setup
         localRepo.setLang(context, enLocale)
         val resultOne = Ideologies.ANARCHY.titleRes.resString(context)
@@ -51,15 +51,15 @@ class IdeologiesTest {
         localRepo.setLang(context, ukLocale)
         val resultThree = Ideologies.ANARCHY.titleRes.resString(context)
 
-        // VERIFY
+        // verify
         assertThat(resultOne).contains(enTitle)
         assertThat(resultTwo).contains(ruTitle)
         assertThat(resultThree).contains(ukTitle)
     }
 
     @Test
-    fun testChangeLang_andGetLocale_returnsTrue() {
-        // ACTION
+    fun changeLang_getLocale_returnsChangedLocaleSettings() {
+        // action
         // First lang setup
         localRepo.setLang(context, enLocale)
         val resultOne = localRepo.getLang()
@@ -71,7 +71,7 @@ class IdeologiesTest {
         localRepo.setLang(context, ukLocale)
         val resultThree = localRepo.getLang()
 
-        // VERIFY
+        // verify
         assertThat(resultOne).contains(enLocale)
         assertThat(resultTwo).contains(ruLocale)
         assertThat(resultThree).contains(ukLocale)

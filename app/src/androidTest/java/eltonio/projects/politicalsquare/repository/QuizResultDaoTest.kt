@@ -30,7 +30,8 @@ class QuizResultDaoTest {
     }
 
     @Test
-    fun testAddQuizResult() = runBlockingTest{
+    fun addQuizResult_OneItem_returnsDBHasThisItem() = runBlockingTest{
+        //setup
         val quizItem = Quiz(1, "NewQuiz", "Developer", "Test quiz")
         quizDao.addQuiz(quizItem)
 
@@ -54,7 +55,7 @@ class QuizResultDaoTest {
     }
 
     @Test
-    fun testDeleteQuizResult() = runBlockingTest {
+    fun deleteQuizResult_OneItem_returnsDBHasNoItems() = runBlockingTest {
         val quizItem = Quiz(1, "NewQuiz", "Developer", "Test quiz")
         quizDao.addQuiz(quizItem)
 

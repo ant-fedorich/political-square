@@ -29,12 +29,10 @@ class FakeAndroidTestLocalRepository (
 
 
     override fun loadQuizOption(): Int {
-        TODO("Not yet implemented")
+        return 0
     }
 
-    override fun setQuizIsActive(active: Boolean) {
-        TODO("Not yet implemented")
-    }
+    override fun setQuizIsActive(active: Boolean) {}
 
     override fun saveChosenView(
         x: Float,
@@ -45,102 +43,101 @@ class FakeAndroidTestLocalRepository (
         quizId: Int,
         startedAt: String
     ) {
-        TODO("Not yet implemented")
+
     }
 
     override fun getIntroOpened(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun setIntroOpened() {
-        TODO("Not yet implemented")
     }
 
     override fun getViewPagerScreenList(): MutableList<ScreenItem>? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun setSplashAnimationTime(time: Long) {
-        TODO("Not yet implemented")
+
     }
 
     override fun getSplashAppeared(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun setSessionStarted() {
-        TODO("Not yet implemented")
+
     }
 
     override fun getSessionStarted(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun saveQuizOption(id: Int) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setMainActivityIsInFront(b: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setHorScore(toInt: Int) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setVerScore(toInt: Int) {
-        TODO("Not yet implemented")
+
     }
 
     override fun getChosenViewX(): Float {
-        TODO("Not yet implemented")
+        return 0f
     }
 
     override fun getChosenViewY(): Float {
-        TODO("Not yet implemented")
+        return 0f
     }
 
     override fun getHorStartScore(): Int {
-        TODO("Not yet implemented")
+        return -1
     }
 
     override fun getVerStartScore(): Int {
-        TODO("Not yet implemented")
+        return -1
     }
 
     override fun getChosenIdeology(): String {
-        TODO("Not yet implemented")
+        return ""
     }
 
     override fun getStartedAt(): String {
-        TODO("Not yet implemented")
+        return ""
     }
 
     override fun getHorScore(): Int {
-        TODO("Not yet implemented")
+        return -1
     }
 
     override fun getVerScore(): Int {
-        TODO("Not yet implemented")
+        return -1
     }
 
     override fun getQuizIsActive(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun getSplashAnimationTime(): Long {
-        TODO("Not yet implemented")
+        return -1
     }
 
     override fun getMainActivityIsInFront(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun setSplashIsAppeared() {
-        TODO("Not yet implemented")
+
     }
 
     override fun clearPref() {
-        TODO("Not yet implemented")
+
     }
 }

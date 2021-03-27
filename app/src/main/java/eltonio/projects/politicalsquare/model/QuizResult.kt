@@ -15,8 +15,8 @@ import androidx.room.PrimaryKey
 )
 data class QuizResult(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val quizId: Int,
+    val id: Int = 0,
+    val quizId: Int = 1,
     val ideologyStringId: String,
     val horStartScore: Int,
     val verStartScore: Int,

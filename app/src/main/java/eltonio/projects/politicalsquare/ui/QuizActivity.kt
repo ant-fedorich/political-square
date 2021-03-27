@@ -125,6 +125,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                 val intent = Intent(this, ResultActivity::class.java)
                 startActivity(intent)
                 slideLeft(this) //quiz in
+                finish()
             }
         })
 
@@ -240,7 +241,10 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
     override fun onBackPressed() {
         showEndQuizDialogLambda(this) {
-            startActivity(Intent(this, MainActivity::class.java))
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
         }
     }
 

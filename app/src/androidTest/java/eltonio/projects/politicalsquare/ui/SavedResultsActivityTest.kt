@@ -1,10 +1,8 @@
 package eltonio.projects.politicalsquare.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -18,16 +16,12 @@ import eltonio.projects.politicalsquare.getOrAwait
 import eltonio.projects.politicalsquare.model.Quiz
 import eltonio.projects.politicalsquare.model.QuizResult
 import eltonio.projects.politicalsquare.repository.AppDatabase
-import eltonio.projects.politicalsquare.repository.DBRepository
-import eltonio.projects.politicalsquare.repository.FakeAndroidTestDBRepository
-import eltonio.projects.politicalsquare.ui.viewmodel.SavedResultViewModel
 import kotlinx.coroutines.test.runBlockingTest
-import org.checkerframework.checker.lock.qual.ReleasesNoLocks
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
-
 
 @MediumTest
 @HiltAndroidTest
@@ -48,7 +42,7 @@ class SavedResultsActivityTest {
     }
 
     @Test
-    fun showNotEmptySavedResultList_swipeToDelete_resultsDeletedFromDB() = runBlockingTest {
+    fun showNotEmptySavedResultList_swipeToDelete_returnsItemDeletedFromDB() = runBlockingTest {
         // given - setup
         val startResultFromDB = database.quizResultDao().getQuizResults().getOrAwait()
 
@@ -66,7 +60,7 @@ class SavedResultsActivityTest {
             endedAt = "11.10.10",
             duration = 100,
             avgAnswerTime = 10.0)
-        // action
+
         database.quizResultDao().addQuizResult(quizResult)
         val resultFromDB = database.quizResultDao().getQuizResults().getOrAwait()
 
