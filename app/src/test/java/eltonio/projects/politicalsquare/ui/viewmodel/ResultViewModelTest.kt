@@ -71,6 +71,7 @@ class ResultViewModelTest {
             localRepo.loadQuizOption()
             cloudRepo.firebaseUser
         }
+
         assertThat(result).isNotEmpty()
         assertThat(result.last().startedAt).contains("2020-10-10 10:10:10")
     }

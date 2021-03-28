@@ -62,7 +62,7 @@ class SavedResultsActivity : AppCompatActivity() {
         viewmodel.getResultList().observe(this, Observer {
             // TODO: How to get resultList imidiatly? Not in Observer or onResume
             resultList = it
-            quizAdapter.setQuizResults(resultList)
+            quizAdapter.addQuizResultList(resultList)
         })
     }
 
@@ -96,7 +96,7 @@ class SavedResultsActivity : AppCompatActivity() {
                     // TODO: VM
                     viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
                         resultList = it // TODO: How to get resultList immediately?
-                        quizAdapter.setQuizResults(resultList)
+                        quizAdapter.addQuizResultList(resultList)
                     })
 
                     for (ideo in Ideologies.values()) {
@@ -111,7 +111,7 @@ class SavedResultsActivity : AppCompatActivity() {
                             viewmodel.addQuizResult(deletedResultItem)
                             viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
                                 resultList = it
-                                quizAdapter.setQuizResults(resultList)
+                                quizAdapter.addQuizResultList(resultList)
                             })
                         }
                         .show()
@@ -150,10 +150,9 @@ class SavedResultsActivity : AppCompatActivity() {
 //    }
 //
     private fun setupRecycler() {
-        quizAdapter.setOnItemClickListener(object :
-            QuizRecycleAdapter.OnQuizItemClickListener {
-            override fun onItemClick(position: Int) = goToResultDetail(position)
-        })
+        quizAdapter.onQuizItemClickListener = { position ->
+            goToResultDetail(position)
+        }
 
         binding.recyclerResultsList.apply {
             adapter = quizAdapter

@@ -6,46 +6,34 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.databinding.LayoutScreenItemBinding
 import eltonio.projects.politicalsquare.model.ScreenItem
-import eltonio.projects.politicalsquare.util.AppUtil
 import eltonio.projects.politicalsquare.util.AppUtil.playGif
 import kotlinx.android.synthetic.main.layout_screen_item.view.*
 
 class IntroViewPagerAdapter(var context: Context, var screenList: MutableList<ScreenItem>) : PagerAdapter(){
-    private var currentView: View? = null
+    override fun instantiateItem(parent: ViewGroup, position: Int): Any {
+        val binding = LayoutScreenItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding.apply {
+            imageIntroAnimation.tag = "tag_image_intro_animation_$position"
+            imageIntroBackground.tag = "tag_image_intro_background_$position"
 
-    override fun getCount(): Int  = screenList.size
+            textIntroTitle.text = screenList[position].title
 
-    override fun isViewFromObject(view: View, o: Any): Boolean = o == view
+            // Set a background image (the first image of GIF) for scrolling pager
+            imageIntroBackground.setImageResource(screenList[position].screenImage)
 
-    override fun destroyItem(container: ViewGroup, position: Int, o: Any) = container.removeView(o as View)
-
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val screenLayout = inflater.inflate(R.layout.layout_screen_item, null)
-        val title = screenLayout.text_intro_title
-        val image = screenLayout.image_intro_animation
-        val imageBackground = screenLayout.image_intro_background
-
-        // Tags to have an access to views
-        image.tag = "tag_image_intro_animation_$position"
-        imageBackground.tag = "tag_image_intro_background_$position"
-
-        title.text = screenList[position].title
-        // Set a background image (the first image of GIF) for scrolling pager
-        imageBackground.setImageResource(screenList[position].screenImage)
-
-        // For the first screen, load animation immediately
-        if (position == 0) {
-            imageBackground.visibility = View.INVISIBLE
-            playGif(context, screenList[position].screenImage, image)
+            // For the first screen, load animation immediately
+            if (position == 0) {
+                imageIntroBackground.visibility = View.INVISIBLE
+                playGif(context, screenList[position].screenImage, imageIntroAnimation)
+            }
         }
-
-        container.addView(screenLayout)
-        return  screenLayout
+        parent.addView(binding.root)
+        return  binding.root
     }
 
-    override fun setPrimaryItem(container: ViewGroup, position: Int, o: Any) {
-        currentView = o as View
-    }
+    override fun destroyItem(parent: ViewGroup, position: Int, o: Any) = parent.removeView(o as View)
+    override fun getCount(): Int  = screenList.size
+    override fun isViewFromObject(view: View, o: Any): Boolean = o == view
 }
