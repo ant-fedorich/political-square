@@ -9,6 +9,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.RadioButton
@@ -20,13 +21,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.databinding.ActivityBaseBinding
 import eltonio.projects.politicalsquare.databinding.ActivitySettingsBinding
 import eltonio.projects.politicalsquare.util.QuizOptions
 import eltonio.projects.politicalsquare.ui.viewmodel.SettingsViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import eltonio.projects.politicalsquare.util.AppUtil.showEndQuizDialogLambda
-import kotlinx.android.synthetic.main.activity_base.view.* // FIXME: How to get rid ot synthetic
 
 
 @AndroidEntryPoint
@@ -81,8 +82,8 @@ class SettingsActivity : AppCompatActivity(), View.OnTouchListener {
         binding.radioGroupLang.setOnCheckedChangeListener { _, checkedId ->
             viewModel.getQuizIsActiveState().observe(this, Observer {
                 if (it == true) {
-                    val baseActivity = layoutInflater.inflate(R.layout.activity_base, null)
-                    baseActivity.activity_container.closeDrawer(GravityCompat.START)
+                    val baseBinding = ActivityBaseBinding.inflate(layoutInflater)
+                    baseBinding.activityContainer.closeDrawer(GravityCompat.START)
 
                     showEndQuizDialogLambda(this) {
                         checkRadioButton(checkedId)

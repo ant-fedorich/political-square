@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
@@ -28,9 +30,6 @@ import eltonio.projects.politicalsquare.ui.viewmodel.SavedResultViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-
-// FIXME: how to get rid of sintetic
-import kotlinx.android.synthetic.main.layout_result_item.view.*
 import org.jetbrains.annotations.TestOnly
 
 @AndroidEntryPoint
@@ -164,10 +163,10 @@ class SavedResultsActivity : AppCompatActivity() {
 
     private fun goToResultDetail(position: Int) {
         val itemView = binding.recyclerResultsList.layoutManager?.findViewByPosition(position) as ConstraintLayout
-        val itemContainerTransitionName = itemView.layout_item_container.transitionName
-        val titleTransitionName = itemView.text_saved_result_title.transitionName
-        val dateTransitionName = itemView.text_saved_result_date.transitionName
-        val imageTransitionName = itemView.image_compass_saved_result.transitionName
+        val itemContainerTransitionName = itemView.findViewById<ConstraintLayout>(R.id.layout_item_container).transitionName
+        val titleTransitionName = itemView.findViewById<TextView>(R.id.text_saved_result_title).transitionName
+        val dateTransitionName = itemView.findViewById<TextView>(R.id.text_saved_result_date).transitionName
+        val imageTransitionName = itemView.findViewById<ImageView>(R.id.image_compass_saved_result).transitionName
 
         // TODO: MVVM Extra to Repository
         var intent = Intent(this, SavedResultDetailActivity::class.java).apply {
@@ -184,7 +183,7 @@ class SavedResultsActivity : AppCompatActivity() {
             putExtra(EXTRA_ITEM_CONTAINER_TRANSITION_NAME, itemContainerTransitionName)
         }
 
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, itemView.layout_item_container, itemContainerTransitionName)
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, itemView.findViewById<ConstraintLayout>(R.id.layout_item_container), itemContainerTransitionName)
 
         startActivity(intent, options.toBundle())
     }

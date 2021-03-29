@@ -49,7 +49,7 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             compassY = it
         })
 
-        setContentView(binding.root)
+        setContentViewForBase(binding.root)
     }
 
     override fun onBackPressed() {

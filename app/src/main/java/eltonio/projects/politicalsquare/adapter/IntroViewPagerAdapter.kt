@@ -9,7 +9,6 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.databinding.LayoutScreenItemBinding
 import eltonio.projects.politicalsquare.model.ScreenItem
 import eltonio.projects.politicalsquare.util.AppUtil.playGif
-import kotlinx.android.synthetic.main.layout_screen_item.view.*
 
 class IntroViewPagerAdapter(var context: Context, var screenList: MutableList<ScreenItem>) : PagerAdapter(){
     override fun instantiateItem(parent: ViewGroup, position: Int): Any {

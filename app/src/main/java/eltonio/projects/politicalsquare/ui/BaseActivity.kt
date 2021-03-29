@@ -15,68 +15,46 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.databinding.ActivityBaseBinding
 import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.AppUtil
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_base.view.*
 import javax.inject.Inject
 
 // TODO: DI: Get rid of transfer repo here
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private val binding: ActivityBaseBinding by lazy { ActivityBaseBinding.inflate(layoutInflater)}
+    private val baseBinding: ActivityBaseBinding by lazy { ActivityBaseBinding.inflate(layoutInflater)}
 
     @Inject lateinit var localRepo: LocalRepository
 
     // FIXME: fix backstack everywhere
 
-    override fun setContentView(layoutResID: Int) {
-        val fullView = layoutInflater.inflate(R.layout.activity_base, null)
-        layoutInflater.inflate(layoutResID, fullView.activity_content, true)
-        super.setContentView(fullView)
+    fun setContentViewForBase(childView: View) {
+        super.setContentView(baseBinding.root)
+        baseBinding.activityContent.addView(childView)
 
-        fullView.nav_global_view.setNavigationItemSelectedListener(this)
+        baseBinding.navGlobalView.setNavigationItemSelectedListener(this)
 
         // Interface
-        setSupportActionBar(toolbar_global)
-        val toggle = ActionBarDrawerToggle(this, activity_container, toolbar_global,
+        setSupportActionBar(baseBinding.toolbarGlobal)
+        val toggle = ActionBarDrawerToggle(this, baseBinding.activityContainer, baseBinding.toolbarGlobal,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
         toggle.syncState()
-        activity_container.addDrawerListener(toggle)
+        baseBinding.activityContainer.addDrawerListener(toggle)
     }
 
     override fun onBackPressed() {
-        if (activity_container.isDrawerOpen(nav_global_view)) {
-            activity_container.closeDrawers()
+        if (baseBinding.activityContainer.isDrawerOpen(baseBinding.navGlobalView)) {
+            baseBinding.activityContainer.closeDrawers()
         } else {
             super.onBackPressed()
         }
     }
 
-//    override fun setContentView(layoutResID: Int) {
-//        val fullView = layoutInflater.inflate(R.layout.activity_base, null)
-//        layoutInflater.inflate(layoutResID, fullView.activity_content, true)
-//        super.setContentView(fullView)
-//
-//        binding.navGlobalView.setNavigationItemSelectedListener(this)
-//
-//        // Interface
-//        setSupportActionBar(binding.toolbarGlobal)
-//        val toggle = ActionBarDrawerToggle(this, binding.activityContainer, binding.toolbarGlobal,
-//            R.string.navigation_drawer_open,
-//            R.string.navigation_drawer_close
-//        )
-//        toggle.syncState()
-//        binding.activityContainer.addDrawerListener(toggle)
-//
-//        setContentView(binding.root)
-//    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_main -> {
                 if (localRepo.getQuizIsActive()) {
-                    binding.activityContainer.closeDrawer(GravityCompat.START)
+                    baseBinding.activityContainer.closeDrawer(GravityCompat.START)
 
                     AppUtil.showEndQuizDialogLambda(this) {
                         if (localRepo.getMainActivityIsInFront() == false) {
@@ -111,7 +89,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 AppUtil.pushLeft(this) // info in
             }
         }
-        binding.activityContainer.closeDrawer(GravityCompat.START)
+        baseBinding.activityContainer.closeDrawer(GravityCompat.START)
 
         return true
     }

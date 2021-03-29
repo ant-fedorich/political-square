@@ -86,7 +86,7 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
         binding.buttonCompassInfo.setOnClickListener(this)
         binding.frame1.setOnTouchListener(this)
 
-        setContentView(binding.root)
+        setContentViewForBase(binding.root)
     }
 
     override fun onBackPressed() {

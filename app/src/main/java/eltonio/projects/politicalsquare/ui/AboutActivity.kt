@@ -1,10 +1,9 @@
 package eltonio.projects.politicalsquare.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.util.AppUtil
 import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 
 @AndroidEntryPoint

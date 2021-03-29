@@ -9,7 +9,6 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.databinding.LayoutSpinnerItemBinding
 import eltonio.projects.politicalsquare.util.QuizOptions
 import eltonio.projects.politicalsquare.util.QuizOptions.Companion.resString
-import kotlinx.android.synthetic.main.layout_spinner_item.view.*
 
 class QuizOptionAdapter(context: Context, quizOptionList: Array<QuizOptions>) : ArrayAdapter<QuizOptions>(context, 0, quizOptionList) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View = initView(position, convertView, parent)

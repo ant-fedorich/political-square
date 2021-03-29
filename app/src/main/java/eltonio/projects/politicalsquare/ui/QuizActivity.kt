@@ -83,7 +83,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
 
         viewmodel.showNextQuestion()
 
-        setContentView(binding.root)
+        setContentViewForBase(binding.root)
     }
 
     private fun getRadioHovers() {

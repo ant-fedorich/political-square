@@ -20,7 +20,6 @@ import eltonio.projects.politicalsquare.ui.viewmodel.MainViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
 import eltonio.projects.politicalsquare.util.AppUtil.toast
-import kotlinx.android.synthetic.main.activity_main.*
 
 @AndroidEntryPoint
 class MainActivity: BaseActivity() {
@@ -33,7 +32,7 @@ class MainActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+//        setContentView(R.layout.activity_main)
         lifecycle.addObserver(viewmodel)
 
         viewmodel.splashAppearedEvent.observe(this, {
@@ -57,12 +56,12 @@ class MainActivity: BaseActivity() {
             binding.spinnerQuizOptions.setSelection(it)
         })
 
-        button_start.setOnClickListener{ onStartClicked() }
+        binding.buttonStart.setOnClickListener{ onStartClicked() }
 //        binding.buttonStart.setOnClickListener {
 //            toast(this, "Hello")
 //        }
 
-        spinner_quiz_options.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinnerQuizOptions.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val clickedItem = parent?.getItemAtPosition(position) as QuizOptions
                 viewmodel.clickSpinnerItem(clickedItem.id)
@@ -70,7 +69,7 @@ class MainActivity: BaseActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-//        setContentView(binding.root)
+        setContentViewForBase(binding.root)
     }
 
     /** INTERFACE METHODS */
@@ -82,21 +81,14 @@ class MainActivity: BaseActivity() {
     /** CUSTOM METHODS */
     private fun initSpinner() {
         val spinnerAdapter = QuizOptionAdapter(this, QuizOptions.values())
-        spinner_quiz_options.adapter = spinnerAdapter
-        spinnerView = spinner_quiz_options
+        binding.spinnerQuizOptions.adapter = spinnerAdapter
+        spinnerView = binding.spinnerQuizOptions
     }
 
     private fun startContainerFadeAnimation() { // Is needed to load Splash Activity .alpha = 0f
-//        val baseBinding = ActivityBaseBinding.inflate(LayoutInflater.from(this), this, true)
-//
-//        baseBinding.activityContainer.animate().apply {
-//            duration = 500
-//            alpha(1f)
-//            interpolator = AccelerateInterpolator(3f)
-//        }.start()
+        val baseBinding = ActivityBaseBinding.inflate(LayoutInflater.from(this))
 
-
-        this.findViewById<DrawerLayout>(R.id.activity_container).animate().apply {
+        baseBinding.activityContainer.animate().apply {
             duration = 500
             alpha(1f)
             interpolator = AccelerateInterpolator(3f)

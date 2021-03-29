@@ -13,7 +13,6 @@ import eltonio.projects.politicalsquare.util.Ideologies
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.model.QuizResult
 import eltonio.projects.politicalsquare.views.ResultListPointView
-import kotlinx.android.synthetic.main.layout_result_item.view.*
 
 class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleViewHolder>() {
     var onQuizItemClickListener: ((position: Int) -> Unit)? = null
