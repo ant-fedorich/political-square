@@ -1,17 +1,17 @@
 package eltonio.projects.politicalsquare.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.util.pushRight
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 
-class AboutActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class AboutActivity: AppCompatActivity(R.layout.activity_about) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about)
 
         title = getString(R.string.about_title_actionbar)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

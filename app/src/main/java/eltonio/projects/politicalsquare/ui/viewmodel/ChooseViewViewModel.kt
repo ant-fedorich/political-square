@@ -1,25 +1,30 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.App
-import eltonio.projects.politicalsquare.data.AppDatabase
-import eltonio.projects.politicalsquare.data.AppRepository
-import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.Question
-import eltonio.projects.politicalsquare.models.QuestionWithAnswers
-import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.util.*
-import kotlinx.android.synthetic.main.activity_choose_view.*
-import kotlinx.coroutines.CoroutineScope
+import eltonio.projects.politicalsquare.repository.DBRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
+import eltonio.projects.politicalsquare.util.QuizOptions
+import eltonio.projects.politicalsquare.util.AppUtil
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyFromScore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class ChooseViewViewModel(application: Application) : AndroidViewModel(application) {
-    private val localRepo = AppRepository.Local()
-    private var dbRepo: AppRepository.DB
-
+@HiltViewModel
+class ChooseViewViewModel @Inject constructor(
+    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context,
+    private val localRepo: LocalRepository,
+    private val dbRepo: DBRepository,
+) : ViewModel() {
     private var ideologyIsChosenEvent: MutableLiveData<Boolean> = MutableLiveData()
     private var ideologyTitle: MutableLiveData<String> = MutableLiveData()
     private var quizOptionId: MutableLiveData<Int> = MutableLiveData()
@@ -32,9 +37,8 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
 //    private var verStartScore = 0
 
     init {
-        val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
-        val questionDao = AppDatabase.getDatabase(application).questionDao()
-        dbRepo = AppRepository.DB(quizResultDao, questionDao)
+//        val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
+//        val questionDao = AppDatabase.getDatabase(application).questionDao()
 
         when(localRepo.loadQuizOption()) {
             QuizOptions.UKRAINE.id -> getQuestions(QuizOptions.UKRAINE.id)
@@ -67,9 +71,9 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
         localRepo.setQuizIsActive(isActive)
     }
 
-    fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideology: String, quizId: Int) {
+    fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideologyId: String, quizId: Int) {
         val startedAt = getDateTime()
-        localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId, startedAt) // TODO: put an object instead of attributes
+        localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideologyId, quizId, startedAt) // TODO: put an object instead of attributes
     }
 
     fun getXandYForHover(inputX: Float, inputY: Float, endX: Int, endY: Int) {
@@ -109,12 +113,12 @@ class ChooseViewViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun getIdeologyTitle(): LiveData<String> {
-        val step = convertDpToPx(4f)
+        val step = convertDpToPx(context, 4f)
         horStartScore.value =
             (x / step - 40).toInt()
         verStartScore.value =
             (y / step - 40).toInt()
-        ideologyTitle.value = getIdeology(horStartScore.value!!, verStartScore.value!!)
+        ideologyTitle.value = getIdeologyFromScore(context, horStartScore.value!!, verStartScore.value!!)
         return ideologyTitle
     }
 

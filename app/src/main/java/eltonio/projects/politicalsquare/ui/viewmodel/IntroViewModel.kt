@@ -1,14 +1,18 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import eltonio.projects.politicalsquare.data.AppRepository
-import eltonio.projects.politicalsquare.models.ScreenItem
+import dagger.hilt.android.lifecycle.HiltViewModel
+import eltonio.projects.politicalsquare.model.ScreenItem
+import eltonio.projects.politicalsquare.repository.LocalRepository
+import javax.inject.Inject
 
-class IntroViewModel : ViewModel() {
-    private val localRepo = AppRepository.Local()
-
+@HiltViewModel
+class IntroViewModel @Inject constructor(
+    private val localRepo: LocalRepository
+) : ViewModel() {
     private var splashAnimationTime: MutableLiveData<Long> = MutableLiveData()
     private var introOpenEvent: MutableLiveData<Boolean> = MutableLiveData()
     private var lang: MutableLiveData<String> = MutableLiveData()
@@ -32,6 +36,10 @@ class IntroViewModel : ViewModel() {
         return lang
     }
 
+    fun setLang(context: Context, lang: String) {
+        localRepo.setLang(context, lang)
+    }
+
     fun getScreenList(): LiveData<MutableList<ScreenItem>> {
         screenList.value = localRepo.getViewPagerScreenList()
         screenLisUpdatedState.value = true
@@ -44,5 +52,9 @@ class IntroViewModel : ViewModel() {
 
     fun getSplashAnimationTime(): LiveData<Long> {
         return splashAnimationTime
+    }
+
+    fun setSplashAnimationTime(time: Long) {
+        localRepo.setSplashAnimationTime(time)
     }
 }

@@ -1,26 +1,33 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
-import android.app.Application
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.lifecycle.*
-import eltonio.projects.politicalsquare.data.AppDatabase
-import eltonio.projects.politicalsquare.data.AppRepository
-import eltonio.projects.politicalsquare.models.QuizOptions
-import eltonio.projects.politicalsquare.models.QuizResult
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import eltonio.projects.politicalsquare.util.QuizOptions
+import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.CloudRepository
+import eltonio.projects.politicalsquare.repository.DBRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewX
 import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewY
-import eltonio.projects.politicalsquare.util.getIdeology
-import eltonio.projects.politicalsquare.util.getIdeologyStringId
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyFromScore
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyStringId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class ResultViewModel(application: Application) : AndroidViewModel(application) {
-    private var localRepo = AppRepository.Local()
-    private var cloudRepo = AppRepository.Cloud()
-    private var dbRepo: AppRepository.DB
-
+@HiltViewModel
+class ResultViewModel @Inject constructor(
+    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context,
+    private var localRepo: LocalRepository,
+    private var dbRepo: DBRepository,
+    private var cloudRepo: CloudRepository
+) : ViewModel() {
     private var chosenIdeologyLiveData: MutableLiveData<String>
     private var resultIdeologyLiveData: MutableLiveData<String>
     private var compassX: MutableLiveData<Int>
@@ -45,10 +52,6 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
 
 
     init {
-        val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
-        val questionDao = AppDatabase.getDatabase(application).questionDao()
-        dbRepo = AppRepository.DB(quizResultDao, questionDao)
-        localRepo = AppRepository.Local()
         viewModelScope.launch(Dispatchers.IO) {
             cloudRepo.logQuizCompleteEvent()
         }
@@ -94,12 +97,13 @@ class ResultViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun getIdeologyData() {
         if (horScore != null && verScore != null) {
-            resultIdeology = getIdeology(horScore, verScore)
+            resultIdeology = getIdeologyFromScore(context, horScore, verScore)
             resultIdeologyLiveData.value = resultIdeology
         }
-        ideologyStringId = getIdeologyStringId(resultIdeology)
+        ideologyStringId = getIdeologyStringId(context, resultIdeology)
     }
 
+    // TODO: Do Local Unit test
     private fun getTimeData() {
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val endDate = Date()

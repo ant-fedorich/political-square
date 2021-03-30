@@ -4,21 +4,25 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.databinding.ActivitySavedResultDetailBinding
 import eltonio.projects.politicalsquare.ui.viewmodel.SavedResultDetailViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import eltonio.projects.politicalsquare.views.ResultDetailPointView
-import kotlinx.android.synthetic.main.activity_saved_result_detail.*
-import kotlinx.android.synthetic.main.activity_saved_result_detail.view.*
 
-
+@AndroidEntryPoint
 class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var viewModel: SavedResultDetailViewModel
+    private val viewmodel: SavedResultDetailViewModel by viewModels()
+    private val binding: ActivitySavedResultDetailBinding by lazy { ActivitySavedResultDetailBinding.inflate(layoutInflater) }
 
     private var resultIdeology = ""
     private var ideologyId = ""
@@ -32,14 +36,10 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
     private var verResultScore = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-
         setWindowSharedElementTransitions()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_saved_result_detail)
-        viewModel = ViewModelProvider(this).get(SavedResultDetailViewModel::class.java)
 
         title = getString(R.string.savedresultdetail_title_actionbar)
 
@@ -48,20 +48,22 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
             setTransitionNamesFromIntent(it)
         }
         // Init listeners
-        button_compass_info_3.setOnClickListener(this)
+        binding.buttonCompassInfo3.setOnClickListener(this)
 
-        viewModel.getIdeology(ideologyId).observe(this, Observer {
-                title_result_detail.text = it
+        viewmodel.getIdeology(ideologyId).observe(this, Observer {
+                binding.titleResultDetail.text = it
                 resultIdeology = it
         })
 
-        viewModel.getOwner(quizId).observe(this, Observer {
+        viewmodel.getOwner(quizId).observe(this, Observer {
             quizOwner = it
-            text_result_owner.text = getString(R.string.savedresultdetail_title_quiz) + ": " + quizOwner
-            text_result_date.text = endedAt
+            binding.textResultOwner.text = getString(R.string.savedresultdetail_title_quiz) + ": " + quizOwner
+            binding.textResultDate.text = endedAt
         })
 
         addPointsOnCompass()
+
+        setContentView(binding.root)
     }
 
     /** INTERFACE METHODS */
@@ -88,10 +90,10 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
     /** CUSTOM METHODS */
     private fun setTransitionNamesFromIntent(extras: Bundle) {
         extras.let {
-            title_result_detail.transitionName = it.getString(EXTRA_TITLE_TRANSITION_NAME, "NONE")
-            text_result_date.transitionName  = it.getString(EXTRA_DATE_TRANSITION_NAME,"NONE")
-            image_main_compass_2.transitionName  = it.getString(EXTRA_IMAGE_TRANSITION_NAME, "NONE")
-            layout_saved_result_detail.transitionName = it.getString(
+            binding.titleResultDetail.transitionName = it.getString(EXTRA_TITLE_TRANSITION_NAME, "NONE")
+            binding.textResultDate.transitionName  = it.getString(EXTRA_DATE_TRANSITION_NAME,"NONE")
+            binding.imageMainCompass2.transitionName  = it.getString(EXTRA_IMAGE_TRANSITION_NAME, "NONE")
+            binding.layoutSavedResultDetail.transitionName = it.getString(
                 EXTRA_ITEM_CONTAINER_TRANSITION_NAME, "NONE")
         }
     }
@@ -129,6 +131,7 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    // todo use applicationContext or From Hilt Context
     private fun addPointsOnCompass() {
         val resultDetailPoint =
             ResultDetailPointView(
@@ -138,7 +141,9 @@ class SavedResultDetailActivity : AppCompatActivity(), View.OnClickListener {
                 horResultScore,
                 verResultScore
             )
-        layout_saved_result_detail.frame_saved_result_detail.addView(resultDetailPoint)
+        // TODO: with layout or without?
+        //binding.layoutSavedResultDetail.frame_saved_result_detail.addView(resultDetailPoint)
+        binding.frameSavedResultDetail.addView(resultDetailPoint)
     }
 }
 

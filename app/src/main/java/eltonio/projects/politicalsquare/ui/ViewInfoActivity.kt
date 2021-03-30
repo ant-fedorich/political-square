@@ -1,33 +1,33 @@
 package eltonio.projects.politicalsquare.ui
 
 import android.graphics.Typeface
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.util.Log
-import androidx.annotation.RequiresApi
+import androidx.activity.viewModels
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.databinding.ActivityViewInfoBinding
 import eltonio.projects.politicalsquare.ui.viewmodel.ViewInfoViewModel
 import eltonio.projects.politicalsquare.util.EXTRA_IDEOLOGY_TITLE
-import eltonio.projects.politicalsquare.util.pushRight
-import kotlinx.android.synthetic.main.activity_view_info.*
-import eltonio.projects.politicalsquare.util.*
 
+import eltonio.projects.politicalsquare.util.AppUtil.EmptyTransitionListener
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
+
+@AndroidEntryPoint
 class ViewInfoActivity : AppCompatActivity() {
-    private lateinit var viewModel: ViewInfoViewModel
+    private val viewModel: ViewInfoViewModel by viewModels()
+    private val binding: ActivityViewInfoBinding by lazy { ActivityViewInfoBinding.inflate(layoutInflater) }
+
+    // TODO: Use only context for AppUtil, not method?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_info)
-        viewModel = ViewModelProvider(this).get(ViewInfoViewModel::class.java)
 
 //        setSupportActionBar(toolbar_collapsing)
-        setSupportActionBar(toolbar_view_info)
+        setSupportActionBar(binding.toolbarViewInfo)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // Set color, because is transparent by style
         window.statusBarColor = ContextCompat.getColor(this, R.color.primary_dark)
@@ -39,30 +39,32 @@ class ViewInfoActivity : AppCompatActivity() {
 //            setExpandedTitleColor(resources.getColor(R.color.on_primary_bright))
 //        }
 
-        text_ideology_description.movementMethod = ScrollingMovementMethod()
+        binding.textIdeologyDescription.movementMethod = ScrollingMovementMethod()
 
         val ideology = intent.getStringExtra(EXTRA_IDEOLOGY_TITLE)
 
-        viewModel.updateData(ideology)
-        viewModel.getIdeology().observe(this, Observer {
-            title_view_info.text = it
+        viewModel.updateData(ideology.length) //fixme ONLY TEST ideology.length
+        viewModel.getIdeology().observe(this, {
+            binding.titleViewInfo.text = it
         })
-        viewModel.getImageId().observe(this, Observer {
-            image_ideology_info.setImageResource(it)
+        viewModel.getImageId().observe(this, {
+            binding.imageIdeologyInfo.setImageResource(it)
         })
-        viewModel.getDescriptionId().observe(this, Observer {
-            text_ideology_description.text = getString(it)
+        viewModel.getDescriptionId().observe(this, {
+            binding.textIdeologyDescription.text = getString(it)
         })
 //        viewModel.getStyleId().observe(this, Observer {
 //            layout_collapsing_toolbar.setExpandedTitleTextAppearance(it)
 //        })
 
-        motion_viewinfo.setTransitionListener(object : MotionLayout.TransitionListener by EmptyTransitionListener{
+        binding.motionViewinfo.setTransitionListener(object : MotionLayout.TransitionListener by EmptyTransitionListener {
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
-                if (progress >= 0.95f) title_view_info.typeface = Typeface.createFromAsset(assets, "font/roboto_medium.ttf")
-                if (progress < 0.95f) title_view_info.typeface = Typeface.createFromAsset(assets, "font/roboto_regular.ttf")
+                if (progress >= 0.95f) binding.titleViewInfo.typeface = Typeface.createFromAsset(assets, "font/roboto_medium.ttf")
+                if (progress < 0.95f) binding.titleViewInfo.typeface = Typeface.createFromAsset(assets, "font/roboto_regular.ttf")
             }
         })
+
+        setContentView(binding.root)
     }
 
     override fun onSupportNavigateUp(): Boolean {

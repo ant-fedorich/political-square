@@ -5,26 +5,32 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.Question
+import eltonio.projects.politicalsquare.databinding.ActivityChooseViewBinding
+import eltonio.projects.politicalsquare.util.Ideologies
+import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.ui.viewmodel.ChooseViewViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
+import eltonio.projects.politicalsquare.util.AppUtil.toast
 import eltonio.projects.politicalsquare.views.ChoosePointView
-import kotlinx.android.synthetic.main.activity_choose_view.*
 import kotlinx.coroutines.*
 
-class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchListener {
-    /** DECLARATION */
-    private lateinit var viewModel: ChooseViewViewModel
+@AndroidEntryPoint
+class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchListener {
+    private val viewmodel: ChooseViewViewModel by viewModels()
+    private val binding: ActivityChooseViewBinding by lazy { ActivityChooseViewBinding.inflate(layoutInflater)}
+
 
     // TODO: mvvm vars to vm???
     private var horStartScore = 0
@@ -52,7 +58,7 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
 
     private val bigRadiusInDp = 16f
     private val radiusInDp = 12f
-    private val diameterInPx = convertDpToPx(bigRadiusInDp).toInt()*2
+    private var diameterInPx = -1
 
     private var containerHeight = -1
     private var containerWidth = -1
@@ -63,33 +69,34 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_choose_view)
-        viewModel = ViewModelProvider(this).get(ChooseViewViewModel::class.java)
+        diameterInPx = convertDpToPx(this, bigRadiusInDp).toInt()*2
 
-        viewModel.getQuizId().observe(this, Observer {
+        viewmodel.getQuizId().observe(this, Observer {
             quizId = it
         })
-        viewModel.getHorStartScore().observe(this, Observer {
+        viewmodel.getHorStartScore().observe(this, Observer {
             horStartScore = it
         })
-        viewModel.getVerStartScore().observe(this, Observer {
+        viewmodel.getVerStartScore().observe(this, Observer {
             verStartScore = it
         })
 
         // Init listeners
-        button_start_quiz.setOnClickListener(this)
-        button_compass_info.setOnClickListener(this)
-        frame_1.setOnTouchListener(this)
+        binding.buttonStartQuiz.setOnClickListener(this)
+        binding.buttonCompassInfo.setOnClickListener(this)
+        binding.frame1.setOnTouchListener(this)
+
+        setContentViewForBase(binding.root)
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        slideRight(this)
+        AppUtil.slideRight(this)
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        containerHeight = frame_1.height
-        containerWidth = frame_1.width
+        containerHeight = binding.frame1.height
+        containerWidth = binding.frame1.width
 
         initLayoutFrameParams()
 
@@ -131,13 +138,14 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
     @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
     private fun onStartQuizClicked() {
         if (ideologyIsChosen != true) {
-            return toast(getString(R.string.chooseview_toast_choose_first))
+            return toast(this, getString(R.string.chooseview_toast_choose_first))
         } else {
-            viewModel.setQuizIsActive(true)
-            viewModel.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId)
+            viewmodel.setQuizIsActive(true)
+            viewmodel.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId)
 
             startActivity(Intent(this, QuizActivity::class.java))
             slideLeft(this)
+            // TODO: 03/17/2021 Get rid of this
             MainActivity().finish()
             finish()
         }
@@ -154,37 +162,40 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         x = event.x
         y = event.y
 
-        val endX = image_for_canvas.width
-        val endY = image_for_canvas.height
+        val endX = binding.imageForCanvas.width
+        val endY = binding.imageForCanvas.height
 
         val bitmap = Bitmap.createBitmap(endX, endY, Bitmap.Config.ARGB_8888)
-        image_for_canvas.visibility = View.VISIBLE
-        image_for_canvas.setImageBitmap(bitmap)
+        binding.imageForCanvas.visibility = View.VISIBLE
+        binding.imageForCanvas.setImageBitmap(bitmap)
         // end
 
-        viewModel.getXandYForHover(x, y, endX, endY)
+        viewmodel.getXandYForHover(x, y, endX, endY)
 
-        viewModel.getIdeologyTitle().observe(this, Observer<String> {
+        viewmodel.getIdeologyTitle().observe(this, Observer {
             ideology = it
             when (it) {
-                Ideologies.AUTHORITARIAN_LEFT.title -> showThisIdeologyHover(image_autho_left_hover)
-                Ideologies.RADICAL_NATIONALISM.title -> showThisIdeologyHover(image_nation_hover)
-                Ideologies.POWER_CENTRISM.title -> showThisIdeologyHover(image_gov_hover)
-                Ideologies.SOCIAL_DEMOCRACY.title -> showThisIdeologyHover(image_soc_demo_hover)
-                Ideologies.SOCIALISM.title -> showThisIdeologyHover(image_soc_hover)
+                // TODO: Crutch: Change titleRes to StringId
+                Ideologies.AUTHORITARIAN_LEFT.titleRes.resString(this) -> showThisIdeologyHover(binding.imageAuthoLeftHover)
+                Ideologies.RADICAL_NATIONALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageNationHover)
+                Ideologies.POWER_CENTRISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageProgHover)
+                Ideologies.SOCIAL_DEMOCRACY.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageSocDemoHover)
+                Ideologies.SOCIALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageSocHover)
 
-                Ideologies.AUTHORITARIAN_RIGHT.title -> showThisIdeologyHover(image_autho_right_hover)
-                Ideologies.RADICAL_CAPITALISM.title -> showThisIdeologyHover(image_radical_cap_hover)
-                Ideologies.CONSERVATISM.title -> showThisIdeologyHover(image_cons_hover)
-                Ideologies.PROGRESSIVISM.title -> showThisIdeologyHover(image_prog_hover)
+                Ideologies.AUTHORITARIAN_RIGHT.titleRes.resString(this)  -> showThisIdeologyHover(
+                    binding.imageAuthoRightHover
+                )
+                Ideologies.RADICAL_CAPITALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageRadicalCapHover)
+                Ideologies.CONSERVATISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageConsHover)
+                Ideologies.PROGRESSIVISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageProgHover)
 
-                Ideologies.RIGHT_ANARCHY.title -> showThisIdeologyHover(image_right_anar_hover)
-                Ideologies.ANARCHY.title -> showThisIdeologyHover(image_anar_hover)
-                Ideologies.LIBERALISM.title -> showThisIdeologyHover(image_lib_hover)
-                Ideologies.LIBERTARIANISM.title -> showThisIdeologyHover(image_libertar_hover)
+                Ideologies.RIGHT_ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageRightAnarHover)
+                Ideologies.ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageAnarHover)
+                Ideologies.LIBERALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageLibHover)
+                Ideologies.LIBERTARIANISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageLibertarHover)
 
-                Ideologies.LEFT_ANARCHY.title -> showThisIdeologyHover(image_left_anar_hover)
-                Ideologies.LIBERTARIAN_SOCIALISM.title -> showThisIdeologyHover(image_lib_soc)
+                Ideologies.LEFT_ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageLeftAnarHover)
+                Ideologies.LIBERTARIAN_SOCIALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageLibSoc)
 
                 else -> showThisIdeologyHover(null)
             }
@@ -264,8 +275,8 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         oldLayoutFrameParams?.rightMargin = oldRightMargin
         oldLayoutFrameParams?.bottomMargin = oldBottomMargin
         oldPointFrame?.layoutParams = oldLayoutFrameParams
-        frame_1.removeAllViews()
-        frame_1.addView(oldPointFrame)
+        binding.frame1.removeAllViews()
+        binding.frame1.addView(oldPointFrame)
     }
 
     private fun startOldPointViewAnimation() {
@@ -291,8 +302,8 @@ class ChooseViewActivity : BaseActivity(), View.OnClickListener, View.OnTouchLis
         layoutFrameParams?.rightMargin = containerWidth - event.x.toInt() - diameterInPx
         layoutFrameParams?.bottomMargin = containerHeight - event.y.toInt() - diameterInPx
         pointFrame?.layoutParams = layoutFrameParams
-        frame_1.removeView(pointFrame)
-        frame_1.addView(pointFrame)
+        binding.frame1.removeView(pointFrame)
+        binding.frame1.addView(pointFrame)
     }
 
     private fun startPointViewAnimation() {

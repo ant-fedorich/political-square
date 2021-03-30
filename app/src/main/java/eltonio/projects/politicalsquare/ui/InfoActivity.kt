@@ -1,5 +1,6 @@
 package eltonio.projects.politicalsquare.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,40 +9,44 @@ import android.view.MotionEvent
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.*
+import eltonio.projects.politicalsquare.databinding.ActivityInfoBinding
 import eltonio.projects.politicalsquare.ui.viewmodel.InfoViewModel
 import eltonio.projects.politicalsquare.util.*
-import kotlinx.android.synthetic.main.activity_info.*
+import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 
+
+@AndroidEntryPoint
 class InfoActivity : AppCompatActivity() {
-    private lateinit var viewModel: InfoViewModel
+    private val viewmodel: InfoViewModel by viewModels()
+    private val binding: ActivityInfoBinding by lazy { ActivityInfoBinding.inflate(layoutInflater) }
 
     private var oldIdeologyHover: ImageView? = null
     private var intentToViewInfo: Intent? = null
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_info)
-        viewModel = ViewModelProvider(this).get(InfoViewModel::class.java)
 
         title = getString(R.string.info_title_actionbar)
 
         // Set text for descriptions
-        text_desc_compass_1.text = getString(R.string.text_desc_compass_1)
-        text_desc_compass_2.text = getString(R.string.text_desc_compass_2)
-        text_desc_compass_3.text = getString(R.string.text_desc_compass_3)
+        binding.textDescCompass1.text = getString(R.string.text_desc_compass_1)
+        binding.textDescCompass2.text = getString(R.string.text_desc_compass_2)
+        binding.textDescCompass3.text = getString(R.string.text_desc_compass_3)
 
         // Set listeners
-        frame_3.setOnTouchListener { v, event ->
-            viewModel.getIdeology(event.x, event.y).observe(this, Observer { ideology ->
-                text_ideology_selected.text = ideology
+        binding.frame3.setOnTouchListener { v, event ->
+            viewmodel.getIdeology(event.x, event.y).observe(this, { ideology ->
+                binding.textIdeologySelected.text = ideology
 
                 intentToViewInfo = Intent(this, ViewInfoActivity::class.java)
                 intentToViewInfo?.putExtra(EXTRA_IDEOLOGY_TITLE, ideology)
 
-                viewModel.getImageHoverId(ideology).observe(this, Observer {
+                viewmodel.getImageHoverId(ideology).observe(this, {
                     val imageHover = findViewById<ImageView>(it)
                     showThisIdeologyHover(imageHover)
                 })
@@ -56,6 +61,7 @@ class InfoActivity : AppCompatActivity() {
             }
             return@setOnTouchListener true
         }
+        setContentView(binding.root)
     }
 
     override fun onSupportNavigateUp(): Boolean {

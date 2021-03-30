@@ -1,23 +1,26 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
-import android.app.Application
+import android.content.Context
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.App
-import eltonio.projects.politicalsquare.data.AppRepository
-import eltonio.projects.politicalsquare.models.QuestionWithAnswers
-import eltonio.projects.politicalsquare.models.Step
+import eltonio.projects.politicalsquare.model.QuestionWithAnswers
+import eltonio.projects.politicalsquare.model.Step
+import eltonio.projects.politicalsquare.repository.CloudRepository
+import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class QuizViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class QuizViewModel @Inject constructor(
+    private var localRepo: LocalRepository,
+    private var cloudRepo: CloudRepository
+) : ViewModel() {
     // TODO: Refactor
-    private var localRepo = AppRepository.Local()
-    private var cloudRepo = AppRepository.Cloud()
+
 
     private var questionCounterTotalLiveData: MutableLiveData<Int> = MutableLiveData()
     private var questionCounterLiveData: MutableLiveData<Int> = MutableLiveData()
@@ -160,6 +163,4 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
 
         FABButtonShowEvent.value = true
     }
-
-
 }

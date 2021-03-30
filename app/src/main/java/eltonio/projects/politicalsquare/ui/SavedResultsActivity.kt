@@ -1,60 +1,68 @@
 package eltonio.projects.politicalsquare.ui
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import eltonio.projects.politicalsquare.adapter.QuizRecycleAdapter
 import eltonio.projects.politicalsquare.R
-import kotlinx.android.synthetic.main.activity_saved_results.*
+
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.layout_result_item.view.*
+
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.*
-import eltonio.projects.politicalsquare.models.Ideologies
-import eltonio.projects.politicalsquare.models.QuizResult
-import eltonio.projects.politicalsquare.ui.viewmodel.SaveResultViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import eltonio.projects.politicalsquare.databinding.ActivitySavedResultsBinding
+import eltonio.projects.politicalsquare.util.Ideologies
+import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
+import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.ui.viewmodel.SavedResultViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import org.jetbrains.annotations.TestOnly
 
-
+@AndroidEntryPoint
 class SavedResultsActivity : AppCompatActivity() {
-    private lateinit var viewModel: SaveResultViewModel
+    private val viewmodel by viewModels<SavedResultViewModel>()
+    private val binding: ActivitySavedResultsBinding by lazy { ActivitySavedResultsBinding.inflate(layoutInflater)}
 
-    private lateinit var resultList: List<QuizResult>
-    private lateinit var quizAdapter: QuizRecycleAdapter
-
+    private val quizAdapter: QuizRecycleAdapter by lazy { QuizRecycleAdapter(this) }
+    private var resultList: List<QuizResult> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_saved_results)
-        viewModel = ViewModelProvider(this).get(SaveResultViewModel::class.java)
 
         title = getString(R.string.saved_title_actionbar)
 
-        resultList = emptyList()
-        viewModel.getResultList().observe(this, Observer {
+        subscribeToObservers()
+        setupRecycler()
+
+        val itemTouchHelper = ItemTouchHelper(getSwipeCallback(this))
+        itemTouchHelper.attachToRecyclerView(binding.recyclerResultsList)
+
+        setContentView(binding.root)
+    }
+
+
+
+    private fun subscribeToObservers() {
+        viewmodel.getResultList().observe(this, Observer {
             // TODO: How to get resultList imidiatly? Not in Observer or onResume
             resultList = it
-            initRecycler()
-            quizAdapter.setOnItemClickListener(object :
-                QuizRecycleAdapter.OnQuizItemClickListener {
-                override fun onItemClick(position: Int) = goToResultDetail(position)
-            })
+            quizAdapter.addQuizResultList(resultList)
         })
-
-        val itemTouchHelper = ItemTouchHelper(getSwipeCallback())
-        itemTouchHelper.attachToRecyclerView(recycler_results_list)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -69,7 +77,7 @@ class SavedResultsActivity : AppCompatActivity() {
     }
 
     /** CUSTOM METHODS */
-    private fun getSwipeCallback(): ItemTouchHelper.SimpleCallback {
+    private fun getSwipeCallback(context: Context): ItemTouchHelper.SimpleCallback {
         // Add swiping actions
         return object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -83,26 +91,26 @@ class SavedResultsActivity : AppCompatActivity() {
 
                 if (direction == ItemTouchHelper.LEFT) {
                     deletedResultItem = quizAdapter.getQuizResultAt(position)
-                    viewModel.deleteQuizResult(deletedResultItem)
+                    viewmodel.deleteQuizResult(deletedResultItem)
                     // TODO: VM
-                    viewModel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
+                    viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
                         resultList = it // TODO: How to get resultList immediately?
-                        quizAdapter.setQuizResults(resultList)
+                        quizAdapter.addQuizResultList(resultList)
                     })
 
                     for (ideo in Ideologies.values()) {
                         if (ideo.stringId == deletedResultItem.ideologyStringId) {
-                            ideologyTitle = ideo.title
+                            ideologyTitle = ideo.titleRes.resString(context)
                         }
                     }
 
                     // Add Snackbar
-                    Snackbar.make(recycler_results_list, "$ideologyTitle удален", Snackbar.LENGTH_LONG)
+                    Snackbar.make(binding.recyclerResultsList, "$ideologyTitle удален", Snackbar.LENGTH_LONG)
                         .setAction("Undo") {
-                            viewModel.addQuizResult(deletedResultItem)
-                            viewModel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
+                            viewmodel.addQuizResult(deletedResultItem)
+                            viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
                                 resultList = it
-                                quizAdapter.setQuizResults(resultList)
+                                quizAdapter.addQuizResultList(resultList)
                             })
                         }
                         .show()
@@ -129,22 +137,36 @@ class SavedResultsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initRecycler() {
-        quizAdapter = QuizRecycleAdapter()
-        recycler_results_list.apply {
-            adapter = quizAdapter
-            layoutManager = LinearLayoutManager(this.context)
-            setHasFixedSize(true)
+    // TODO: ??? use this or not?
+//    private fun initRecycler() {
+//        quizAdapter = QuizRecycleAdapter(this)
+//        binding.recyclerResultsList.apply {
+//            adapter = quizAdapter
+//            layoutManager = LinearLayoutManager(this.context)
+//            setHasFixedSize(true)
+//        }
+//        quizAdapter.setQuizResults(resultList)
+//    }
+//
+    private fun setupRecycler() {
+        quizAdapter.onQuizItemClickListener = { position ->
+            goToResultDetail(position)
         }
-        quizAdapter.setQuizResults(resultList)
+
+        binding.recyclerResultsList.apply {
+            adapter = quizAdapter
+            layoutManager = LinearLayoutManager(this@SavedResultsActivity)
+        }
     }
 
+
+
     private fun goToResultDetail(position: Int) {
-        val itemView = recycler_results_list.layoutManager?.findViewByPosition(position) as ConstraintLayout
-        val itemContainerTransitionName = itemView.layout_item_container.transitionName
-        val titleTransitionName = itemView.text_saved_result_title.transitionName
-        val dateTransitionName = itemView.text_saved_result_date.transitionName
-        val imageTransitionName = itemView.image_compass_saved_result.transitionName
+        val itemView = binding.recyclerResultsList.layoutManager?.findViewByPosition(position) as ConstraintLayout
+        val itemContainerTransitionName = itemView.findViewById<ConstraintLayout>(R.id.layout_item_container).transitionName
+        val titleTransitionName = itemView.findViewById<TextView>(R.id.text_saved_result_title).transitionName
+        val dateTransitionName = itemView.findViewById<TextView>(R.id.text_saved_result_date).transitionName
+        val imageTransitionName = itemView.findViewById<ImageView>(R.id.image_compass_saved_result).transitionName
 
         // TODO: MVVM Extra to Repository
         var intent = Intent(this, SavedResultDetailActivity::class.java).apply {
@@ -161,10 +183,12 @@ class SavedResultsActivity : AppCompatActivity() {
             putExtra(EXTRA_ITEM_CONTAINER_TRANSITION_NAME, itemContainerTransitionName)
         }
 
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, itemView.layout_item_container, itemContainerTransitionName)
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, itemView.findViewById<ConstraintLayout>(R.id.layout_item_container), itemContainerTransitionName)
 
         startActivity(intent, options.toBundle())
     }
 
+    @TestOnly
+    fun getResultList() = resultList
 }
 

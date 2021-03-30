@@ -6,45 +6,50 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.animation.*
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 
 import eltonio.projects.politicalsquare.R
+import eltonio.projects.politicalsquare.databinding.ActivityResultBinding
 import eltonio.projects.politicalsquare.ui.viewmodel.ResultViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
+import eltonio.projects.politicalsquare.util.AppUtil.showEndQuizDialogLambda
 import eltonio.projects.politicalsquare.views.ResultPointView
 
-import kotlinx.android.synthetic.main.activity_result.*
 
+@AndroidEntryPoint
 class ResultActivity : BaseActivity(), View.OnClickListener {
-    private lateinit var viewModel: ResultViewModel
+    private val viewmodel: ResultViewModel by viewModels()
+    private val binding: ActivityResultBinding by lazy { ActivityResultBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_result)
-        viewModel = ViewModelProvider(this).get(ResultViewModel::class.java)
 
         title = getString(R.string.result_title_actionbar)
 
-        button_compass_info_2.setOnClickListener(this)
+        binding.buttonCompassInfo2.setOnClickListener(this)
 
 
         val youThoughtText = getString(R.string.result_subtitle_you_thought)
-        viewModel.getChosenIdeology().observe(this, Observer {
-            title_2_2.text = "$youThoughtText: $it"
+        viewmodel.getChosenIdeology().observe(this, {
+            binding.title22.text = "$youThoughtText: $it"
         })
-        viewModel.getResultIdeology().observe(this, Observer {
-            title_2.text = it
+        viewmodel.getResultIdeology().observe(this, Observer {
+            binding.title2.text = it
         })
 
         startResultPointsAnimation()
 
-        viewModel.getCompassX().observe(this, Observer {
+        viewmodel.getCompassX().observe(this, Observer {
             compassX = it
         })
-        viewModel.getCompassY().observe(this, Observer {
+        viewmodel.getCompassY().observe(this, Observer {
             compassY = it
         })
+
+        setContentViewForBase(binding.root)
     }
 
     override fun onBackPressed() {
@@ -57,9 +62,9 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_compass_info_2 -> {
-                viewModel.onCompassInfoClick()
+                viewmodel.onCompassInfoClick()
                 val intent = Intent(this, ViewInfoActivity::class.java)
-                viewModel.getResultIdeology().observe(this, Observer {
+                viewmodel.getResultIdeology().observe(this, Observer {
                     intent.putExtra(EXTRA_IDEOLOGY_TITLE, it)
                 })
                 startActivity(intent)
@@ -73,14 +78,14 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
         // Add start points
         val resultPoints = ResultPointView(this, 0f, 0f)
         resultPoints.alpha = 0f
-        frame_result_points.addView(resultPoints)
+        binding.frameResultPoints.addView(resultPoints)
 
         // Fading animation
         val animateFade = ObjectAnimator.ofFloat(resultPoints, View.ALPHA, 1f).apply {
             duration = 200
             addUpdateListener {
-                frame_result_points.removeView(resultPoints)
-                frame_result_points.addView(resultPoints)
+                binding.frameResultPoints.removeView(resultPoints)
+                binding.frameResultPoints.addView(resultPoints)
             }
         }
 
@@ -89,8 +94,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             duration = 200
             interpolator = AccelerateInterpolator()
             addUpdateListener {
-                frame_result_points.removeView(resultPoints)
-                frame_result_points.addView(resultPoints)
+                binding.frameResultPoints.removeView(resultPoints)
+                binding.frameResultPoints.addView(resultPoints)
             }
         }
 
@@ -99,8 +104,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             duration = 100
             interpolator = DecelerateInterpolator()
             addUpdateListener {
-                frame_result_points.removeView(resultPoints)
-                frame_result_points.addView(resultPoints)
+                binding.frameResultPoints.removeView(resultPoints)
+                binding.frameResultPoints.addView(resultPoints)
             }
         }
 
@@ -110,8 +115,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             startDelay = 200
             interpolator = AccelerateInterpolator()
             addUpdateListener {
-                frame_result_points.removeView(resultPoints)
-                frame_result_points.addView(resultPoints)
+                binding.frameResultPoints.removeView(resultPoints)
+                binding.frameResultPoints.addView(resultPoints)
             }
         }
 
@@ -120,8 +125,8 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             duration = 100
             interpolator = DecelerateInterpolator()
             addUpdateListener {
-                frame_result_points.removeView(resultPoints)
-                frame_result_points.addView(resultPoints)
+                binding.frameResultPoints.removeView(resultPoints)
+                binding.frameResultPoints.addView(resultPoints)
             }
         }
 

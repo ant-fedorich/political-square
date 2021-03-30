@@ -1,13 +1,17 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import eltonio.projects.politicalsquare.data.AppRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import eltonio.projects.politicalsquare.repository.LocalRepository
+import javax.inject.Inject
 
-class SettingsViewModel : ViewModel() {
-    private val localRepo = AppRepository.Local()
-
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val localRepo: LocalRepository
+) : ViewModel() {
     private var lang = MutableLiveData<String>()
     private var quizOption = MutableLiveData<Int>()
     private var quizIsActiveState = MutableLiveData<Boolean>()
@@ -17,7 +21,12 @@ class SettingsViewModel : ViewModel() {
         return lang
     }
 
+    fun setLang(context: Context, lang: String) {
+        localRepo.setLang(context, lang)
+    }
+
     fun getQuizOption(): LiveData<Int> {
+        localRepo.getLang()
         quizOption.value = localRepo.loadQuizOption()
         return quizOption
     }
