@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open" translatable="false">Open menu</string>
     <string name="navigation_drawer_close" translatable="false">Close menu</string>
 
-    <string name="intro_title_1">Who you think you are?</string>
+    <string name="intro_title_1">Who you think you are on Political Compass?</string>
     <string name="intro_title_2">Pass Quiz</string>
     <string name="intro_title_3">Who you really are</string>
     <string name="intro_button_next">Next</string>

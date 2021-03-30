@@ -20,24 +20,24 @@ import javax.inject.Singleton
 
 @Module
 object FakeDBModule {
-    @Singleton
-    @Provides
-    fun provideFakeDatabase(@ApplicationContext context: Context)
-        = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
-
-
 //    @Singleton
 //    @Provides
-//    fun provideFakeDatabase(@ApplicationContext context: Context): AppDatabase {
-//        context.deleteDatabase(TEST_DB_NAME)
-//
-//        return Room.databaseBuilder(context, AppDatabase::class.java, TEST_DB_NAME)
+//    fun provideFakeDatabase(@ApplicationContext context: Context)
+//        = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
 //            .allowMainThreadQueries()
-//            .createFromAsset(DB_NAME)
 //            .build()
-//    }
+
+
+    @Singleton
+    @Provides
+    fun provideFakeDatabase(@ApplicationContext context: Context): AppDatabase {
+        context.deleteDatabase(TEST_DB_NAME)
+
+        return Room.databaseBuilder(context, AppDatabase::class.java, TEST_DB_NAME)
+            .allowMainThreadQueries()
+            .createFromAsset(DB_NAME)
+            .build()
+    }
 
 
 

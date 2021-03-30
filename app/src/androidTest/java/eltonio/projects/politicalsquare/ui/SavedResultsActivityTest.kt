@@ -83,6 +83,5 @@ class SavedResultsActivityTest {
         assertThat(resultFromActivity.size).isEqualTo(resultFromDB.size)
         assertThat(resultAfterDeleting).isEmpty()
 
-        Thread.sleep(1000)
     }
 }

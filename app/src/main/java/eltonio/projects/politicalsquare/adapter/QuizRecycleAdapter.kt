@@ -2,12 +2,10 @@ package eltonio.projects.politicalsquare.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.databinding.LayoutResultItemBinding
 import eltonio.projects.politicalsquare.util.Ideologies
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
@@ -25,7 +23,6 @@ class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycl
 
     fun addQuizResultList(resultList: List<QuizResult>) {
         differ.submitList(resultList)
-        //notifyDataSetChanged()
     }
 
     inner class QuizRecycleViewHolder(val binding: LayoutResultItemBinding): RecyclerView.ViewHolder(binding.root)
@@ -45,18 +42,14 @@ class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycl
 
             for (ideology in Ideologies.values()) {
                 if (ideology.stringId == item.ideologyStringId) {
-                    textSavedResultTitle.text = ideology.titleRes.resString(context)
+                    textSavedResultTitle.text = ideology.resId.resString(context)
+                    textSavedResultTitle.text
                 }
             }
 
             textSavedResultNumber.text = (position+1).toString()
 
-            horStartScore = item.horStartScore
-            verStarScore = item.verStartScore
-            horResultScore = item.horResultScore
-            verResultScore = item.verResultScore
-
-            val myView = ResultListPointView(context, horResultScore, verResultScore)
+            val myView = ResultListPointView(context, item.horResultScore, item.verResultScore)
 
             frameQuizResultImage.addView(myView)
 
@@ -69,11 +62,4 @@ class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycl
     override fun getItemCount() = differ.currentList.size
 
     fun getQuizResultAt(position: Int) = differ.currentList[position]
-
-    companion object {
-        var horStartScore = 0
-        var verStarScore = 0
-        var horResultScore = 0
-        var verResultScore = 0
-    }
 }

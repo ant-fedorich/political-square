@@ -6,37 +6,40 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.repository.LocalRepository
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val localRepo: LocalRepository
 ) : ViewModel() {
-    private var lang = MutableLiveData<String>()
-    private var quizOption = MutableLiveData<Int>()
-    private var quizIsActiveState = MutableLiveData<Boolean>()
+    private var _lang = MutableLiveData<String>()
+    val lang: LiveData<String> = _lang
 
-    fun getLang(): LiveData<String> {
-        lang.value = localRepo.getLang()
-        return lang
+    private var _quizOption = MutableLiveData<Int>()
+    val quizOption: LiveData<Int> = _quizOption
+
+    private var _quizIsActiveState = MutableLiveData<Boolean>()
+    val quizIsActiveState: LiveData<Boolean> = _quizIsActiveState
+
+    fun loadLang() = runBlocking{
+        _lang.value = localRepo.getLang()
     }
 
-    fun setLang(context: Context, lang: String) {
+    fun setLang(context: Context, lang: String) = runBlocking {
         localRepo.setLang(context, lang)
     }
 
-    fun getQuizOption(): LiveData<Int> {
+    fun loadQuizOption() = runBlocking {
         localRepo.getLang()
-        quizOption.value = localRepo.loadQuizOption()
-        return quizOption
+        _quizOption.value = localRepo.loadQuizOption()
     }
 
-    fun saveQuizOption(quizOptionId: Int) {
+    fun saveQuizOption(quizOptionId: Int) = runBlocking {
         localRepo.saveQuizOption(quizOptionId)
     }
 
-    fun getQuizIsActiveState(): LiveData<Boolean> {
-        quizIsActiveState.value = localRepo.getQuizIsActive()
-        return quizIsActiveState
+    fun loadQuizIsActiveState() = runBlocking {
+        _quizIsActiveState.value = localRepo.getQuizIsActive()
     }
 }

@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @ExperimentalCoroutinesApi
 @SmallTest
 @HiltAndroidTest
-class QuizResultDaoWithHiltTest {
+class QuestionsDaoWithHiltTest {
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
     @get:Rule
@@ -27,12 +27,18 @@ class QuizResultDaoWithHiltTest {
 
     @Inject lateinit var quizResultDao: QuizResultDao
     @Inject lateinit var quizDao: QuizDao
+    @Inject lateinit var questionDao: QuestionDao
+
 
     @Before
     fun setup() {
         hiltRule.inject()
     }
 
+//    @Test
+//    fun getQuestions() {
+//        val questionList = questionDao.getQuestionsWithAnswers(1)
+//    }
 
     @Test
     fun addQuizResult_OneItem_returnsDBHasThisItem() = runBlockingTest{

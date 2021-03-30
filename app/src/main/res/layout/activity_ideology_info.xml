@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layoutDescription="@xml/activity_view_info_scene"
-    tools:context=".ui.ViewInfoActivity">
+    tools:context=".ui.IdeologyInfoActivity">
 
     <ImageView
         android:id="@+id/image_ideology_info"

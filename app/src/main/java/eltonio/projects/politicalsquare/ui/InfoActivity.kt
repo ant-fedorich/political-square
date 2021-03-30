@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.MotionEvent
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -17,6 +16,9 @@ import eltonio.projects.politicalsquare.ui.viewmodel.InfoViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
 import eltonio.projects.politicalsquare.util.AppUtil.pushRight
+import eltonio.projects.politicalsquare.util.AppUtil.resString
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 
 @AndroidEntryPoint
@@ -24,44 +26,43 @@ class InfoActivity : AppCompatActivity() {
     private val viewmodel: InfoViewModel by viewModels()
     private val binding: ActivityInfoBinding by lazy { ActivityInfoBinding.inflate(layoutInflater) }
 
+    private val intentToViewInfo: Intent by lazy { Intent(this, IdeologyInfoActivity::class.java) }
     private var oldIdeologyHover: ImageView? = null
-    private var intentToViewInfo: Intent? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupText()
 
+        // Set listeners
+        binding.frame3.setOnTouchListener { v, event ->
+            val ideologyResId = viewmodel.getIdeologyResId(event.x, event.y)
+            binding.textIdeologySelected.text = ideologyResId.resString(this)
+
+            intentToViewInfo.putExtra(EXTRA_IDEOLOGY_TITLE_RES, ideologyResId)
+
+            val imageHover = findViewById<ImageView>(viewmodel.getImageHoverId(ideologyResId))
+            showThisIdeologyHover(imageHover)
+
+            if (event.action == MotionEvent.ACTION_UP) {
+                runBlocking { delay(80) }
+                v.performClick()
+                startActivity(intentToViewInfo)
+                pushLeft(this@InfoActivity)
+            }
+            return@setOnTouchListener true
+        }
+
+        setContentView(binding.root)
+    }
+
+    private fun setupText() {
         title = getString(R.string.info_title_actionbar)
 
         // Set text for descriptions
         binding.textDescCompass1.text = getString(R.string.text_desc_compass_1)
         binding.textDescCompass2.text = getString(R.string.text_desc_compass_2)
         binding.textDescCompass3.text = getString(R.string.text_desc_compass_3)
-
-        // Set listeners
-        binding.frame3.setOnTouchListener { v, event ->
-            viewmodel.getIdeology(event.x, event.y).observe(this, { ideology ->
-                binding.textIdeologySelected.text = ideology
-
-                intentToViewInfo = Intent(this, ViewInfoActivity::class.java)
-                intentToViewInfo?.putExtra(EXTRA_IDEOLOGY_TITLE, ideology)
-
-                viewmodel.getImageHoverId(ideology).observe(this, {
-                    val imageHover = findViewById<ImageView>(it)
-                    showThisIdeologyHover(imageHover)
-                })
-            })
-
-            if (event.action == MotionEvent.ACTION_UP) {
-                Handler().postDelayed({
-                    v.performClick()
-                    startActivity(intentToViewInfo)
-                    pushLeft(this)
-                }, 80)
-            }
-            return@setOnTouchListener true
-        }
-        setContentView(binding.root)
     }
 
     override fun onSupportNavigateUp(): Boolean {

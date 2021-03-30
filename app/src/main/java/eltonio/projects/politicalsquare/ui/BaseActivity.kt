@@ -15,22 +15,20 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.databinding.ActivityBaseBinding
 import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.AppUtil
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-// TODO: DI: Get rid of transfer repo here
 @AndroidEntryPoint
-open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+open class BaseActivity : AppCompatActivity() {
     private val baseBinding: ActivityBaseBinding by lazy { ActivityBaseBinding.inflate(layoutInflater)}
 
     @Inject lateinit var localRepo: LocalRepository
-
-    // FIXME: fix backstack everywhere
 
     fun setContentViewForBase(childView: View) {
         super.setContentView(baseBinding.root)
         baseBinding.activityContent.addView(childView)
 
-        baseBinding.navGlobalView.setNavigationItemSelectedListener(this)
+        baseBinding.navGlobalView.setNavigationItemSelectedListener { i ->  onNavigationItemSelected(i) }
 
         // Interface
         setSupportActionBar(baseBinding.toolbarGlobal)
@@ -50,24 +48,26 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    private fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_main -> {
-                if (localRepo.getQuizIsActive()) {
-                    baseBinding.activityContainer.closeDrawer(GravityCompat.START)
+            R.id.nav_main -> runBlocking {
+                    if (localRepo.getQuizIsActive()) {
+                        baseBinding.activityContainer.closeDrawer(GravityCompat.START)
 
-                    AppUtil.showEndQuizDialogLambda(this) {
+                        AppUtil.showEndQuizDialogLambda(this@BaseActivity) {
+                            runBlocking {
+                                if (localRepo.getMainActivityIsInFront() == false) {
+                                    startActivity(Intent(this@BaseActivity, MainActivity::class.java))
+                                }
+                            }
+                        }
+
+                    } else {
                         if (localRepo.getMainActivityIsInFront() == false) {
-                            startActivity(Intent(this, MainActivity::class.java))
+                            startActivity(Intent(this@BaseActivity, MainActivity::class.java))
+                            finish()
                         }
                     }
-
-                } else {
-                    if (localRepo.getMainActivityIsInFront() == false) {
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
-                    }
-                }
             }
             R.id.nav_saved -> {
                 startActivity(Intent(this, SavedResultsActivity::class.java))

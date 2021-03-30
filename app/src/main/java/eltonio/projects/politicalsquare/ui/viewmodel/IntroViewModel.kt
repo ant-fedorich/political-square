@@ -7,54 +7,51 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.model.ScreenItem
 import eltonio.projects.politicalsquare.repository.LocalRepository
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
     private val localRepo: LocalRepository
 ) : ViewModel() {
-    private var splashAnimationTime: MutableLiveData<Long> = MutableLiveData()
-    private var introOpenEvent: MutableLiveData<Boolean> = MutableLiveData()
-    private var lang: MutableLiveData<String> = MutableLiveData()
-    private var screenList: MutableLiveData<MutableList<ScreenItem>> = MutableLiveData()
-    private var screenLisUpdatedState: MutableLiveData<Boolean> = MutableLiveData()
+    private var _splashAnimationTime: MutableLiveData<Long> = MutableLiveData()
+    val splashAnimationTime: LiveData<Long> = _splashAnimationTime
 
-    fun checkIntroOpened() {
+    private var _introOpenEvent: MutableLiveData<Boolean> = MutableLiveData()
+    val introOpenedEvent: LiveData<Boolean> = _introOpenEvent
+
+    private var _lang: MutableLiveData<String> = MutableLiveData()
+    val lang: LiveData<String> = _lang
+
+    private var _screenList: MutableLiveData<MutableList<ScreenItem>> = MutableLiveData()
+    val screenList: LiveData<MutableList<ScreenItem>> = _screenList
+
+
+    fun setSplashAnimationTime(time: Long) = runBlocking {
+        localRepo.setSplashAnimationTime(time)
+    }
+
+    fun checkIntroOpened() = runBlocking {
         if (localRepo.getIntroOpened()) {
-            splashAnimationTime.value = 600L
-            introOpenEvent.value = true
+            _splashAnimationTime.value = 600L
+            _introOpenEvent.value = true
         } else {
             // Set long animation after Intro
-            splashAnimationTime.value = 1200L
-            introOpenEvent.value = false
+            _splashAnimationTime.value = 1200L
+            _introOpenEvent.value = false
             localRepo.setIntroOpened()
         }
     }
 
-    fun loadLang(): LiveData<String> {
-        lang.value = localRepo.getLang()
-        return lang
+    fun loadLang() = runBlocking {
+        _lang.value = localRepo.getLang()
     }
 
-    fun setLang(context: Context, lang: String) {
+    fun setLang(context: Context, lang: String) = runBlocking {
         localRepo.setLang(context, lang)
     }
 
-    fun getScreenList(): LiveData<MutableList<ScreenItem>> {
-        screenList.value = localRepo.getViewPagerScreenList()
-        screenLisUpdatedState.value = true
-        return screenList
-    }
-
-    fun getIntroOpened(): LiveData<Boolean> {
-        return introOpenEvent
-    }
-
-    fun getSplashAnimationTime(): LiveData<Long> {
-        return splashAnimationTime
-    }
-
-    fun setSplashAnimationTime(time: Long) {
-        localRepo.setSplashAnimationTime(time)
+    fun loadScreenList() {
+        _screenList.value = localRepo.getViewPagerScreenList()
     }
 }

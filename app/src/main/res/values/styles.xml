@@ -1,6 +1,8 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light">
+        <item name="android:forceDarkAllowed">false</item>
+
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>

@@ -5,14 +5,14 @@ import eltonio.projects.politicalsquare.R
 
 enum class QuizOptions(
     id: Int,
-    titleRes: Int,
-    ownerRes: Int,
-    descRes: Int,
+    titleResId: Int,
+    ownerResId: Int,
+    descResId: Int,
     quesAmount: Int,
-    image: Int
+    imageResId: Int
 ) {
     WORLD(
-        1,
+        1, //sqlite id starts with 1
         R.string.all_title_quiz_option_1,
         R.string.all_owner_quiz_option_1,
         R.string.all_desc_quiz_option_1,
@@ -20,7 +20,7 @@ enum class QuizOptions(
         R.drawable.img_world_quiz
     ),
     UKRAINE(
-        2,
+        2, //sqlite id starts with 1
         R.string.all_title_quiz_option_2,
         R.string.all_owner_quiz_option_2,
         R.string.all_desc_quiz_option_2,
@@ -30,18 +30,16 @@ enum class QuizOptions(
 
     var id = id
         private set
-    var titleRes = titleRes
+    var titleResId = titleResId
         private set
-    var ownerRes = ownerRes
+    var ownerResId = ownerResId
         private set
-    var descRes = descRes
+    var descResId = descResId
         private set
     var quesAmount = quesAmount
         private set
-    var image = image
+    var imageResId = imageResId
         private set
-
-    val context: Context? = null
 
     companion object {
         fun Int.resString(context: Context): String {

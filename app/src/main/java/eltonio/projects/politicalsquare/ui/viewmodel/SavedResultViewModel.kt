@@ -7,6 +7,7 @@ import eltonio.projects.politicalsquare.repository.DBRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,8 +15,7 @@ class SavedResultViewModel @Inject constructor(
     private var dbRepo: DBRepository
 ) : ViewModel() {
 
-    fun getResultList(): LiveData<List<QuizResult>> = dbRepo.getQuizResults()
-
+    fun getQuizResult(): LiveData<List<QuizResult>> = dbRepo.getQuizResults()
 
     fun getResultListWithDelay(): LiveData<List<QuizResult>> {
         return liveData {
@@ -24,15 +24,11 @@ class SavedResultViewModel @Inject constructor(
         }
     }
 
-    fun deleteQuizResult(quizResult: QuizResult) {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun deleteQuizResult(quizResult: QuizResult) = runBlocking {
             dbRepo.deleteQuizResult(quizResult)
-        }
     }
 
-    fun addQuizResult(quizResult: QuizResult) {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun addQuizResult(quizResult: QuizResult) = runBlocking {
             dbRepo.addQuizResult(quizResult)
-        }
     }
 }

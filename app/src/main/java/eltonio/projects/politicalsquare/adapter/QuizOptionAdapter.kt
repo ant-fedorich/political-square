@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.databinding.LayoutSpinnerItemBinding
 import eltonio.projects.politicalsquare.util.QuizOptions
 import eltonio.projects.politicalsquare.util.QuizOptions.Companion.resString
@@ -18,9 +17,9 @@ class QuizOptionAdapter(context: Context, quizOptionList: Array<QuizOptions>) : 
         val binding = LayoutSpinnerItemBinding.inflate(LayoutInflater.from(context))
         val item = getItem(position)
         item?.let {
-            binding.titleQuizOption.text = it.titleRes.resString(context)
-            binding.textQuizOption.text = it.descRes.resString(context)
-            binding.imageQuizOption.setImageResource(it.image)
+            binding.titleQuizOption.text = it.titleResId.resString(context)
+            binding.textQuizOption.text = it.descResId.resString(context)
+            binding.imageQuizOption.setImageResource(it.imageResId)
         }
         return binding.root
     }

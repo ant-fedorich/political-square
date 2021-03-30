@@ -12,7 +12,6 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.*
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.databinding.ActivityChooseViewBinding
@@ -21,34 +20,39 @@ import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.ui.viewmodel.ChooseViewViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyStringIdByResId
 import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
 import eltonio.projects.politicalsquare.util.AppUtil.toast
 import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.coroutines.*
 
 @AndroidEntryPoint
-class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchListener {
+class ChooseViewActivity: BaseActivity() {
     private val viewmodel: ChooseViewViewModel by viewModels()
     private val binding: ActivityChooseViewBinding by lazy { ActivityChooseViewBinding.inflate(layoutInflater)}
 
-
-    // TODO: mvvm vars to vm???
-    private var horStartScore = 0
-    private var verStartScore = 0
-    private var ideology = ""
-
-    private var x = 0f
-    private var y = 0f
+    //Chosen view vars
+    private var ideologyStringId = ""
+    private var x = -1f
+    private var y = -1f
+    private var horStartScore = -1
+    private var verStartScore = -1
     private var oldIdeologyHover: ImageView? = null
-
     private var quizId = -1
 
+    private var ideologyIsChosen = false
+
+    //Graphic vars
+    private val pointFrame: ConstraintLayout by lazy { ConstraintLayout(this) }
+    private val oldPointFrame: ConstraintLayout by lazy { ConstraintLayout(this) }
+    private val layoutFrameParams: ConstraintLayout.LayoutParams by lazy {
+        ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)
+    }
+    private val oldLayoutFrameParams: ConstraintLayout.LayoutParams by lazy {
+        ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)
+    }
     private var pointView: ChoosePointView? = null
     private var oldPointView: ChoosePointView? = null
-    private var pointFrame: ConstraintLayout? = null
-    private var oldPointFrame: ConstraintLayout? = null
-    private var layoutFrameParams: ConstraintLayout.LayoutParams? = null
-    private var oldLayoutFrameParams: ConstraintLayout.LayoutParams? = null
 
     private var oldPointExists = false
     private var oldLeftMargin = -1
@@ -58,102 +62,82 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
 
     private val bigRadiusInDp = 16f
     private val radiusInDp = 12f
-    private var diameterInPx = -1
+    private val diameterInPx by lazy { convertDpToPx(this, bigRadiusInDp).toInt()*2 }
 
     private var containerHeight = -1
     private var containerWidth = -1
 
-    private var ideologyIsChosen = false
-
-    /** METHODS */
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        diameterInPx = convertDpToPx(this, bigRadiusInDp).toInt()*2
+        subscribeToObservers()
 
-        viewmodel.getQuizId().observe(this, Observer {
-            quizId = it
-        })
-        viewmodel.getHorStartScore().observe(this, Observer {
-            horStartScore = it
-        })
-        viewmodel.getVerStartScore().observe(this, Observer {
-            verStartScore = it
-        })
+        //Listeners
+        binding.buttonStartQuiz.setOnClickListener {
+            if (ideologyIsChosen) {
+                viewmodel.setQuizIsActive(true)
+                viewmodel.loadQuizOption()
+                viewmodel.saveChosenIdeology(x, y, horStartScore, verStartScore, ideologyStringId, quizId)
 
-        // Init listeners
-        binding.buttonStartQuiz.setOnClickListener(this)
-        binding.buttonCompassInfo.setOnClickListener(this)
-        binding.frame1.setOnTouchListener(this)
+                startActivity(Intent(this, QuizActivity::class.java))
+                slideLeft(this)
+                finish()
+            } else {
+                toast(this, getString(R.string.chooseview_toast_choose_first))
+            }
+        }
+        binding.buttonCompassInfo.setOnClickListener {
+            startActivity(Intent(this, InfoActivity::class.java))
+        }
+        binding.frame1.setOnTouchListener { v, event ->
+            containerHeight = binding.frame1.height
+            containerWidth = binding.frame1.width
+
+            when(event?.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    drawHover(event)
+
+                    if (oldPointExists) {
+                        addOldPointFrame()
+                        startOldPointViewAnimation()
+                    }
+                    addPointFrame(event)
+                    startPointViewAnimation()
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    startMovePoint(event)
+                    drawHover(event)
+                }
+                MotionEvent.ACTION_UP -> {
+                    startChangeSizePointAnimation()
+                    saveOldPointParams(event)
+
+                    ideologyIsChosen = true
+
+                    v?.performClick()
+                }
+            }
+            return@setOnTouchListener true
+        }
 
         setContentViewForBase(binding.root)
+    }
+
+    private fun subscribeToObservers() {
+        viewmodel.quizOptionId.observe(this) {
+            quizId = it
+        }
+        viewmodel.horStartScore.observe(this) {
+            horStartScore = it
+        }
+        viewmodel.verStartScore.observe(this) {
+            verStartScore = it
+        }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         AppUtil.slideRight(this)
-    }
-
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        containerHeight = binding.frame1.height
-        containerWidth = binding.frame1.width
-
-        initLayoutFrameParams()
-
-        when(event?.action) {
-            MotionEvent.ACTION_DOWN -> {
-                drawHover(event)
-
-                if (oldPointExists) {
-                    addOldPointFrame()
-                    startOldPointViewAnimation()
-                }
-                addPointFrame(event)
-                startPointViewAnimation()
-            }
-            MotionEvent.ACTION_MOVE -> {
-                startMovePoint(event)
-                drawHover(event)
-            }
-            MotionEvent.ACTION_UP -> {
-                startChangeSizePointAnimation()
-                saveOldPointParams(event)
-
-                ideologyIsChosen = true
-
-                v?.performClick()
-            }
-        }
-        return true
-    }
-
-    override fun onClick(v: View?) {
-        when(v?.id) {
-            R.id.button_start_quiz -> onStartQuizClicked()
-            R.id.button_compass_info -> onCompassInfoClicked()
-        }
-    }
-
-    /** CUSTOM METHODS */
-    @SuppressLint("SimpleDateFormat") // TODO: Get rid of it
-    private fun onStartQuizClicked() {
-        if (ideologyIsChosen != true) {
-            return toast(this, getString(R.string.chooseview_toast_choose_first))
-        } else {
-            viewmodel.setQuizIsActive(true)
-            viewmodel.saveChosenView(x, y, horStartScore, verStartScore, ideology, quizId)
-
-            startActivity(Intent(this, QuizActivity::class.java))
-            slideLeft(this)
-            // TODO: 03/17/2021 Get rid of this
-            MainActivity().finish()
-            finish()
-        }
-    }
-
-    private fun onCompassInfoClicked() {
-        val intent = Intent(this, InfoActivity::class.java)
-        startActivity(intent)
     }
 
     /** GRAPHIC METHODS */
@@ -172,39 +156,37 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
 
         viewmodel.getXandYForHover(x, y, endX, endY)
 
-        viewmodel.getIdeologyTitle().observe(this, Observer {
-            ideology = it
+        viewmodel.getIdeologyResId().observe(this) {
+            ideologyStringId = getIdeologyStringIdByResId(it)
             when (it) {
                 // TODO: Crutch: Change titleRes to StringId
-                Ideologies.AUTHORITARIAN_LEFT.titleRes.resString(this) -> showThisIdeologyHover(binding.imageAuthoLeftHover)
-                Ideologies.RADICAL_NATIONALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageNationHover)
-                Ideologies.POWER_CENTRISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageProgHover)
-                Ideologies.SOCIAL_DEMOCRACY.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageSocDemoHover)
-                Ideologies.SOCIALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageSocHover)
+                Ideologies.AUTHORITARIAN_LEFT.resId -> showThisIdeologyHover(binding.imageAuthoLeftHover)
+                Ideologies.RADICAL_NATIONALISM.resId  -> showThisIdeologyHover(binding.imageNationHover)
+                Ideologies.POWER_CENTRISM.resId  -> showThisIdeologyHover(binding.imageProgHover)
+                Ideologies.SOCIAL_DEMOCRACY.resId  -> showThisIdeologyHover(binding.imageSocDemoHover)
+                Ideologies.SOCIALISM.resId  -> showThisIdeologyHover(binding.imageSocHover)
 
-                Ideologies.AUTHORITARIAN_RIGHT.titleRes.resString(this)  -> showThisIdeologyHover(
+                Ideologies.AUTHORITARIAN_RIGHT.resId  -> showThisIdeologyHover(
                     binding.imageAuthoRightHover
                 )
-                Ideologies.RADICAL_CAPITALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageRadicalCapHover)
-                Ideologies.CONSERVATISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageConsHover)
-                Ideologies.PROGRESSIVISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageProgHover)
+                Ideologies.RADICAL_CAPITALISM.resId  -> showThisIdeologyHover(binding.imageRadicalCapHover)
+                Ideologies.CONSERVATISM.resId  -> showThisIdeologyHover(binding.imageConsHover)
+                Ideologies.PROGRESSIVISM.resId  -> showThisIdeologyHover(binding.imageProgHover)
 
-                Ideologies.RIGHT_ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageRightAnarHover)
-                Ideologies.ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageAnarHover)
-                Ideologies.LIBERALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageLibHover)
-                Ideologies.LIBERTARIANISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageLibertarHover)
+                Ideologies.RIGHT_ANARCHY.resId  -> showThisIdeologyHover(binding.imageRightAnarHover)
+                Ideologies.ANARCHY.resId  -> showThisIdeologyHover(binding.imageAnarHover)
+                Ideologies.LIBERALISM.resId  -> showThisIdeologyHover(binding.imageLibHover)
+                Ideologies.LIBERTARIANISM.resId  -> showThisIdeologyHover(binding.imageLibertarHover)
 
-                Ideologies.LEFT_ANARCHY.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageLeftAnarHover)
-                Ideologies.LIBERTARIAN_SOCIALISM.titleRes.resString(this)  -> showThisIdeologyHover(binding.imageLibSoc)
+                Ideologies.LEFT_ANARCHY.resId  -> showThisIdeologyHover(binding.imageLeftAnarHover)
+                Ideologies.LIBERTARIAN_SOCIALISM.resId  -> showThisIdeologyHover(binding.imageLibSoc)
 
                 else -> showThisIdeologyHover(null)
             }
-        })
-        //Log.d(TAG, "Area is touched: x = $x, y = $y")
+        }
     }
 
     private fun showThisIdeologyHover(ideologyHover: ImageView?) {
-
         // If Ideology same, break
         if (oldIdeologyHover == ideologyHover) {
             return
@@ -231,11 +213,6 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
         oldIdeologyHover = ideologyHover
     }
 
-    private fun initLayoutFrameParams() {
-        layoutFrameParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)
-        oldLayoutFrameParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)
-    }
-
     private fun saveOldPointParams(event: MotionEvent) {
         oldPointExists = true
         oldLeftMargin = event.x.toInt() - diameterInPx
@@ -254,27 +231,26 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
                     100f,
                     animatedValue as Float
                 )
-                pointFrame?.removeAllViews()
-                pointFrame?.addView(pointView)
+                pointFrame.removeAllViews()
+                pointFrame.addView(pointView)
             }
         }.start()
     }
 
     private fun startMovePoint(event: MotionEvent) {
-        layoutFrameParams?.leftMargin = event.x.toInt() - diameterInPx
-        layoutFrameParams?.topMargin = event.y.toInt() - diameterInPx
-        layoutFrameParams?.rightMargin = containerWidth - event.x.toInt() - diameterInPx
-        layoutFrameParams?.bottomMargin = containerHeight - event.y.toInt() - diameterInPx
-        pointFrame?.layoutParams = layoutFrameParams
+        layoutFrameParams.leftMargin = event.x.toInt() - diameterInPx
+        layoutFrameParams.topMargin = event.y.toInt() - diameterInPx
+        layoutFrameParams.rightMargin = containerWidth - event.x.toInt() - diameterInPx
+        layoutFrameParams.bottomMargin = containerHeight - event.y.toInt() - diameterInPx
+        pointFrame.layoutParams = layoutFrameParams
     }
 
     private fun addOldPointFrame() {
-        oldPointFrame = ConstraintLayout(this)
-        oldLayoutFrameParams?.leftMargin = oldLeftMargin
-        oldLayoutFrameParams?.topMargin = oldTopMargin
-        oldLayoutFrameParams?.rightMargin = oldRightMargin
-        oldLayoutFrameParams?.bottomMargin = oldBottomMargin
-        oldPointFrame?.layoutParams = oldLayoutFrameParams
+        oldLayoutFrameParams.leftMargin = oldLeftMargin
+        oldLayoutFrameParams.topMargin = oldTopMargin
+        oldLayoutFrameParams.rightMargin = oldRightMargin
+        oldLayoutFrameParams.bottomMargin = oldBottomMargin
+        oldPointFrame.layoutParams = oldLayoutFrameParams
         binding.frame1.removeAllViews()
         binding.frame1.addView(oldPointFrame)
     }
@@ -289,19 +265,18 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
                     100f,
                     animatedValue as Float
                 )
-                oldPointFrame?.removeAllViews()
-                oldPointFrame?.addView(oldPointView)
+                oldPointFrame.removeAllViews()
+                oldPointFrame.addView(oldPointView)
             }
         }.start()
     }
 
     private fun addPointFrame(event: MotionEvent) {
-        pointFrame = ConstraintLayout(this)
-        layoutFrameParams?.leftMargin = event.x.toInt() - diameterInPx
-        layoutFrameParams?.topMargin = event.y.toInt() - diameterInPx
-        layoutFrameParams?.rightMargin = containerWidth - event.x.toInt() - diameterInPx
-        layoutFrameParams?.bottomMargin = containerHeight - event.y.toInt() - diameterInPx
-        pointFrame?.layoutParams = layoutFrameParams
+        layoutFrameParams.leftMargin = event.x.toInt() - diameterInPx
+        layoutFrameParams.topMargin = event.y.toInt() - diameterInPx
+        layoutFrameParams.rightMargin = containerWidth - event.x.toInt() - diameterInPx
+        layoutFrameParams.bottomMargin = containerHeight - event.y.toInt() - diameterInPx
+        pointFrame.layoutParams = layoutFrameParams
         binding.frame1.removeView(pointFrame)
         binding.frame1.addView(pointFrame)
     }
@@ -316,8 +291,8 @@ class ChooseViewActivity: BaseActivity(), View.OnClickListener, View.OnTouchList
                     100f,
                     animatedValue as Float
                 )
-                pointFrame?.removeAllViews()
-                pointFrame?.addView(pointView)
+                pointFrame.removeAllViews()
+                pointFrame.addView(pointView)
             }
         }.start()
     }

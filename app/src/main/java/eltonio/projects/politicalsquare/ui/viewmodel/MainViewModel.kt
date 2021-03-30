@@ -10,6 +10,7 @@ import eltonio.projects.politicalsquare.util.QuizOptions
 import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -18,23 +19,24 @@ class MainViewModel @Inject constructor(
     private val localRepo: LocalRepository,
     private val cloudRepo: CloudRepository
 ) : ViewModel(), LifecycleObserver {
-    var splashAppearedEvent = MutableLiveData<Boolean>()
-    var spinnerSelection = MutableLiveData<Int>()
-
     private lateinit var usersRef: DatabaseReference
     private var currentUser: FirebaseUser? = null
     private lateinit var userId: String
     private lateinit var lastSessionStarted: String
 
+    private var _splashAppearedEvent = MutableLiveData<Boolean>()
+    val splashAppearedEvent: LiveData<Boolean> = _splashAppearedEvent
+    private var _spinnerSelection = MutableLiveData<Int>()
+    val spinnerSelection: LiveData<Int> = _spinnerSelection
+
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        runBlocking {
             cloudRepo.setUserLangProperty(localRepo.getLang())
+            if (localRepo.getSplashAppeared() == false) _splashAppearedEvent.value = false
+            _spinnerSelection.value = if (localRepo.loadQuizOption() == QuizOptions.WORLD.id) 0 else 1
+            val test = localRepo.getSplashAppeared()
+            test
         }
-
-        if (localRepo.getSplashAppeared() == false) splashAppearedEvent.value = false
-
-        spinnerSelection.value = if (localRepo.loadQuizOption() == QuizOptions.WORLD.id) 0 else 1
-
         initUser()
     }
 
@@ -43,7 +45,7 @@ class MainViewModel @Inject constructor(
         currentUser = cloudRepo.firebaseUser
         lastSessionStarted = getDateTime()
 
-        viewModelScope.launch {
+        runBlocking {
             if (currentUser == null) {
                 withContext(Dispatchers.IO) {
                     cloudRepo.createAndSignInAnonymously()
@@ -66,8 +68,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun clickSpinnerItem(id: Int) {
-        viewModelScope.launch {
+    fun clickSpinnerItem(id: Int) = runBlocking {
             when (id) {
                 QuizOptions.WORLD.id -> {
                     localRepo.saveQuizOption(QuizOptions.WORLD.id)
@@ -79,16 +80,16 @@ class MainViewModel @Inject constructor(
                         localRepo.saveQuizOption(QuizOptions.UKRAINE.id) }
                 }
             }
-        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    private fun onResume() {
+    private fun onResume() = runBlocking {
         localRepo.setMainActivityIsInFront(true)
+        _spinnerSelection.value = if (localRepo.loadQuizOption() == QuizOptions.WORLD.id) 0 else 1
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    private fun onPause() {
+    private fun onPause() = runBlocking {
         localRepo.setMainActivityIsInFront(false)
     }
 

@@ -32,8 +32,6 @@ import com.google.common.truth.Truth.assertThat
 @LargeTest
 @HiltAndroidTest
 class CompleteUITest { // needs DB with Room.databaseBuilder
-    // TODO: Get rid of all  Thread.sleep(1000)
-
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
     @get:Rule
@@ -57,7 +55,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.button_start)).perform(click())
         onView(withId(R.id.button_compass_info)).perform(click())
         onView(withId(R.id.image_lib_hover)).check(matches(isDisplayed())).perform(click())
-        // TODO:  Unresolved reference: layout_collapsing_toolbar
         // FIXME:  Unresolved reference: layout_collapsing_toolbar
 //        onView(withId(R.id.layout_collapsing_toolbar))
 //            .perform(swipeUp())
@@ -131,12 +128,9 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
 
         onView(withId(R.id.button_compass_info_2)).perform(click())
 
-        Thread.sleep(1000)
-
         onView(isRoot()).perform(pressBack())
 
 
-        // TODO:  Issue with showing nav menu
         // FIXME:  Issue with showing nav menu
         // Check Result
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open))).perform(click())
@@ -144,8 +138,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.recycler_results_list))
             .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         onView(withId(R.id.button_compass_info_3)).perform(click())
-
-        Thread.sleep(1000)
 
         onView(isRoot()).perform(pressBack())
         onView(isRoot()).perform(pressBack())
@@ -155,7 +147,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.nav_main)).perform(click())
 //        onView(allOf(withId(android.R.id.button1), withText(appContext.getString(R.string.all_dialog_yes))))
 //            .perform(click())
-        Thread.sleep(1000)
     }
 
     @Test /** USE CASE 2. User starts another quiz and quits **/
@@ -181,7 +172,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(allOf(withId(android.R.id.button1), withText(context.getString(R.string.all_dialog_yes))))
             .perform(click())
 
-        Thread.sleep(1000)
     }
 
     @Test /** USE CASE 3. User reviews all menu **/
@@ -205,7 +195,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
 
         //
         launchActivity<MainActivity>()
-        // TODO: check drawer does not work
         // FIXME: check drawer does not work
 //        onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
 //            .perform(click())
@@ -226,7 +215,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.image_gov_hover))
             .perform(click())
 
-        // TODO: Unresolved reference: layout_appbar
         // FIXME: Unresolved reference: layout_appbar
 //        onView(withId(R.id.layout_appbar))
 //            .perform(swipeUp())
@@ -243,7 +231,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
 
         onView(isRoot()).perform(pressBack())
 
-        Thread.sleep(1000)
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
             .perform(click())
@@ -254,7 +241,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.button_start))
             .perform(click())
 
-        Thread.sleep(1000)
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
             .perform(click())
@@ -265,7 +251,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.button_start))
             .perform(click())
 
-        Thread.sleep(1000)
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
             .perform(click())
@@ -276,7 +261,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.button_start))
             .perform(click())
 
-        Thread.sleep(1000)
 
         onView(withId(R.id.image_lib_hover))
             .perform(click())
@@ -295,6 +279,5 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.scroll_1))
             .perform(swipeUp(), swipeDown())
 
-        Thread.sleep(1000)
     }
 }

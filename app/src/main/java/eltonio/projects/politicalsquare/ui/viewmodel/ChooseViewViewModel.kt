@@ -1,79 +1,52 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
-import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import eltonio.projects.politicalsquare.App
-import eltonio.projects.politicalsquare.repository.DBRepository
 import eltonio.projects.politicalsquare.repository.LocalRepository
-import eltonio.projects.politicalsquare.util.QuizOptions
-import eltonio.projects.politicalsquare.util.AppUtil
 import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
-import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyFromScore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyResIdFromScore
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class ChooseViewViewModel @Inject constructor(
-    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context,
+    @ApplicationContext private val context: Context,
     private val localRepo: LocalRepository,
-    private val dbRepo: DBRepository,
 ) : ViewModel() {
-    private var ideologyIsChosenEvent: MutableLiveData<Boolean> = MutableLiveData()
-    private var ideologyTitle: MutableLiveData<String> = MutableLiveData()
-    private var quizOptionId: MutableLiveData<Int> = MutableLiveData()
-    private var horStartScore: MutableLiveData<Int> = MutableLiveData()
-    private var verStartScore: MutableLiveData<Int> = MutableLiveData()
+    // TODO: Inner LiveData, why
+    private var _ideologyIsChosenEvent: MutableLiveData<Boolean> = MutableLiveData()
+    private var _ideologyResId: MutableLiveData<Int> = MutableLiveData()
+
+    private var _quizOptionId: MutableLiveData<Int> = MutableLiveData()
+    val quizOptionId: LiveData<Int> = _quizOptionId
+    private var _horStartScore: MutableLiveData<Int> = MutableLiveData()
+    val horStartScore: LiveData<Int> = _horStartScore
+    private var _verStartScore: MutableLiveData<Int> = MutableLiveData()
+    val verStartScore: LiveData<Int> = _verStartScore
 
     private var x = 0f
     private var y = 0f
-//    private var horStartScore = 0
-//    private var verStartScore = 0
-
-    init {
-//        val quizResultDao = AppDatabase.getDatabase(application).quizResultDao()
-//        val questionDao = AppDatabase.getDatabase(application).questionDao()
-
-        when(localRepo.loadQuizOption()) {
-            QuizOptions.UKRAINE.id -> getQuestions(QuizOptions.UKRAINE.id)
-            QuizOptions.WORLD.id -> getQuestions(QuizOptions.WORLD.id)
-        }
-    }
 
     /** METHODS */
-    private fun getQuestions(quizId: Int) {
-        quizOptionId.value = quizId
-        viewModelScope.launch (Dispatchers.IO) {
-            App.appQuestionsWithAnswers = dbRepo.getQuestionsWithAnswers(quizId)
-            Collections.shuffle(App.appQuestionsWithAnswers)
+    fun loadQuizOption() = runBlocking {
+        _quizOptionId.value = localRepo.loadQuizOption()
+    }
+
+
+
+    fun setQuizIsActive(isActive: Boolean) = runBlocking {
+            localRepo.setQuizIsActive(isActive)
         }
-    }
 
-    fun getQuizId(): LiveData<Int> {
-        return quizOptionId
-    }
-
-    fun getHorStartScore(): LiveData<Int> {
-        return horStartScore
-    }
-
-    fun getVerStartScore(): LiveData<Int> {
-        return verStartScore
-    }
-
-    fun setQuizIsActive(isActive: Boolean) {
-        localRepo.setQuizIsActive(isActive)
-    }
-
-    fun saveChosenView(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideologyId: String, quizId: Int) {
+    fun saveChosenIdeology(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideologyStringId: String, quizId: Int) {
         val startedAt = getDateTime()
-        localRepo.saveChosenView(x, y, horStartScore, verStartScore, ideologyId, quizId, startedAt) // TODO: put an object instead of attributes
+
+        runBlocking {
+            localRepo.saveChosenIdeology(x, y, horStartScore, verStartScore, ideologyStringId, quizId, startedAt, -1, -1)
+        }
     }
 
     fun getXandYForHover(inputX: Float, inputY: Float, endX: Int, endY: Int) {
@@ -112,20 +85,18 @@ class ChooseViewViewModel @Inject constructor(
         }
     }
 
-    fun getIdeologyTitle(): LiveData<String> {
+    fun getIdeologyResId(): LiveData<Int> {
         val step = convertDpToPx(context, 4f)
-        horStartScore.value =
-            (x / step - 40).toInt()
-        verStartScore.value =
-            (y / step - 40).toInt()
-        ideologyTitle.value = getIdeologyFromScore(context, horStartScore.value!!, verStartScore.value!!)
-        return ideologyTitle
+        _horStartScore.value = (x / step - 40).toInt()
+        _verStartScore.value = (y / step - 40).toInt()
+        _ideologyResId.value = getIdeologyResIdFromScore(_horStartScore.value!!, _verStartScore.value!!)
+        return _ideologyResId
     }
 
     fun setIdeologyIsChosenEvent(isChosen: Boolean) {
-        ideologyIsChosenEvent.value = isChosen
+        _ideologyIsChosenEvent.value = isChosen
     }
     fun getIdeologyIsChosenEvent(): LiveData<Boolean> {
-        return ideologyIsChosenEvent
+        return _ideologyIsChosenEvent
     }
 }

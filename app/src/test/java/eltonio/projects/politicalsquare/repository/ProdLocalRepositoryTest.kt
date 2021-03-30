@@ -3,16 +3,22 @@ package eltonio.projects.politicalsquare.repository
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import eltonio.projects.politicalsquare.util.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
 import org.junit.Before
+import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+
+@ExperimentalCoroutinesApi
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -20,6 +26,9 @@ class ProdLocalRepositoryTest {
     private lateinit var context: Context
     private lateinit var testSharedPref: SharedPreferences
     private lateinit var localRepo: LocalRepository
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setup() {
@@ -30,7 +39,7 @@ class ProdLocalRepositoryTest {
     }
 
     @Test
-    fun `put data for ResultActivity to SharedPref and get it`() {
+    fun `put data for ResultActivity to SharedPref and get it`() = runBlockingTest {
         //given - setup
         testSharedPref.edit().apply{
             putInt(PREF_QUIZ_OPTION, 1)
@@ -43,8 +52,11 @@ class ProdLocalRepositoryTest {
             putInt(PREF_HORIZONTAL_SCORE, 1)
             putInt(PREF_VERTICAL_SCORE, 1)
         }.apply()
+
+
         //then - verify
         assertThat(localRepo.loadQuizOption()).isEqualTo(1)
+        assertThat(localRepo.loadChosenView()).isEqualTo()
         assertThat(localRepo.getChosenViewX()).isEqualTo(2.0f)
         assertThat(localRepo.getChosenViewY()).isEqualTo(2.0f)
         assertThat(localRepo.getHorStartScore()).isEqualTo(1)

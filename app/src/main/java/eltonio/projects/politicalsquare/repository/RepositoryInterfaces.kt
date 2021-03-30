@@ -8,45 +8,39 @@ import eltonio.projects.politicalsquare.model.*
 
 
 interface LocalRepository {
-    fun setLang(context: Context, lang: String)
-    fun getLang(): String
-    fun loadQuizOption(): Int
-    fun setQuizIsActive(active: Boolean)
-    fun saveChosenView(
+    suspend fun setLang(context: Context, lang: String)
+    suspend fun getLang(): String
+    suspend fun loadQuizOption(): Int
+    suspend fun setQuizIsActive(active: Boolean)
+    suspend fun getIntroOpened(): Boolean
+    suspend fun setIntroOpened()
+    fun getViewPagerScreenList(): MutableList<ScreenItem>?
+    suspend fun setSplashAnimationTime(time: Long)
+    suspend fun getSplashAppeared(): Boolean
+    suspend fun setSessionStarted()
+    suspend fun getSessionStarted(): Boolean
+    suspend fun saveQuizOption(id: Int)
+    suspend fun setMainActivityIsInFront(b: Boolean)
+    suspend fun getQuizIsActive(): Boolean
+    suspend fun getSplashAnimationTime(): Long
+    suspend fun getMainActivityIsInFront(): Boolean
+    suspend fun setSplashIsAppeared()
+    suspend fun setSplashIsNOTAppeared()
+    fun clearPref()
+    suspend fun loadChosenView(): ChosenIdeologyData?
+    suspend fun saveChosenIdeology(
         x: Float,
         y: Float,
         horStartScore: Int,
         verStartScore: Int,
-        ideologyId: String,
+        ideology: String,
         quizId: Int,
-        startedAt: String
+        startedAt: String,
+        horEndScore: Int,
+        verEndScore: Int
     )
-
-    fun getIntroOpened(): Boolean
-    fun setIntroOpened()
-    fun getViewPagerScreenList(): MutableList<ScreenItem>?
-    fun setSplashAnimationTime(time: Long)
-    fun getSplashAppeared(): Boolean
-    fun setSessionStarted()
-    fun getSessionStarted(): Boolean
-    fun saveQuizOption(id: Int)
-    fun setMainActivityIsInFront(b: Boolean)
-    fun setHorScore(toInt: Int)
-    fun setVerScore(toInt: Int)
-    fun getChosenViewX(): Float
-    fun getChosenViewY(): Float
-    fun getHorStartScore(): Int
-    fun getVerStartScore(): Int
-    fun getChosenIdeology(): String
-    fun getStartedAt(): String
-    fun getHorScore(): Int
-    fun getVerScore(): Int
-    fun getQuizIsActive(): Boolean
-    fun getSplashAnimationTime(): Long
-    fun getMainActivityIsInFront(): Boolean
-    fun setSplashIsAppeared()
-    fun clearPref()
 }
+
 
 interface DBRepository
 {

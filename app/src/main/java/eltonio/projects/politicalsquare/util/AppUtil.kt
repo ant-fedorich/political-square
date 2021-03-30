@@ -4,6 +4,9 @@ import android.app.Activity
 //import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Point
+import android.view.View
+import android.view.animation.Animation
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -14,13 +17,12 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.google.android.material.tabs.TabLayout
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.repository.ProdLocalRepository
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 
 object AppUtil {
@@ -76,8 +78,10 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
         val dialogTitle = context.getString(R.string.all_dialog_do_you_want_to_end)
         setTitle(dialogTitle)
         setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.all_dialog_yes)) { _, _ ->
-            ProdLocalRepository(context).setQuizIsActive(false)
-//            quizIsActive = false // TODO: V - livedata? or get from Repo directly?
+            runBlocking {
+                ProdLocalRepository(context).setQuizIsActive(false)
+            }
+
             onOkBlock()
         }
         setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.all_dialog_no)) { _, _ ->
@@ -87,10 +91,8 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
     }
 }
 
-    // TODO: Instrumented unit test with context
     fun convertDpToPx(context: Context, dp: Float): Float = dp * context.resources.displayMetrics.density
 
-    // TODO: Instr unit test with context
     fun getScreenResolution(context: Context): Point {
         context as Activity
         val display = context.windowManager.defaultDisplay
@@ -104,51 +106,100 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
         return when {
             // border
             (horScore in -40..-20 && verScore in -40..-35) || (horScore in -40..-35 && verScore in -35..-20) ->
-                Ideologies.AUTHORITARIAN_LEFT.titleRes.resString(context)
+                Ideologies.AUTHORITARIAN_LEFT.resId.resString(context)
 
             horScore in -20..20 && verScore in -40..-35 ->
-                Ideologies.RADICAL_NATIONALISM.titleRes.resString(context)
+                Ideologies.RADICAL_NATIONALISM.resId.resString(context)
 
             (horScore in 20..40 && verScore in -40..-35) || (horScore in 35..40 && verScore in -35..-20) ->
-                Ideologies.AUTHORITARIAN_RIGHT.titleRes.resString(context)
+                Ideologies.AUTHORITARIAN_RIGHT.resId.resString(context)
 
             horScore in 35..40 && verScore in -20..20 ->
-                Ideologies.RADICAL_CAPITALISM.titleRes.resString(context)
+                Ideologies.RADICAL_CAPITALISM.resId.resString(context)
 
             (horScore in 35..40 && verScore in 20..40) || (horScore in 20..40 && verScore in 35..40) ->
-                Ideologies.RIGHT_ANARCHY.titleRes.resString(context)
+                Ideologies.RIGHT_ANARCHY.resId.resString(context)
 
             horScore in -20..20 && verScore in 35..40 ->
-                Ideologies.ANARCHY.titleRes.resString(context)
+                Ideologies.ANARCHY.resId.resString(context)
 
             (horScore in -40..-20 && verScore in 35..40) || (horScore in -40..-35 && verScore in 20..40) ->
-                Ideologies.LEFT_ANARCHY.titleRes.resString(context)
+                Ideologies.LEFT_ANARCHY.resId.resString(context)
 
             horScore in -40..-35 && verScore in -20..20 ->
-                Ideologies.SOCIALISM.titleRes.resString(context)
+                Ideologies.SOCIALISM.resId.resString(context)
 
             // main
-            horScore in -35..0 && verScore in -35..-20 -> Ideologies.POWER_CENTRISM.titleRes.resString(context)
-            horScore in -35..0 && verScore in -20..0 -> Ideologies.SOCIAL_DEMOCRACY.titleRes.resString(context)
+            horScore in -35..0 && verScore in -35..-20 -> Ideologies.POWER_CENTRISM.resId.resString(context)
+            horScore in -35..0 && verScore in -20..0 -> Ideologies.SOCIAL_DEMOCRACY.resId.resString(context)
 
-            horScore in 0..35 && verScore in -35..-20 -> Ideologies.CONSERVATISM.titleRes.resString(context)
-            horScore in 0..35 && verScore in -20..0 -> Ideologies.PROGRESSIVISM.titleRes.resString(context)
+            horScore in 0..35 && verScore in -35..-20 -> Ideologies.CONSERVATISM.resId.resString(context)
+            horScore in 0..35 && verScore in -20..0 -> Ideologies.PROGRESSIVISM.resId.resString(context)
 
-            horScore in 0..35 && verScore in 20..35 -> Ideologies.LIBERTARIANISM.titleRes.resString(context)
-            horScore in -35..0 && verScore in 20..35 -> Ideologies.LIBERTARIAN_SOCIALISM.titleRes.resString(context)
-            horScore in -35..35 && verScore in 0..20 -> Ideologies.LIBERALISM.titleRes.resString(context)
+            horScore in 0..35 && verScore in 20..35 -> Ideologies.LIBERTARIANISM.resId.resString(context)
+            horScore in -35..0 && verScore in 20..35 -> Ideologies.LIBERTARIAN_SOCIALISM.resId.resString(context)
+            horScore in -35..35 && verScore in 0..20 -> Ideologies.LIBERALISM.resId.resString(context)
             else -> "none"
         }
     }
 
-    // TODO: DO Local unit test
-    fun getIdeologyStringId(context: Context, ideologyName: String): String {
+    fun getIdeologyResIdFromScore(horScore: Int, verScore: Int): Int {
+        return when {
+            // border
+            (horScore in -40..-20 && verScore in -40..-35) || (horScore in -40..-35 && verScore in -35..-20) ->
+                Ideologies.AUTHORITARIAN_LEFT.resId
+
+            horScore in -20..20 && verScore in -40..-35 ->
+                Ideologies.RADICAL_NATIONALISM.resId
+
+            (horScore in 20..40 && verScore in -40..-35) || (horScore in 35..40 && verScore in -35..-20) ->
+                Ideologies.AUTHORITARIAN_RIGHT.resId
+
+            horScore in 35..40 && verScore in -20..20 ->
+                Ideologies.RADICAL_CAPITALISM.resId
+
+            (horScore in 35..40 && verScore in 20..40) || (horScore in 20..40 && verScore in 35..40) ->
+                Ideologies.RIGHT_ANARCHY.resId
+
+            horScore in -20..20 && verScore in 35..40 ->
+                Ideologies.ANARCHY.resId
+
+            (horScore in -40..-20 && verScore in 35..40) || (horScore in -40..-35 && verScore in 20..40) ->
+                Ideologies.LEFT_ANARCHY.resId
+
+            horScore in -40..-35 && verScore in -20..20 ->
+                Ideologies.SOCIALISM.resId
+
+            // main
+            horScore in -35..0 && verScore in -35..-20 -> Ideologies.POWER_CENTRISM.resId
+            horScore in -35..0 && verScore in -20..0 -> Ideologies.SOCIAL_DEMOCRACY.resId
+
+            horScore in 0..35 && verScore in -35..-20 -> Ideologies.CONSERVATISM.resId
+            horScore in 0..35 && verScore in -20..0 -> Ideologies.PROGRESSIVISM.resId
+
+            horScore in 0..35 && verScore in 20..35 -> Ideologies.LIBERTARIANISM.resId
+            horScore in -35..0 && verScore in 20..35 -> Ideologies.LIBERTARIAN_SOCIALISM.resId
+            horScore in -35..35 && verScore in 0..20 -> Ideologies.LIBERALISM.resId
+            else -> -1
+        }
+    }
+
+    fun getIdeologyStringIdByResId(ideologyResId: Int): String {
         var stringId = "none"
 
         for (ideo in Ideologies.values()) {
-            if (ideologyName == ideo.titleRes.resString(context)) stringId = ideo.stringId
+            if (ideologyResId == ideo.resId) stringId = ideo.stringId
         }
         return stringId
+    }
+
+    fun getIdeologyResIdByStringId(ideologyStringId: String): Int {
+        var resId = 0
+
+        for (ideo in Ideologies.values()) {
+            if (ideologyStringId == ideo.stringId) resId = ideo.resId
+        }
+        return resId
     }
 
     fun playGif(context: Context, screenImage: Int, containerImageView: ImageView) {
@@ -178,22 +229,34 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
             .into(containerImageView)
     }
 
-
-    // TODO: Instr unit test with context
-//    fun refreshAllСatalogs(context: Context) {
-//        Ideologies.refreshAll(context)
-//        QuizOptions.refreshAll(context)
-//    }
-
     fun Int.resString(context: Context): String {
         return context.getString(this)
     }
 
-    object EmptyTransitionListener : MotionLayout.TransitionListener {
+    object DefaultTransitionListener : MotionLayout.TransitionListener {
         override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {}
         override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
         override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {}
         override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {}
     }
+
+    val defaultOnItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {}
+        override fun onNothingSelected(p0: AdapterView<*>?) {}
+    }
+
+    val defaultOnTabSelectedListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab?) {}
+        override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        override fun onTabReselected(tab: TabLayout.Tab?) {}
+    }
+
+    val defaultAnimationListener = object : Animation.AnimationListener {
+        override fun onAnimationStart(p0: Animation?) {}
+        override fun onAnimationEnd(p0: Animation?) {}
+        override fun onAnimationRepeat(p0: Animation?) {}
+    }
+
+
 
 }

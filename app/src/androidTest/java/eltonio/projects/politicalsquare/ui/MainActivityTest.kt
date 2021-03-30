@@ -74,7 +74,6 @@ class MainActivityTest { // needs DB with Room.databaseBuilder
         onView(allOf(withId(android.R.id.button1), withText(context.getString(R.string.all_dialog_yes))))
             .perform(click())
         onView(withId(R.id.layout_main)).check(matches(isDisplayed()))
-        Thread.sleep(2000)
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open))).perform(click())
         pressBack()

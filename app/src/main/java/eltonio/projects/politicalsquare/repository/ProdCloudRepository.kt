@@ -18,17 +18,15 @@ import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 
-// TODO: 03/24/2021 Get rif open, change to Mockk
-open
 class ProdCloudRepository @Inject constructor(
     private val analytics: FirebaseAnalytics,
     private var firebaseAuth: FirebaseAuth,
     private val firebaseDatabase: FirebaseDatabase
 ): CloudRepository {
-
     override var usersRef = firebaseDatabase.getReference("Users")
     override var firebaseUser: FirebaseUser? = null  // LiveData
     private var userLoggedIn = false // LiveData
@@ -51,7 +49,7 @@ class ProdCloudRepository @Inject constructor(
                 val lastSessionStarted = getDateTime()
 
                 if (userId != null) {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    runBlocking {
                         setUserCreationDate(userId, lastSessionStarted)
                         updateUser(userId, lastSessionStarted)
                     }
@@ -110,6 +108,6 @@ class ProdCloudRepository @Inject constructor(
         }
         analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
-    // TODO: Crashlytics disabled
+    // Crashlytics disabled
     // fun logCrash(message: String) = App.crashlytics.log(message)
 }
