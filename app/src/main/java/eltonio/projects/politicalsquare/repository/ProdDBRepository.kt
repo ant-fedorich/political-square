@@ -1,9 +1,10 @@
 package eltonio.projects.politicalsquare.repository
 
 import androidx.lifecycle.LiveData
-import eltonio.projects.politicalsquare.model.Question
-import eltonio.projects.politicalsquare.model.QuestionWithAnswers
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.Question
+import eltonio.projects.politicalsquare.repository.entity.QuestionWithAnswers
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProdDBRepository @Inject constructor(
@@ -18,12 +19,8 @@ class ProdDBRepository @Inject constructor(
         quizResultDao.deleteQuizResult(quizResult)
     }
 
-    override fun getQuizResults(): LiveData<List<QuizResult>> {
+    override fun getQuizResults(): Flow<List<QuizResult>> {
         return quizResultDao.getQuizResults()
-    }
-
-    suspend fun getAllQuestions(): List<Question> {
-        return questionDao.getAllQuestions()
     }
 
     override suspend fun getQuestionsWithAnswers(quizId: Int): List<QuestionWithAnswers> {

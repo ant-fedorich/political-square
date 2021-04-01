@@ -1,18 +1,18 @@
 package eltonio.projects.politicalsquare.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.getOrAwait
-import eltonio.projects.politicalsquare.model.Quiz
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.Quiz
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
 @ExperimentalCoroutinesApi
@@ -31,6 +31,7 @@ class QuizResultDaoWithHiltTest {
     fun setup() {
         hiltRule.inject()
     }
+
 
     @Test
     fun addQuizResult_OneItem_returnsDBHasThisItem() = runBlockingTest{
@@ -51,7 +52,7 @@ class QuizResultDaoWithHiltTest {
             avgAnswerTime = 10.0)
         // action
         quizResultDao.addQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults().getOrAwait()
+        val allQuizResults = quizResultDao.getQuizResults().asLiveData().getOrAwait()
         // verify
         assertThat(allQuizResults).contains(quizResult)
     }
@@ -77,7 +78,7 @@ class QuizResultDaoWithHiltTest {
         // action
         quizResultDao.addQuizResult(quizResult)
         quizResultDao.deleteQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults().getOrAwait()
+        val allQuizResults = quizResultDao.getQuizResults().asLiveData().getOrAwait()
 
         // verify
         assertThat(allQuizResults).doesNotContain(quizItem)

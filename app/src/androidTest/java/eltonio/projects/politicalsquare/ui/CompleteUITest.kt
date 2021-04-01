@@ -2,6 +2,7 @@ package eltonio.projects.politicalsquare.ui
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onData
@@ -16,8 +17,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.getOrAwait
-import eltonio.projects.politicalsquare.model.Quiz
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import eltonio.projects.politicalsquare.repository.AppDatabase
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.Matchers.*
@@ -32,8 +32,6 @@ import com.google.common.truth.Truth.assertThat
 @LargeTest
 @HiltAndroidTest
 class CompleteUITest { // needs DB with Room.databaseBuilder
-    // TODO: Get rid of all  Thread.sleep(1000)
-
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
     @get:Rule
@@ -54,15 +52,11 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
     fun useCase_userPassesTheQuiz() {
         launchActivity<MainActivity>()
 
+        onView(withId(R.id.spinner_quiz_options)).perform(click())
+        onData(anything()).atPosition(1).perform(click())
         onView(withId(R.id.button_start)).perform(click())
         onView(withId(R.id.button_compass_info)).perform(click())
         onView(withId(R.id.image_lib_hover)).check(matches(isDisplayed())).perform(click())
-        // TODO:  Unresolved reference: layout_collapsing_toolbar
-        // FIXME:  Unresolved reference: layout_collapsing_toolbar
-//        onView(withId(R.id.layout_collapsing_toolbar))
-//            .perform(swipeUp())
-//        onView(withId(R.id.toolbar_collapsing))
-//            .perform(swipeDown(), swipeDown())
 
         onView(isRoot()).perform(pressBack())
         onView(isRoot()).perform(pressBack())
@@ -113,31 +107,12 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.radio_answer_4)).perform(click())
         onView(withId(R.id.radio_answer_5)).perform(click())
         onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_4)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
         onView(withId(R.id.radio_answer_5)).perform(click())
 
         onView(withId(R.id.button_compass_info_2)).perform(click())
 
-        Thread.sleep(1000)
-
         onView(isRoot()).perform(pressBack())
 
-
-        // TODO:  Issue with showing nav menu
-        // FIXME:  Issue with showing nav menu
         // Check Result
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open))).perform(click())
         onView(withId(R.id.nav_saved)).perform(click())
@@ -145,18 +120,14 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
             .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         onView(withId(R.id.button_compass_info_3)).perform(click())
 
-        Thread.sleep(1000)
-
         onView(isRoot()).perform(pressBack())
         onView(isRoot()).perform(pressBack())
         onView(isRoot()).perform(pressBack())
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open))).perform(click())
         onView(withId(R.id.nav_main)).perform(click())
-//        onView(allOf(withId(android.R.id.button1), withText(appContext.getString(R.string.all_dialog_yes))))
-//            .perform(click())
-        Thread.sleep(1000)
     }
+
 
     @Test /** USE CASE 2. User starts another quiz and quits **/
     fun useCase_userStartsAnotherQuizAndQuits() {
@@ -181,8 +152,8 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(allOf(withId(android.R.id.button1), withText(context.getString(R.string.all_dialog_yes))))
             .perform(click())
 
-        Thread.sleep(1000)
     }
+
 
     @Test /** USE CASE 3. User reviews all menu **/
     fun useCase_userReviewsAllMenu () = runBlockingTest {
@@ -198,18 +169,13 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
             duration = 100,
             avgAnswerTime = 10.0)
         database.quizResultDao().addQuizResult(quizResult)
-        val resultFromDB = database.quizResultDao().getQuizResults().getOrAwait()
+        val resultFromDB = database.quizResultDao().getQuizResults().asLiveData().getOrAwait()
 
         //verify
         assertThat(resultFromDB).isNotEmpty()
 
         //
         launchActivity<MainActivity>()
-        // TODO: check drawer does not work
-        // FIXME: check drawer does not work
-//        onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
-//            .perform(click())
-//        onView(withId(R.id.nav_main)).perform(click())
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
             .perform(click())
@@ -226,11 +192,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.image_gov_hover))
             .perform(click())
 
-        // TODO: Unresolved reference: layout_appbar
-        // FIXME: Unresolved reference: layout_appbar
-//        onView(withId(R.id.layout_appbar))
-//            .perform(swipeUp())
-
         onView(isRoot()).perform(pressBack())
         onView(isRoot()).perform(pressBack())
 
@@ -243,7 +204,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
 
         onView(isRoot()).perform(pressBack())
 
-        Thread.sleep(1000)
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
             .perform(click())
@@ -254,7 +214,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.button_start))
             .perform(click())
 
-        Thread.sleep(1000)
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
             .perform(click())
@@ -265,7 +224,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.button_start))
             .perform(click())
 
-        Thread.sleep(1000)
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
             .perform(click())
@@ -276,7 +234,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.button_start))
             .perform(click())
 
-        Thread.sleep(1000)
 
         onView(withId(R.id.image_lib_hover))
             .perform(click())
@@ -295,6 +252,5 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.scroll_1))
             .perform(swipeUp(), swipeDown())
 
-        Thread.sleep(1000)
     }
 }

@@ -1,6 +1,7 @@
 package eltonio.projects.politicalsquare.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeLeft
@@ -13,12 +14,11 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.adapter.QuizRecycleAdapter
 import eltonio.projects.politicalsquare.getOrAwait
-import eltonio.projects.politicalsquare.model.Quiz
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.Quiz
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import eltonio.projects.politicalsquare.repository.AppDatabase
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
@@ -44,7 +44,7 @@ class SavedResultsActivityTest {
     @Test
     fun showNotEmptySavedResultList_swipeToDelete_returnsItemDeletedFromDB() = runBlockingTest {
         // given - setup
-        val startResultFromDB = database.quizResultDao().getQuizResults().getOrAwait()
+        val startResultFromDB = database.quizResultDao().getQuizResults().asLiveData().getOrAwait()
 
         val quizItem = Quiz(1, "NewQuiz", "Developer", "Test quiz")
         database.quizDaoForTesting().addQuiz(quizItem)
@@ -62,7 +62,7 @@ class SavedResultsActivityTest {
             avgAnswerTime = 10.0)
 
         database.quizResultDao().addQuizResult(quizResult)
-        val resultFromDB = database.quizResultDao().getQuizResults().getOrAwait()
+        val resultFromDB = database.quizResultDao().getQuizResults().asLiveData().getOrAwait()
 
         val scenario = launchActivity<SavedResultsActivity>()
         var resultFromActivity = listOf<QuizResult>()
@@ -75,14 +75,14 @@ class SavedResultsActivityTest {
         onView(withId(R.id.recycler_results_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<QuizRecycleAdapter.QuizRecycleViewHolder>(0, swipeLeft()))
 
-        val resultAfterDeleting = database.quizResultDao().getQuizResults().getOrAwait()
+        val resultAfterDeleting = database.quizResultDao().getQuizResults().asLiveData().getOrAwait()
 
         // then - verify
+
         assertThat(startResultFromDB).isEmpty()
         assertThat(resultFromDB).isNotEmpty()
         assertThat(resultFromActivity.size).isEqualTo(resultFromDB.size)
         assertThat(resultAfterDeleting).isEmpty()
 
-        Thread.sleep(1000)
     }
 }

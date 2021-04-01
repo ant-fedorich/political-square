@@ -1,21 +1,22 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.util.QuizOptions
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
+import eltonio.projects.politicalsquare.model.ChosenIdeologyData
 import eltonio.projects.politicalsquare.repository.CloudRepository
 import eltonio.projects.politicalsquare.repository.DBRepository
 import eltonio.projects.politicalsquare.repository.LocalRepository
-import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewX
-import eltonio.projects.politicalsquare.ui.ResultActivity.Companion.chosenViewY
-import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyFromScore
-import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyStringId
-import kotlinx.coroutines.Dispatchers
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyStringIdByResId
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyResIdFromScore
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -23,18 +24,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResultViewModel @Inject constructor(
-    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context,
+    @ApplicationContext private val context: Context,
     private var localRepo: LocalRepository,
     private var dbRepo: DBRepository,
     private var cloudRepo: CloudRepository
 ) : ViewModel() {
-    private var chosenIdeologyLiveData: MutableLiveData<String>
-    private var resultIdeologyLiveData: MutableLiveData<String>
-    private var compassX: MutableLiveData<Int>
-    private var compassY: MutableLiveData<Int>
 
-    private var chosenIdeology = ""
-    private var resultIdeology = ""
     private var startedAt = ""
     private var endedAt = ""
     private var duration = 0
@@ -43,69 +38,78 @@ class ResultViewModel @Inject constructor(
     private var userId = ""
     private var quizId = -1
 
-    var verScore: Int = 0
-    var horScore: Int = 0
-    var horStartScore = 0
-    var verStartScore = 0
+    private var horStartScore = 0
+    private var verStartScore = 0
+    private var verEndScore = 0
+    private var horEndScore = 0
 
     private var ideologyStringId: String = ""
+    private var chosenIdeology: ChosenIdeologyData? = null
 
+    private var _chosenIdeologyStringId = MutableLiveData<String>()
+    val chosenIdeologyStringId: LiveData<String> = _chosenIdeologyStringId
+
+    private var _resultIdeologyResId = MutableLiveData<Int>()
+    val resultIdeologyResId: LiveData<Int> = _resultIdeologyResId
+
+    private var _chosenViewX = MutableLiveData<Float>()
+    val chosenViewX: LiveData<Float> = _chosenViewX
+
+    private var _chosenViewY = MutableLiveData<Float>()
+    val chosenViewY: LiveData<Float> = _chosenViewY
+
+    private var _compassX = MutableLiveData<Int>()
+    val compassX: LiveData<Int> = _compassX
+
+    private var _compassY = MutableLiveData<Int>()
+    val compassY: LiveData<Int> = _compassY
+
+    private var _allDataCollectedState = MutableLiveData<Boolean>()
+    val allDataCollectedState: LiveData<Boolean> = _allDataCollectedState
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             cloudRepo.logQuizCompleteEvent()
+            val jobResult = collectAllResultData()
+            _allDataCollectedState.value = jobResult.await()
+            getIdeologyData()
+            getTimeData()
+            addQuizResultToRepository()
         }
 
-        // LiveData
-//        chosenIdeology = localRepo.getChosenIdeology()
-        chosenIdeologyLiveData = MutableLiveData()
-        resultIdeologyLiveData = MutableLiveData()
-
-        collectAllResultData()
-        getIdeologyData()
-        getTimeData()
-        addQuizResultToRepository()
-
-        compassX = MutableLiveData(horScore.plus(40))
-        compassY = MutableLiveData(verScore.plus(40))
-        chosenIdeologyLiveData.value = chosenIdeology
     }
 
-    fun getChosenIdeology(): LiveData<String> {
-        return chosenIdeologyLiveData
-    }
+    private fun collectAllResultData() = viewModelScope.async (IO) {
+        chosenIdeology = localRepo.loadChosenIdeologyData()?.also {
+            quizId = it.chosenQuizId
 
-    fun getResultIdeology(): LiveData<String> {
-        return resultIdeologyLiveData
-    }
-
-    private fun collectAllResultData() {
-        quizId = localRepo.loadQuizOption()
-
-        chosenViewX = localRepo.getChosenViewX()
-        chosenViewY = localRepo.getChosenViewY()
-        horStartScore = localRepo.getHorStartScore()
-        verStartScore = localRepo.getVerStartScore()
-        chosenIdeology = localRepo.getChosenIdeology()
-        startedAt = localRepo.getStartedAt()
-
-        horScore = localRepo.getHorScore()
-        verScore = localRepo.getVerScore()
-
+            horStartScore = it.horStartScore
+            verStartScore = it.verStartScore
+            horEndScore = it.horEndScore
+            verEndScore = it.verEndScore
+            startedAt = it.startedAt
+            withContext(Main) {
+                _chosenIdeologyStringId.value = it.chosenIdeologyStringId
+                _chosenViewX.value = it.chosenViewX
+                _chosenViewY.value = it.chosenViewY
+                _compassX.value = it.horEndScore.plus(40)
+                _compassY.value = it.verEndScore.plus(40)
+            }
+        }
         userId = cloudRepo.firebaseUser?.uid.toString()
+        true
     }
 
     private fun getIdeologyData() {
-        if (horScore != null && verScore != null) {
-            resultIdeology = getIdeologyFromScore(context, horScore, verScore)
-            resultIdeologyLiveData.value = resultIdeology
+        chosenIdeology?.let {
+            _resultIdeologyResId.value = getIdeologyResIdFromScore(it.horEndScore, it.verEndScore)
         }
-        ideologyStringId = getIdeologyStringId(context, resultIdeology)
+
+        ideologyStringId = getIdeologyStringIdByResId(_resultIdeologyResId.value!!)
     }
 
-    // TODO: Do Local Unit test
     private fun getTimeData() {
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
         val endDate = Date()
         val startedAtParsed = formatter.parse(startedAt)
         val diffInMillies = endDate.time - startedAtParsed.time
@@ -119,38 +123,26 @@ class ResultViewModel @Inject constructor(
                 duration/ QuizOptions.UKRAINE.quesAmount.toDouble()
     }
 
-    private fun addQuizResultToRepository() {
+    private fun addQuizResultToRepository() = viewModelScope.launch(IO) {
         val quizResult = QuizResult(
             id = 0, //id is autoincrement
             quizId = quizId,
             ideologyStringId = ideologyStringId,
             horStartScore = horStartScore,
             verStartScore = verStartScore,
-            horResultScore = horScore,
-            verResultScore = verScore,
+            horResultScore = horEndScore,
+            verResultScore = verEndScore,
             startedAt = startedAt,
             endedAt = endedAt,
             duration = duration,
             avgAnswerTime = avgAnswerTime
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
             dbRepo.addQuizResult(quizResult)
             cloudRepo.addQuizResult(userId, quizResult)
-        }
     }
 
-    fun getCompassX(): LiveData<Int> {
-        return compassX
-    }
-
-    fun getCompassY(): LiveData<Int> {
-        return compassY
-    }
-
-    fun onCompassInfoClick() {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun onCompassInfoClick() = viewModelScope.launch {
             cloudRepo.logDetailedInfoEvent()
-        }
     }
 }

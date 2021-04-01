@@ -7,76 +7,100 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.*
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.databinding.ActivityResultBinding
 import eltonio.projects.politicalsquare.ui.viewmodel.ResultViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyResIdByStringId
 import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
+import eltonio.projects.politicalsquare.util.AppUtil.resString
 import eltonio.projects.politicalsquare.util.AppUtil.showEndQuizDialogLambda
 import eltonio.projects.politicalsquare.views.ResultPointView
 
-
 @AndroidEntryPoint
-class ResultActivity : BaseActivity(), View.OnClickListener {
+class ResultActivity : BaseActivity() {
     private val viewmodel: ResultViewModel by viewModels()
     private val binding: ActivityResultBinding by lazy { ActivityResultBinding.inflate(layoutInflater) }
 
+    private var chosenIdeologyX = 0f
+    private var chosenIdeologyY = 0f
+    private var compassX: Int = 0
+    private var compassY: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        subscribeToObservers()
 
         title = getString(R.string.result_title_actionbar)
 
-        binding.buttonCompassInfo2.setOnClickListener(this)
-
-
-        val youThoughtText = getString(R.string.result_subtitle_you_thought)
-        viewmodel.getChosenIdeology().observe(this, {
-            binding.title22.text = "$youThoughtText: $it"
-        })
-        viewmodel.getResultIdeology().observe(this, Observer {
-            binding.title2.text = it
-        })
-
-        startResultPointsAnimation()
-
-        viewmodel.getCompassX().observe(this, Observer {
-            compassX = it
-        })
-        viewmodel.getCompassY().observe(this, Observer {
-            compassY = it
-        })
+        binding.buttonCompassInfo2.setOnClickListener {
+            viewmodel.onCompassInfoClick()
+            val intent = Intent(this, IdeologyInfoActivity::class.java)
+            viewmodel.resultIdeologyResId.observe(this) { // TODO: One time info, get rid LiveData or not
+                intent.putExtra(EXTRA_IDEOLOGY_TITLE_RES, it)
+            }
+            startActivity(intent)
+            pushLeft(this) // info in
+        }
 
         setContentViewForBase(binding.root)
     }
 
+    /***********************************************************/
+
+    private fun subscribeToObservers() {
+       viewmodel.allDataCollectedState.observe(this) {
+           if (it == true) {
+               startResultPointsAnimation()
+           }
+       }
+
+        viewmodel.chosenIdeologyStringId.observe(this) {
+            val youThoughtText = getString(R.string.result_subtitle_you_thought)
+            binding.title22.text = "$youThoughtText: ${getIdeologyResIdByStringId(it).resString(this)}"
+        }
+        viewmodel.resultIdeologyResId.observe(this) {
+            binding.title2.text = it.resString(this)
+        }
+
+        viewmodel.compassX.observe(this) {
+            compassX = it
+        }
+        viewmodel.compassY.observe(this) {
+            compassY = it
+        }
+        viewmodel.chosenViewX.observe(this) {
+            chosenIdeologyX = it
+        }
+        viewmodel.chosenViewY.observe(this) {
+            chosenIdeologyY = it
+            //startResultPointsAnimation() // FIXME: get rid, replace
+        }
+    }
+
     override fun onBackPressed() {
         showEndQuizDialogLambda(this) {
-            startActivity(Intent(this, MainActivity::class.java))
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
         }
     }
 
-    /** INTERFACE METHODS */
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.button_compass_info_2 -> {
-                viewmodel.onCompassInfoClick()
-                val intent = Intent(this, ViewInfoActivity::class.java)
-                viewmodel.getResultIdeology().observe(this, Observer {
-                    intent.putExtra(EXTRA_IDEOLOGY_TITLE, it)
-                })
-                startActivity(intent)
-                pushLeft(this) // info in
-            }
-        }
-    }
 
-    /** CUSTOM METHODS */
     private fun startResultPointsAnimation() {
         // Add start points
-        val resultPoints = ResultPointView(this, 0f, 0f)
+        val resultPoints = ResultPointView(
+            context = this,
+            radiusInDp = 0f,
+            radiusResultInDp = 0f,
+            chosenViewX = chosenIdeologyX,
+            chosenViewY = chosenIdeologyY,
+            compassX = compassX,
+            compassY = compassY
+        )
         resultPoints.alpha = 0f
         binding.frameResultPoints.addView(resultPoints)
 
@@ -138,13 +162,6 @@ class ResultActivity : BaseActivity(), View.OnClickListener {
             playSequentially(animateResultPoint1, animateResultPoint2)
             start()
         }
-    }
-
-    companion object {
-        var chosenViewX = 0f
-        var chosenViewY = 0f
-        var compassX: Int? = 0
-        var compassY: Int? = 0
     }
 }
 

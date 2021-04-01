@@ -4,39 +4,44 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.repository.LocalRepository
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val localRepo: LocalRepository
 ) : ViewModel() {
-    private var lang = MutableLiveData<String>()
-    private var quizOption = MutableLiveData<Int>()
-    private var quizIsActiveState = MutableLiveData<Boolean>()
+    private var _savedLang = MutableLiveData<String>()
+    val savedLang: LiveData<String> = _savedLang
 
-    fun getLang(): LiveData<String> {
-        lang.value = localRepo.getLang()
-        return lang
+    private var _quizOption = MutableLiveData<Int>()
+    val quizOption: LiveData<Int> = _quizOption
+
+    private var _quizIsActiveState = MutableLiveData<Boolean>()
+    val quizIsActiveState: LiveData<Boolean> = _quizIsActiveState
+
+    fun loadSavedLang() = viewModelScope.launch{
+        _savedLang.value = localRepo.getSavedLang()
     }
 
-    fun setLang(context: Context, lang: String) {
-        localRepo.setLang(context, lang)
+    fun setupAndSaveLang(context: Context, lang: String) = viewModelScope.launch {
+        localRepo.setupAndSaveLang(context, lang)
     }
 
-    fun getQuizOption(): LiveData<Int> {
-        localRepo.getLang()
-        quizOption.value = localRepo.loadQuizOption()
-        return quizOption
+    fun loadQuizOption() = viewModelScope.launch {
+        localRepo.getSavedLang()
+        _quizOption.value = localRepo.loadQuizOption()
     }
 
-    fun saveQuizOption(quizOptionId: Int) {
+    fun saveQuizOption(quizOptionId: Int) = viewModelScope.launch {
         localRepo.saveQuizOption(quizOptionId)
     }
 
-    fun getQuizIsActiveState(): LiveData<Boolean> {
-        quizIsActiveState.value = localRepo.getQuizIsActive()
-        return quizIsActiveState
+    fun loadQuizIsActiveState() = viewModelScope.launch {
+        _quizIsActiveState.value = localRepo.getQuizIsActive()
     }
 }

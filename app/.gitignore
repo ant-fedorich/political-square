@@ -1,2 +1,9 @@
+#app folder
 /build
+/libs
 /release
+/sampledata
+/srs/main/assets/
+.gitignore
+google-services.json
+

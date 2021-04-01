@@ -1,19 +1,21 @@
 package eltonio.projects.politicalsquare.util
 
 import android.content.Context
-import androidx.test.core.app.ApplicationProvider
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.repository.LocalRepository
-import eltonio.projects.politicalsquare.util.Ideologies
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @HiltAndroidTest
 class IdeologiesTest {
     private val enLocale = "en"
@@ -22,34 +24,34 @@ class IdeologiesTest {
     private val enTitle = "Anarchy"
     private val ruTitle = "Анархизм"
     private val ukTitle = "Анархізм"
-    lateinit var context: Context
+    @Inject
+    @ApplicationContext lateinit var context: Context
     @Inject lateinit var localRepo: LocalRepository
 
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
-
-    // TODO:  @MyRule Context
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setup() {
         hiltRule.inject()
-        context = ApplicationProvider.getApplicationContext()
     }
 
     @Test
-    fun changeLang_getIdeologyTitle_returnsTitlesChanged() {
+    fun changeLang_getIdeologyTitle_returnsTitlesChanged() = runBlocking {
         // action
-        // First lang setup
-        localRepo.setLang(context, enLocale)
-        val resultOne = Ideologies.ANARCHY.titleRes.resString(context)
+        // First savedLang setup
+        localRepo.setupAndSaveLang(context, enLocale)
+        val resultOne = Ideologies.ANARCHY.resId.resString(context)
 
         // Lang changing
-        localRepo.setLang(context, ruLocale)
-        val resultTwo = Ideologies.ANARCHY.titleRes.resString(context)
+        localRepo.setupAndSaveLang(context, ruLocale)
+        val resultTwo = Ideologies.ANARCHY.resId.resString(context)
 
         // Lang changing
-        localRepo.setLang(context, ukLocale)
-        val resultThree = Ideologies.ANARCHY.titleRes.resString(context)
+        localRepo.setupAndSaveLang(context, ukLocale)
+        val resultThree = Ideologies.ANARCHY.resId.resString(context)
 
         // verify
         assertThat(resultOne).contains(enTitle)
@@ -58,18 +60,18 @@ class IdeologiesTest {
     }
 
     @Test
-    fun changeLang_getLocale_returnsChangedLocaleSettings() {
+    fun changeLang_getLocale_returnsChangedLocaleSettings() = runBlocking {
         // action
-        // First lang setup
-        localRepo.setLang(context, enLocale)
-        val resultOne = localRepo.getLang()
+        // First savedLang setup
+        localRepo.setupAndSaveLang(context, enLocale)
+        val resultOne = localRepo.getSavedLang()
 
         // Lang changing
-        localRepo.setLang(context, ruLocale)
-        val resultTwo = localRepo.getLang()
+        localRepo.setupAndSaveLang(context, ruLocale)
+        val resultTwo = localRepo.getSavedLang()
         // Lang changing
-        localRepo.setLang(context, ukLocale)
-        val resultThree = localRepo.getLang()
+        localRepo.setupAndSaveLang(context, ukLocale)
+        val resultThree = localRepo.getSavedLang()
 
         // verify
         assertThat(resultOne).contains(enLocale)

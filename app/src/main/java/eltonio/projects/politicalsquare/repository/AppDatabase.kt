@@ -2,7 +2,7 @@ package eltonio.projects.politicalsquare.repository
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import eltonio.projects.politicalsquare.model.*
+import eltonio.projects.politicalsquare.repository.entity.*
 
 @Database(
     entities = [Question::class, QuestionAnswer::class, Answer::class, Quiz::class, QuizResult::class],

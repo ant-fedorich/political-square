@@ -3,6 +3,7 @@ package eltonio.projects.politicalsquare.ui.viewmodel
 import android.content.Context
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import eltonio.projects.politicalsquare.repository.*
@@ -10,11 +11,9 @@ import org.junit.Before
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import eltonio.projects.politicalsquare.getOrAwaitForUnitTest
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,29 +45,31 @@ class ResultViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `Get data from localRepo and put a new result to dbRepo, returns DB is not empty`() = runBlockingTest {
+    fun `Get data from localRepo and put a new result to dbRepo, returns DB is not empty`() = runBlocking {
         // setup - given
-        every { localRepo.loadQuizOption() } returns 1
+        coEvery { localRepo.loadChosenIdeologyData() } returns mockk {
+            every { chosenViewX } returns 10.10f
+            every { chosenViewY } returns 10.10f
+            every { horStartScore } returns 1
+            every { verStartScore } returns 1
+            every { horEndScore } returns 5
+            every { verEndScore } returns 5
+            every { chosenIdeologyStringId } returns "socialist"
+            every { startedAt } returns "2020-10-10 10:10:10"
+            every { chosenQuizId } returns 1
+        }
 
-        every { localRepo.getChosenViewX() } returns 10.10f
-        every { localRepo.getChosenViewY() } returns 10.10f
-        every { localRepo.getHorStartScore() } returns 1
-        every { localRepo.getVerStartScore() } returns 1
-        every { localRepo.getChosenIdeology() } returns "socialist"
-        every { localRepo.getStartedAt() } returns "2020-10-10 10:10:10"
-        every { localRepo.getHorScore() } returns 5
-        every { localRepo.getVerScore() } returns 5
+        coEvery { localRepo.loadQuizOption() } returns 1
 
         every { cloudRepo.firebaseUser } returns firebaseUser
         every { cloudRepo.firebaseUser?.uid.toString() } returns "12345"
 
         // action - when
         resultViewModel = ResultViewModel(context, localRepo, dbRepo, cloudRepo) // init trigger of getting data from localRepo and put a new getQuizResults to dbRepo
-        val result = dbRepo.getQuizResults().getOrAwaitForUnitTest()
+        val result = dbRepo.getQuizResults().asLiveData().getOrAwaitForUnitTest()
 
         // verify - then
-        verify (atLeast = 1) {
-            localRepo.loadQuizOption()
+        coVerify (atLeast = 1) {
             cloudRepo.firebaseUser
         }
 

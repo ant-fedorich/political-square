@@ -9,16 +9,20 @@ import eltonio.projects.politicalsquare.ui.ResultActivity
 import eltonio.projects.politicalsquare.util.AppUtil
 import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 
-class ResultPointView (context: Context, var radiusInDp: Float, var radiusResultInDp: Float) : View(context) {
+class ResultPointView (
+        context: Context,
+        var radiusInDp: Float,
+        var radiusResultInDp: Float,
+        val chosenViewX: Float,
+        val chosenViewY: Float,
+        val compassX: Int,
+        val compassY: Int
+    ) : View(context) {
+
     private var paint = Paint()
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-
-        val chosenViewX = ResultActivity.chosenViewX
-        val chosenViewY = ResultActivity.chosenViewY
-        val compassX = ResultActivity.compassX
-        val compassY = ResultActivity.compassY
 
         val step = convertDpToPx(context, 4f) // a cell size
         val radius = convertDpToPx(context, radiusInDp)

@@ -1,148 +1,162 @@
 package eltonio.projects.politicalsquare.ui.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eltonio.projects.politicalsquare.App
-import eltonio.projects.politicalsquare.model.QuestionWithAnswers
+import eltonio.projects.politicalsquare.repository.entity.QuestionWithAnswers
 import eltonio.projects.politicalsquare.model.Step
 import eltonio.projects.politicalsquare.repository.CloudRepository
+import eltonio.projects.politicalsquare.repository.DBRepository
 import eltonio.projects.politicalsquare.repository.LocalRepository
+import eltonio.projects.politicalsquare.util.LANG_EN
+import eltonio.projects.politicalsquare.util.LANG_RU
+import eltonio.projects.politicalsquare.util.LANG_UK
 import eltonio.projects.politicalsquare.util.TAG
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import javax.inject.Inject
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
     private var localRepo: LocalRepository,
+    private var dbRepo: DBRepository,
     private var cloudRepo: CloudRepository
 ) : ViewModel() {
-    // TODO: Refactor
+    private var _questionCounterTotal: MutableLiveData<Int> = MutableLiveData()
+    val questionCounterTotal: LiveData<Int> = _questionCounterTotal
 
+    private var _questionCounter: MutableLiveData<Int> = MutableLiveData()
+    val questionCounter: LiveData<Int> = _questionCounter
 
-    private var questionCounterTotalLiveData: MutableLiveData<Int> = MutableLiveData()
-    private var questionCounterLiveData: MutableLiveData<Int> = MutableLiveData()
-    private var questionNew: MutableLiveData<String> = MutableLiveData()
-    private var questionOld: MutableLiveData<String> = MutableLiveData()
-    private var quizFinishedEvent: MutableLiveData<Boolean> = MutableLiveData()
-    private var previousStepLiveData: MutableLiveData<Step> = MutableLiveData()
-    private var FABButtonShowEvent: MutableLiveData<Boolean> = MutableLiveData()
+    private var _questionNew: MutableLiveData<String> = MutableLiveData()
+    val questionNew: LiveData<String> = _questionNew
 
-    private var questionCountTotal = 0
-    private var questionCounter = 0
+    private var _questionOld: MutableLiveData<String> = MutableLiveData()
+    val questionOld: LiveData<String> = _questionOld
 
+    private var _quizFinishedEvent: MutableLiveData<Boolean> = MutableLiveData()
+    val quizFinishedEvent: LiveData<Boolean> = _quizFinishedEvent
+
+    private var _previousStep: MutableLiveData<Step> = MutableLiveData()
+    val previousStep: LiveData<Step> = _previousStep
+
+    private var _FABButtonShowEvent: MutableLiveData<Boolean> = MutableLiveData()
+    val FABButtonShowEvent: LiveData<Boolean> = _FABButtonShowEvent
+
+    private var questionCountTotalLocal = 0
+    private var questionCounterLocal = 0
+
+    private var questionsWithAnswers = mutableListOf<QuestionWithAnswers>()
     private lateinit var currentQuestion: QuestionWithAnswers
+
+    private var _questionDownloadedState = MutableLiveData<Boolean>()
+    val questionDownloadedState: LiveData<Boolean> = _questionDownloadedState
 
     private var horizontalScore = 0f
     private var verticalScore = 0f
-    private var previousStep: Step? = null
+    private var previousStepLocal: Step? = null
     private var isPreviousStep = false
 
+    private var langJob = viewModelScope.async { localRepo.getSavedLang() }
+
     init {
-        viewModelScope.launch (Dispatchers.IO) {
-            cloudRepo.logQuizBeginEvent()
+        viewModelScope.launch {
+            val jobLoadedResult = loadAllQuestionsJob()
+            _questionDownloadedState.postValue(jobLoadedResult.await())
         }
-        questionCountTotal = App.appQuestionsWithAnswers.size
-        questionCounterTotalLiveData.value = questionCountTotal
-    }
-    fun getQuestionCounter(): LiveData<Int> {
-        return questionCounterLiveData
     }
 
-    fun getQuestionCounterTotal(): LiveData<Int> {
-        return questionCounterTotalLiveData
+    private fun loadAllQuestionsJob() = viewModelScope.async(IO) {
+        cloudRepo.logQuizBeginEvent()
+        questionsWithAnswers = dbRepo.getQuestionsWithAnswers(localRepo.loadQuizOption()) as MutableList<QuestionWithAnswers>
+        questionsWithAnswers.shuffle()
+        questionCountTotalLocal = questionsWithAnswers.size
+        withContext(Main) {_questionCounterTotal.value = questionCountTotalLocal}
+        true
     }
 
-    fun getQuizFinishedEvent(): LiveData<Boolean> {
-        return quizFinishedEvent
-    }
+    fun showNextQuestion() = viewModelScope.launch {
+        if (questionCounterLocal < questionCountTotalLocal) {
+            _quizFinishedEvent.value = false
+            currentQuestion = questionsWithAnswers[questionCounterLocal]
 
-    fun getQuestionNew(): LiveData<String> {
-        return questionNew
-    }
-
-    fun getQuestionOld(): LiveData<String> {
-        return questionOld
-    }
-
-    fun getFABButtonShowEvent(): LiveData<Boolean> {
-        return FABButtonShowEvent
-    }
-
-    fun getPreviousStep(): LiveData<Step> {
-        return previousStepLiveData
-    }
-
-    fun showNextQuestion() {
-        if (questionCounter < questionCountTotal) {
-            quizFinishedEvent.value = false
-            currentQuestion = App.appQuestionsWithAnswers[questionCounter]
-
-            when (localRepo.getLang()) {
-                "uk" -> {
-                    if (questionCounter > 0)
-                        questionOld.value = App.appQuestionsWithAnswers[questionCounter - 1].questionUk
-                    questionNew.value = currentQuestion.questionUk
+            when (langJob.await()) {
+                LANG_UK -> {
+                    if (questionCounterLocal > 0)
+                        _questionOld.value = questionsWithAnswers[questionCounterLocal - 1].questionUk
+                    _questionNew.value = currentQuestion.questionUk
                 }
-                "ru" -> {
-                    if (questionCounter > 0)
-                        questionOld.value = App.appQuestionsWithAnswers[questionCounter - 1].questionRu
-                    questionNew.value = currentQuestion.questionRu
+                LANG_RU -> {
+                    if (questionCounterLocal > 0)
+                        _questionOld.value = questionsWithAnswers[questionCounterLocal - 1].questionRu
+                    _questionNew.value = currentQuestion.questionRu
                 }
-                "en" -> {
-                    if (questionCounter > 0)
-                        questionOld.value = App.appQuestionsWithAnswers[questionCounter - 1].questionEn
-                    questionNew.value = currentQuestion.questionEn
+                LANG_EN -> {
+                    if (questionCounterLocal > 0)
+                        _questionOld.value = questionsWithAnswers[questionCounterLocal - 1].questionEn
+                    _questionNew.value = currentQuestion.questionEn
                 }
                 // end
             }
-            questionCounter++
-            Log.i(TAG, "VM: questionCounter: $questionCounter")
-            questionCounterLiveData.value = questionCounter
+            questionCounterLocal++
+            Log.i(TAG, "VM: questionCounter: $questionCounterLocal")
+            _questionCounter.value = questionCounterLocal
         } else {
-            quizFinishedEvent.value = true
+            _quizFinishedEvent.value = true
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
-            localRepo.setHorScore(horizontalScore.toInt())
-            localRepo.setVerScore(verticalScore.toInt())
+            withContext(IO) {
+                localRepo.loadChosenIdeologyData()?.apply {
+                    localRepo.saveChosenIdeologyData(
+                        x = chosenViewX,
+                        y = chosenViewY,
+                        horStartScore = horStartScore,
+                        verStartScore = verStartScore,
+                        ideology = chosenIdeologyStringId,
+                        quizId = chosenQuizId ,
+                        startedAt = startedAt,
+                        horEndScore = horizontalScore.toInt(),
+                        verEndScore = verticalScore.toInt()
+                    )
+                }
+            }
         }
     }
 
-    fun showPrevQuestion() {
+    fun showPrevQuestion() = viewModelScope.launch {
         isPreviousStep = true
-        if (questionCounter > 1) {
-            questionCounter--
-            questionCounterLiveData.value = questionCounter
+        if (questionCounterLocal > 1) {
+            questionCounterLocal--
+            _questionCounter.value = questionCounterLocal
 
-            currentQuestion = App.appQuestionsWithAnswers[questionCounter-1]
+            currentQuestion = questionsWithAnswers[questionCounterLocal-1]
 
-            when (localRepo.getLang()) {
-                "uk" -> {
-                    questionOld.value = currentQuestion.questionUk
+            when (langJob.await()) {
+                LANG_UK -> {
+                    _questionOld.value = currentQuestion.questionUk
                 }
-                "ru" -> {
-                    questionOld.value = currentQuestion.questionRu
+                LANG_RU -> {
+                    _questionOld.value = currentQuestion.questionRu
 
                 }
-                "en" -> {
-                    questionOld.value = currentQuestion.questionEn
+                LANG_EN -> {
+                    _questionOld.value = currentQuestion.questionEn
                 }
             }
-            val prevStep = previousStep
+            val prevStep = previousStepLocal
             if (prevStep != null) {
-                previousStepLiveData.value = prevStep
+                _previousStep.value = prevStep
                 if (prevStep.scale == "horizontal")
                     horizontalScore -= prevStep.point
                 else
                     verticalScore -= prevStep.point
             }
         }
-        previousStep = null
+        previousStepLocal = null
         isPreviousStep = false
 
-        FABButtonShowEvent.value = false
+        _FABButtonShowEvent.value = false
     }
 
     fun checkAnswer(radioSelectedIndex: Int) {
@@ -153,14 +167,14 @@ class QuizViewModel @Inject constructor(
         if (scale == "horizontal") horizontalScore += point else verticalScore += point
 
         step.let {
-            it.questionIndex = questionCounter-1
+            it.questionIndex = questionCounterLocal-1
             it.rbIndex = radioSelectedIndex
             it.scale = scale
             it.point = point
         }
         // Save as a previous step
-        previousStep = step
+        previousStepLocal = step
 
-        FABButtonShowEvent.value = true
+        _FABButtonShowEvent.value = true
     }
 }

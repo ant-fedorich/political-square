@@ -4,35 +4,43 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
-import eltonio.projects.politicalsquare.DatabaseRule
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.getOrAwait
 import eltonio.projects.politicalsquare.repository.entity.Quiz
 import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.*
+import javax.inject.Inject
 
 
 @ExperimentalCoroutinesApi
 @SmallTest
-class QuizResultDaoTest {
-    private lateinit var quizResultDao: QuizResultDao
-    private lateinit var quizDao: QuizDao
-
+@HiltAndroidTest
+class QuestionsDaoWithHiltTest {
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
-    @get:Rule
-    val databaseRule = DatabaseRule()
+
+    @Inject lateinit var quizResultDao: QuizResultDao
+    @Inject lateinit var quizDao: QuizDao
+    @Inject lateinit var questionDao: QuestionDao
+
 
     @Before
     fun setup() {
-        quizResultDao = databaseRule.database.quizResultDao()
-        quizDao = databaseRule.database.quizDaoForTesting()
+        hiltRule.inject()
     }
+
+//    @Test
+//    fun getQuestions() {
+//        val questionList = questionDao.getQuestionsWithAnswers(1)
+//    }
 
     @Test
     fun addQuizResult_OneItem_returnsDBHasThisItem() = runBlockingTest{
-        //setup
         val quizItem = Quiz(1, "NewQuiz", "Developer", "Test quiz")
         quizDao.addQuiz(quizItem)
 
@@ -57,6 +65,7 @@ class QuizResultDaoTest {
 
     @Test
     fun deleteQuizResult_OneItem_returnsDBHasNoItems() = runBlockingTest {
+        //setup
         val quizItem = Quiz(1, "NewQuiz", "Developer", "Test quiz")
         quizDao.addQuiz(quizItem)
 

@@ -27,7 +27,7 @@ object FakeDBModule {
             .allowMainThreadQueries()
             .build()
 
-
+//
 //    @Singleton
 //    @Provides
 //    fun provideFakeDatabase(@ApplicationContext context: Context): AppDatabase {
@@ -38,8 +38,6 @@ object FakeDBModule {
 //            .createFromAsset(DB_NAME)
 //            .build()
 //    }
-
-
 
     @Singleton
     @Provides

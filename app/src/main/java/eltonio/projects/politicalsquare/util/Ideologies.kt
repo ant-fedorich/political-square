@@ -1,13 +1,10 @@
 package eltonio.projects.politicalsquare.util
 
-import android.app.Activity
 import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.R
-import javax.inject.Inject
 
 
-enum class Ideologies(titleRes: Int, stringId: String) {
+enum class Ideologies(resId: Int, stringId: String) {
     AUTHORITARIAN_LEFT(R.string.title_authoritarian_left, "authoritarian_left"),
     RADICAL_NATIONALISM(R.string.title_nationalism, "radical_nationalism"),
     POWER_CENTRISM(R.string.title_powercentrism, "power_centrism"),
@@ -27,8 +24,7 @@ enum class Ideologies(titleRes: Int, stringId: String) {
     LEFT_ANARCHY(R.string.title_left_anarchy, "left_anarchy"),
     LIBERTARIAN_SOCIALISM(R.string.title_liberal_socialism, "libertarian_socialism");
 
-
-    var titleRes = titleRes
+    var resId = resId
         private set
 
     var stringId = stringId

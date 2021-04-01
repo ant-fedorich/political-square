@@ -56,7 +56,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.31"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.activity:activity-ktx:1.3.0-alpha04'
     implementation 'androidx.fragment:fragment-ktx:1.3.1'
@@ -69,6 +69,10 @@ dependencies {
     implementation "com.github.skydoves:balloon:1.2.3"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'// For tooltip
 
+    //DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha08"
+    implementation "androidx.datastore:datastore:1.0.0-alpha08"
+
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
@@ -78,12 +82,10 @@ dependencies {
 
     // Local Unit Test
     def hilt_testing = "2.33-beta"
-    def mockito = "2.23.0"
-    def mockito_kotlin = "2.0.0-alpha01"
     testImplementation "androidx.test:core:1.3.0"
     testImplementation "androidx.test.ext:junit-ktx:1.1.2"
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "com.google.truth:truth:1.1.1"
+    testImplementation "com.google.truth:truth:1.1.2"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
     testImplementation "com.google.dagger:hilt-android-testing:$hilt_testing"
     testImplementation "io.mockk:mockk:1.11.0"
@@ -91,7 +93,7 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:2.1.0"
 
     // Instrumented Unit Test
-    androidTestImplementation "com.google.truth:truth:1.1.1"
+    androidTestImplementation "com.google.truth:truth:1.1.2"
     androidTestImplementation "org.mockito:mockito-core:2.23.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
     androidTestImplementation "androidx.test:core-ktx:1.3.0"
@@ -127,10 +129,9 @@ dependencies {
 
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
 
     // Kotlin components
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.31"
@@ -143,7 +144,4 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     androidTestImplementation 'androidx.test:rules:1.3.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-
-
-
 }

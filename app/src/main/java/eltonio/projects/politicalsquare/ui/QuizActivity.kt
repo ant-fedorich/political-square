@@ -19,18 +19,22 @@ import android.widget.RadioButton
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 
 import eltonio.projects.politicalsquare.*
 import eltonio.projects.politicalsquare.databinding.ActivityQuizBinding
 import eltonio.projects.politicalsquare.ui.viewmodel.QuizViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.defaultAnimationListener
 import eltonio.projects.politicalsquare.util.AppUtil.showEndQuizDialogLambda
 import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
-class QuizActivity : BaseActivity(), View.OnTouchListener {
+class QuizActivity : BaseActivity() {
     private val viewmodel: QuizViewModel by viewModels()
     private val binding: ActivityQuizBinding by lazy { ActivityQuizBinding.inflate(layoutInflater) }
 
@@ -49,18 +53,47 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        subscribeObservers()
+        setupUIText()
+        setupRadioHovers()
+        subscribeObserversForRadioHovers() // TODO: combine it all or not
 
-        viewmodel.getQuestionCounterTotal().observe(this, Observer {
+        // setup listeners
+        binding.fabUndo.setOnClickListener {
+            viewmodel.showPrevQuestion()
+        }
+        binding.radioAnswer1.setOnTouchListener { v, event -> onTouchRadioButton(v, event) }
+        binding.radioAnswer2.setOnTouchListener { v, event -> onTouchRadioButton(v, event) }
+        binding.radioAnswer3.setOnTouchListener { v, event -> onTouchRadioButton(v, event) }
+        binding.radioAnswer4.setOnTouchListener { v, event -> onTouchRadioButton(v, event) }
+        binding.radioAnswer5.setOnTouchListener { v, event -> onTouchRadioButton(v, event) }
+
+        setContentViewForBase(binding.root)
+    }
+
+    /**************************************************/
+
+
+    private fun subscribeObservers() {
+        viewmodel.questionDownloadedState.observe(this) {
+            if (it == true) {
+                viewmodel.showNextQuestion()
+            }
+        }
+
+        viewmodel.questionCounterTotal.observe(this) { // TODO: Get rid of LiveData, this is never changed
             questionCountTotal = it
             Log.i(TAG, "Activity: QuestionCountTotal = $it")
 
-        })
-        viewmodel.getQuestionCounter().observe(this, Observer {
+        }
+        viewmodel.questionCounter.observe(this) {
             questionCounter = it
             Log.i(TAG, "Activity: questionCounter = $it")
-            binding.textQuestionsLeft.text = "${questionCounter} / $questionCountTotal"
-        })
+            binding.textQuestionsLeft.text = "$questionCounter / $questionCountTotal"
+        }
+    }
 
+    private fun setupUIText() {
         this.title = getString(R.string.quiz_title_actionbar)
         binding.radioAnswer1.text = getString(R.string.quiz_radio_answer_1)
         binding.radioAnswer2.text = getString(R.string.quiz_radio_answer_2)
@@ -68,25 +101,11 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         binding.radioAnswer4.text = getString(R.string.quiz_radio_answer_4)
         binding.radioAnswer5.text = getString(R.string.quiz_radio_answer_5)
         binding.radioAnswer3.visibility = View.GONE // DISABLE "Hard to answer" radio
-
-        // Listeners
-        binding.fabUndo.setOnClickListener {
-            viewmodel.showPrevQuestion()
-        }
-        binding.radioAnswer1.setOnTouchListener(this)
-        binding.radioAnswer2.setOnTouchListener(this)
-        binding.radioAnswer3.setOnTouchListener(this)
-        binding.radioAnswer4.setOnTouchListener(this)
-        binding.radioAnswer5.setOnTouchListener(this)
-
-        getRadioHovers()
-
-        viewmodel.showNextQuestion()
-
-        setContentViewForBase(binding.root)
     }
 
-    private fun getRadioHovers() {
+
+
+    private fun setupRadioHovers() {
         // Get shape_radio_hover for every radio button
         radioShapeHover1 = ContextCompat.getDrawable(this, R.drawable.shape_radio_hover) as GradientDrawable
         radioShapeHover2 = ContextCompat.getDrawable(this, R.drawable.shape_radio_hover) as GradientDrawable
@@ -112,8 +131,16 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         for (item in radioShapeHoverList) {
             item.setColor(ContextCompat.getColor(this@QuizActivity, android.R.color.transparent))
         }
-        viewmodel.getQuizFinishedEvent().observe(this, Observer {
-            if (it == false) {
+
+    }
+
+    private fun subscribeObserversForRadioHovers() {
+        viewmodel.quizFinishedEvent.observe(this) {
+            if (it == true) {
+                startActivity(Intent(this, ResultActivity::class.java))
+                slideLeft(this) //quiz in
+                finish()
+            } else {
                 binding.radioGroupAnswers.clearCheck()
                 binding.textQuestionNew.visibility = View.VISIBLE
                 binding.textQuestionOld.visibility = View.VISIBLE
@@ -121,27 +148,22 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                 startOldQuestionAnimation()
                 startNewQuestionAnimation()
                 startProgressBarAnimation()
-            } else {
-                val intent = Intent(this, ResultActivity::class.java)
-                startActivity(intent)
-                slideLeft(this) //quiz in
-                finish()
             }
-        })
+        }
 
-        viewmodel.getQuestionNew().observe(this, Observer {
+        viewmodel.questionNew.observe(this) {
             binding.textQuestionNew.text = it
-        })
+        }
 
-        viewmodel.getQuestionOld().observe(this, Observer {
+        viewmodel.questionOld.observe(this) {
             binding.textQuestionOld.text = it
-        })
+        }
 
-        viewmodel.getFABButtonShowEvent().observe(this, Observer {
+        viewmodel.FABButtonShowEvent.observe(this) {
             if (it == true)
                 startShowFABAnimation()
-        })
-        viewmodel.getPreviousStep().observe(this, Observer {
+        }
+        viewmodel.previousStep.observe(this) {
             val prevRadioButton = binding.radioGroupAnswers[it.rbIndex] as RadioButton
             prevRadioButton.isChecked = true
             fadeInOldAnswer(prevRadioButton, radioShapeHoverList[it.rbIndex])
@@ -150,10 +172,10 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
             startNewQuestionBackwardAnimation()
             startProgressBarBackwardAnimation()
             binding.textQuestionsLeft.text = "${questionCounter} / $questionCountTotal"
-        })
+        }
     }
 
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+    private fun onTouchRadioButton(v: View?, event: MotionEvent?): Boolean {
         when (v) {
             binding.radioAnswer1 -> {
                 Log.i(TAG, "Checked Index: ${binding.radioGroupAnswers.indexOfChild(binding.radioAnswer1)}")
@@ -183,7 +205,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     binding.radioAnswer2.isChecked = true
                     viewmodel.checkAnswer(rbSelectedIndex)
                     viewmodel.showNextQuestion()
-                    if (binding.fabUndo.isEnabled != true) binding.fabUndo.isEnabled = true // TODO: V
+                    if (binding.fabUndo.isEnabled != true) binding.fabUndo.isEnabled = true
                 }
             }
 
@@ -248,7 +270,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         }
     }
 
-    /** CUSTOM METHODS */
+
 
     private fun fadeInOldAnswer(radioButtonSelected: RadioButton?, radioShapeHover: GradientDrawable) {
         if (radioButtonSelected != null) {
@@ -260,10 +282,9 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                 state = intArrayOf(android.R.attr.state_pressed, android.R.attr.state_enabled)
                 setColor(ContextCompat.getColorStateList(this@QuizActivity, R.color.selector_ripple_effect_normal))
             }
-
-            Handler().postDelayed({
+            MainScope().launch { delay(200)
                 rippleEffect.state = intArrayOf()
-                rippleEffect.setColor(ContextCompat.getColorStateList(this, R.color.selector_ripple_effect_oldselected))
+                rippleEffect.setColor(ContextCompat.getColorStateList(this@QuizActivity, R.color.selector_ripple_effect_oldselected))
                 radioShapeHover.setColor(ContextCompat.getColor(this@QuizActivity, R.color.quiz_answer_old_selected))
 
                 radioShapeHover.alpha = 0
@@ -275,7 +296,8 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                     }
                     start()
                 }
-            }, 200)
+            }
+
         }
     }
 
@@ -308,9 +330,7 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
     private fun startOldQuestionAnimation() {
         val quesOldAnimation = AnimationUtils.loadAnimation(this, R.anim.move_old_question)
         quesOldAnimation.duration = 300
-        quesOldAnimation.setAnimationListener (object : Animation.AnimationListener {
-            override fun onAnimationStart(p0: Animation?) {}
-            override fun onAnimationRepeat(p0: Animation?) {}
+        quesOldAnimation.setAnimationListener (object : Animation.AnimationListener by defaultAnimationListener{
             override fun onAnimationEnd(animation: Animation?) {
                 binding.textQuestionOld.visibility = View.INVISIBLE
             }
@@ -335,24 +355,22 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
         val quesOldAnimation = AnimationUtils.loadAnimation(this, R.anim.back_move_old_question)
         quesOldAnimation.duration = 250
 
-        quesOldAnimation.setAnimationListener(object : Animation.AnimationListener{
-            override fun onAnimationStart(p0: Animation?) {}
-            override fun onAnimationRepeat(p0: Animation?) {}
+        quesOldAnimation.setAnimationListener(object : Animation.AnimationListener by defaultAnimationListener{
             override fun onAnimationEnd(animation: Animation?) {
                 binding.textQuestionNew.visibility = View.INVISIBLE
                 binding.textQuestionOld.visibility = View.VISIBLE
-
             }
         })
         binding.textQuestionOld.startAnimation(quesOldAnimation)
     }
+
     private fun startNewQuestionBackwardAnimation() {
         val quesNewAnimation = AnimationUtils.loadAnimation(this, R.anim.back_move_new_question)
         quesNewAnimation.duration = 250
         binding.textQuestionNew.startAnimation(quesNewAnimation)
     }
-    private fun startProgressBarBackwardAnimation() {
 
+    private fun startProgressBarBackwardAnimation() {
         val percent = (((questionCounter+1).toFloat()/questionCountTotal.toFloat())*1000).toInt()
         val oldPercent = (((questionCounter).toFloat()/questionCountTotal.toFloat())*1000).toInt()
         ObjectAnimator.ofInt(binding.progressBar, "progress", percent, oldPercent).apply {
@@ -381,6 +399,5 @@ class QuizActivity : BaseActivity(), View.OnTouchListener {
                 }
         }
     }
-    // end
 }
 
