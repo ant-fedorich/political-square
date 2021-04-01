@@ -10,10 +10,10 @@ import org.junit.Before
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import eltonio.projects.politicalsquare.getOrAwaitForUnitTest
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import eltonio.projects.politicalsquare.model.ChosenIdeologyData
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
 import org.junit.Test
@@ -46,18 +46,21 @@ class ResultViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `Get data from localRepo and put a new result to dbRepo, returns DB is not empty`() = runBlockingTest {
+    fun `Get data from localRepo and put a new result to dbRepo, returns DB is not empty`() = runBlocking {
         // setup - given
-        every { localRepo.loadQuizOption() } returns 1
+        coEvery { localRepo.loadChosenIdeology() } returns mockk {
+            every { chosenViewX } returns 10.10f
+            every { chosenViewY } returns 10.10f
+            every { horStartScore } returns 1
+            every { verStartScore } returns 1
+            every { horEndScore } returns 5
+            every { verEndScore } returns 5
+            every { chosenIdeologyStringId } returns "socialist"
+            every { startedAt } returns "2020-10-10 10:10:10"
+            every { chosenQuizId } returns 1
+        }
 
-        every { localRepo.getChosenViewX() } returns 10.10f
-        every { localRepo.getChosenViewY() } returns 10.10f
-        every { localRepo.getHorStartScore() } returns 1
-        every { localRepo.getVerStartScore() } returns 1
-        every { localRepo.getChosenIdeology() } returns "socialist"
-        every { localRepo.getStartedAt() } returns "2020-10-10 10:10:10"
-        every { localRepo.getHorScore() } returns 5
-        every { localRepo.getVerScore() } returns 5
+        coEvery { localRepo.loadQuizOption() } returns 1
 
         every { cloudRepo.firebaseUser } returns firebaseUser
         every { cloudRepo.firebaseUser?.uid.toString() } returns "12345"
@@ -67,8 +70,7 @@ class ResultViewModelTest {
         val result = dbRepo.getQuizResults().getOrAwaitForUnitTest()
 
         // verify - then
-        verify (atLeast = 1) {
-            localRepo.loadQuizOption()
+        coVerify (atLeast = 1) {
             cloudRepo.firebaseUser
         }
 

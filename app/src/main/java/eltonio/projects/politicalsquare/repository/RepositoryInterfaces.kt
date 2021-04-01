@@ -27,7 +27,7 @@ interface LocalRepository {
     suspend fun setSplashIsAppeared()
     suspend fun setSplashIsNOTAppeared()
     fun clearPref()
-    suspend fun loadChosenView(): ChosenIdeologyData?
+    suspend fun loadChosenIdeology(): ChosenIdeologyData?
     suspend fun saveChosenIdeology(
         x: Float,
         y: Float,

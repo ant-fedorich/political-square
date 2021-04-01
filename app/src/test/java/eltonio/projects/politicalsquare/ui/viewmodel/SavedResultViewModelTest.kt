@@ -36,7 +36,7 @@ class SavedResultViewModelTest {
         val quizResult = QuizResult(2, 2, "ideology", 2, 2, 2, 2, "10.10.10", "11.11.11", 2, 10.0)
         dbRepo.addQuizResult(quizResult)
 
-        val result = saveResultViewModel.getResultList().getOrAwaitForUnitTest()
+        val result = saveResultViewModel.getQuizResultList().getOrAwaitForUnitTest()
 
         assertThat(result).contains(quizResult)
     }

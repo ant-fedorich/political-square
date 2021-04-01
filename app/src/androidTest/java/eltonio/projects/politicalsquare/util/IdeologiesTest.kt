@@ -9,6 +9,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -39,7 +40,7 @@ class IdeologiesTest {
     }
 
     @Test
-    fun changeLang_getIdeologyTitle_returnsTitlesChanged() = runBlockingTest {
+    fun changeLang_getIdeologyTitle_returnsTitlesChanged() = runBlocking {
         // action
         // First lang setup
         localRepo.setLang(context, enLocale)
@@ -60,7 +61,7 @@ class IdeologiesTest {
     }
 
     @Test
-    fun changeLang_getLocale_returnsChangedLocaleSettings() = runBlockingTest {
+    fun changeLang_getLocale_returnsChangedLocaleSettings() = runBlocking {
         // action
         // First lang setup
         localRepo.setLang(context, enLocale)

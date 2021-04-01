@@ -97,7 +97,7 @@ class QuizViewModel @Inject constructor(
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
             runBlocking {
-                val chosenView = localRepo.loadChosenView()
+                val chosenView = localRepo.loadChosenIdeology()
                 chosenView?.apply {
                     localRepo.saveChosenIdeology(
                         x = chosenViewX,

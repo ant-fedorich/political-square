@@ -77,7 +77,7 @@ class ResultViewModel @Inject constructor(
     }
 
     private fun collectAllResultData() = runBlocking {
-        chosenIdeology = localRepo.loadChosenView()?.also {
+        chosenIdeology = localRepo.loadChosenIdeology()?.also {
             quizId = it.chosenQuizId
             _chosenViewX.value = it.chosenViewX
             _chosenViewY.value = it.chosenViewY

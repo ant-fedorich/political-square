@@ -54,7 +54,7 @@ class SavedResultsActivity : AppCompatActivity() {
     }
 
     private fun subscribeToObservers() {
-        viewmodel.getQuizResult().observe(this) {
+        viewmodel.getQuizResultList().observe(this) {
             resultList = it
             quizAdapter.addQuizResultList(resultList)
         }

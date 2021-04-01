@@ -73,9 +73,10 @@ class FakeLocalRepository (
     }
 
     override suspend fun setSplashIsAppeared() {}
+    override suspend fun setSplashIsNOTAppeared() {}
 
     override fun clearPref() {}
-    override suspend fun loadChosenView(): ChosenIdeologyData {
+    override suspend fun loadChosenIdeology(): ChosenIdeologyData {
         return ChosenIdeologyData()
     }
 

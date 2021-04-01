@@ -15,7 +15,7 @@ class SavedResultViewModel @Inject constructor(
     private var dbRepo: DBRepository
 ) : ViewModel() {
 
-    fun getQuizResult(): LiveData<List<QuizResult>> = dbRepo.getQuizResults()
+    fun getQuizResultList(): LiveData<List<QuizResult>> = dbRepo.getQuizResults()
 
     fun getResultListWithDelay(): LiveData<List<QuizResult>> {
         return liveData {

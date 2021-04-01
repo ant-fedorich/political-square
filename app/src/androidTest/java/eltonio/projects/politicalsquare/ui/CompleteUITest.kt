@@ -52,14 +52,11 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
     fun useCase_userPassesTheQuiz() {
         launchActivity<MainActivity>()
 
+        onView(withId(R.id.spinner_quiz_options)).perform(click())
+        onData(anything()).atPosition(1).perform(click())
         onView(withId(R.id.button_start)).perform(click())
         onView(withId(R.id.button_compass_info)).perform(click())
         onView(withId(R.id.image_lib_hover)).check(matches(isDisplayed())).perform(click())
-        // FIXME:  Unresolved reference: layout_collapsing_toolbar
-//        onView(withId(R.id.layout_collapsing_toolbar))
-//            .perform(swipeUp())
-//        onView(withId(R.id.toolbar_collapsing))
-//            .perform(swipeDown(), swipeDown())
 
         onView(isRoot()).perform(pressBack())
         onView(isRoot()).perform(pressBack())
@@ -110,28 +107,12 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.radio_answer_4)).perform(click())
         onView(withId(R.id.radio_answer_5)).perform(click())
         onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_4)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
-        onView(withId(R.id.radio_answer_5)).perform(click())
         onView(withId(R.id.radio_answer_5)).perform(click())
 
         onView(withId(R.id.button_compass_info_2)).perform(click())
 
         onView(isRoot()).perform(pressBack())
 
-
-        // FIXME:  Issue with showing nav menu
         // Check Result
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open))).perform(click())
         onView(withId(R.id.nav_saved)).perform(click())
@@ -145,10 +126,9 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open))).perform(click())
         onView(withId(R.id.nav_main)).perform(click())
-//        onView(allOf(withId(android.R.id.button1), withText(appContext.getString(R.string.all_dialog_yes))))
-//            .perform(click())
     }
 
+    @Ignore
     @Test /** USE CASE 2. User starts another quiz and quits **/
     fun useCase_userStartsAnotherQuizAndQuits() {
         launchActivity<MainActivity>()
@@ -174,6 +154,8 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
 
     }
 
+
+    @Ignore
     @Test /** USE CASE 3. User reviews all menu **/
     fun useCase_userReviewsAllMenu () = runBlockingTest {
         //given - setup
@@ -195,10 +177,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
 
         //
         launchActivity<MainActivity>()
-        // FIXME: check drawer does not work
-//        onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
-//            .perform(click())
-//        onView(withId(R.id.nav_main)).perform(click())
 
         onView(withContentDescription(context.getString(R.string.navigation_drawer_open)))
             .perform(click())
@@ -214,10 +192,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
             .perform(swipeUp(), swipeDown())
         onView(withId(R.id.image_gov_hover))
             .perform(click())
-
-        // FIXME: Unresolved reference: layout_appbar
-//        onView(withId(R.id.layout_appbar))
-//            .perform(swipeUp())
 
         onView(isRoot()).perform(pressBack())
         onView(isRoot()).perform(pressBack())

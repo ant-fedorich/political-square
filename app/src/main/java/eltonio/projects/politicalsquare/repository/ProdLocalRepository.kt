@@ -129,10 +129,6 @@ class ProdLocalRepository @Inject constructor(
     }
 
 
-
-
-
-
     override suspend fun setQuizIsActive(isActive: Boolean) {
         prefDataStore.edit { prefs ->
             prefs[PrefKeys.KEY_QUIZ_IS_ACTIVE] = isActive
@@ -151,8 +147,6 @@ class ProdLocalRepository @Inject constructor(
             prefs[PrefKeys.KEY_MAIN_ACTIVITY_IS_IN_FRONT] = isInFront
         }
     }
-
-
 
     override suspend fun getMainActivityIsInFront(): Boolean {
         return prefDataStore.data.map { prefs ->
@@ -194,7 +188,7 @@ class ProdLocalRepository @Inject constructor(
         }
     }
 
-    override suspend fun loadChosenView(): ChosenIdeologyData? {
+    override suspend fun loadChosenIdeology(): ChosenIdeologyData? {
         try {
             val jsonString = prefDataStore.data.map { prefs ->
                 prefs[PrefKeys.KEY_CHOSEN_IDEOLOGY_DATA] ?: ""
