@@ -20,8 +20,6 @@ class SavedResultDetailViewModel @Inject constructor(): ViewModel() {
     private var _ideology = MutableLiveData<String>()
     val ideology: LiveData<String> = _ideology
 
-
-    // TODO: Do local unit test with LD
     fun setOwner(quizId: Int, activityContext: Context) {
         _owner.value = when(quizId) {
             QuizOptions.UKRAINE.id -> QuizOptions.UKRAINE.ownerResId.resString(activityContext)
@@ -29,9 +27,7 @@ class SavedResultDetailViewModel @Inject constructor(): ViewModel() {
             else -> "none"
         }
     }
-
-    // TODO: Do local unit test with LD
-    fun setIdeology(ideologyStringId: String, activityContext: Context) {
+    fun setIdeologyTitle(ideologyStringId: String, activityContext: Context) {
         for (ideo in Ideologies.values()) {
             if (ideo.stringId == ideologyStringId) {
                  _ideology.value = ideo.resId.resString(activityContext)

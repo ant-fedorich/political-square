@@ -82,8 +82,6 @@ dependencies {
 
     // Local Unit Test
     def hilt_testing = "2.33-beta"
-    def mockito = "2.23.0"
-    def mockito_kotlin = "2.0.0-alpha01"
     testImplementation "androidx.test:core:1.3.0"
     testImplementation "androidx.test.ext:junit-ktx:1.1.2"
     testImplementation 'junit:junit:4.13.2'

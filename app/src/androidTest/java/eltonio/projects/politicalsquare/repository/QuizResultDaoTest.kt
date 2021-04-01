@@ -1,12 +1,13 @@
 package eltonio.projects.politicalsquare.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
 import eltonio.projects.politicalsquare.DatabaseRule
 import eltonio.projects.politicalsquare.getOrAwait
-import eltonio.projects.politicalsquare.model.Quiz
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.Quiz
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.*
@@ -49,7 +50,7 @@ class QuizResultDaoTest {
             avgAnswerTime = 10.0)
         // action
         quizResultDao.addQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults().getOrAwait()
+        val allQuizResults = quizResultDao.getQuizResults().asLiveData().getOrAwait()
         // verify
         assertThat(allQuizResults).contains(quizResult)
     }
@@ -74,7 +75,7 @@ class QuizResultDaoTest {
         // action
         quizResultDao.addQuizResult(quizResult)
         quizResultDao.deleteQuizResult(quizResult)
-        val allQuizResults = quizResultDao.getQuizResults().getOrAwait()
+        val allQuizResults = quizResultDao.getQuizResults().asLiveData().getOrAwait()
 
         // verify
         assertThat(allQuizResults).doesNotContain(quizItem)

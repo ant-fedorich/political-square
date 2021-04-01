@@ -1,6 +1,5 @@
 package eltonio.projects.politicalsquare.repository
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -9,17 +8,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.FirebaseDatabaseKtxRegistrar
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
+import kotlin.coroutines.suspendCoroutine
 
 
 class ProdCloudRepository @Inject constructor(
@@ -41,20 +37,23 @@ class ProdCloudRepository @Inject constructor(
     override suspend fun createAndSignInAnonymously() {
         firebaseAuth.signInAnonymously()
             .addOnSuccessListener { result ->
-                Log.i(TAG, "signInAnonymously: SUCCESS")
-                firebaseUser = result.user
-                userLoggedIn = true // FOR TEST
+//                CoroutineScope(Dispatchers.IO).launch {
+                    //delay(3000)
+                    Log.i(TAG, "signInAnonymously: SUCCESS")
+                    firebaseUser = result.user
+                    userLoggedIn = true // FOR TEST
 
-                val userId = result.user?.uid
-                val lastSessionStarted = getDateTime()
+                    val userId = result.user?.uid
+                    val lastSessionStarted = getDateTime()
 
-                if (userId != null) {
-                    runBlocking {
-                        setUserCreationDate(userId, lastSessionStarted)
-                        updateUser(userId, lastSessionStarted)
+                    if (userId != null) {
+                        runBlocking {
+                            setUserCreationDate(userId, lastSessionStarted)
+                            updateUser(userId, lastSessionStarted)
+                        }
                     }
                 }
-            }
+//            }
             .addOnFailureListener { e ->
                 Log.e(TAG, "signInAnonymously: FAILURE: $e")
             }
@@ -80,7 +79,7 @@ class ProdCloudRepository @Inject constructor(
 
     override suspend fun setAnalyticsUserId(userId: String) = analytics.setUserId(userId)
 
-    override suspend fun setUserLangProperty(loadedLang: String) = analytics.setUserProperty(
+    override suspend fun setUserLangPropertyEvent(loadedLang: String) = analytics.setUserProperty(
         EVENT_PREFERRED_LANG, loadedLang)
 
     suspend fun logSessionStartEvent() = analytics.logEvent(EVENT_QUIZ_SESSION_START, null)

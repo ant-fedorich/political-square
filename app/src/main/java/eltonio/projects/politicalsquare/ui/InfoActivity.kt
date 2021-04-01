@@ -17,7 +17,9 @@ import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.pushLeft
 import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import eltonio.projects.politicalsquare.util.AppUtil.resString
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
@@ -45,14 +47,15 @@ class InfoActivity : AppCompatActivity() {
             showThisIdeologyHover(imageHover)
 
             if (event.action == MotionEvent.ACTION_UP) {
-                runBlocking { delay(80) }
-                v.performClick()
-                startActivity(intentToViewInfo)
-                pushLeft(this@InfoActivity)
+                MainScope().launch {
+                    delay(80) // for animation
+                    v.performClick()
+                    startActivity(intentToViewInfo)
+                    pushLeft(this@InfoActivity)
+                }
             }
             return@setOnTouchListener true
         }
-
         setContentView(binding.root)
     }
 

@@ -2,7 +2,8 @@ package eltonio.projects.politicalsquare.repository
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuizResultDao {
@@ -13,5 +14,5 @@ interface QuizResultDao {
     suspend fun deleteQuizResult(quizResult: QuizResult)
 
     @Query("SELECT * FROM QuizResult")
-    fun getQuizResults(): LiveData<List<QuizResult>>
+    fun getQuizResults(): Flow<List<QuizResult>>
 }

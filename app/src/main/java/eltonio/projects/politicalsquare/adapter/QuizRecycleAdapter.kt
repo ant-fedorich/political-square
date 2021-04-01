@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import eltonio.projects.politicalsquare.databinding.LayoutResultItemBinding
 import eltonio.projects.politicalsquare.util.Ideologies
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import eltonio.projects.politicalsquare.views.ResultListPointView
 
 class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycleAdapter.QuizRecycleViewHolder>() {
@@ -23,6 +23,7 @@ class QuizRecycleAdapter(val context: Context) : RecyclerView.Adapter<QuizRecycl
 
     fun addQuizResultList(resultList: List<QuizResult>) {
         differ.submitList(resultList)
+        notifyDataSetChanged()
     }
 
     inner class QuizRecycleViewHolder(val binding: LayoutResultItemBinding): RecyclerView.ViewHolder(binding.root)

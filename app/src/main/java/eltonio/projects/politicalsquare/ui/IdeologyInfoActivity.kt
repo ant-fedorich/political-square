@@ -39,7 +39,7 @@ class IdeologyInfoActivity : AppCompatActivity() {
         binding.titleViewInfo.text = ideologyResId.resString(this)
 
 
-        viewmodel.updateData(ideologyResId) //fixme ONLY TEST ideology.length
+        viewmodel.updateData(ideologyResId)
 
         binding.motionViewinfo.setTransitionListener(object : MotionLayout.TransitionListener by DefaultTransitionListener {
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {

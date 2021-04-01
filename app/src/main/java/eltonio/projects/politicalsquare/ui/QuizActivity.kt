@@ -28,7 +28,9 @@ import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.defaultAnimationListener
 import eltonio.projects.politicalsquare.util.AppUtil.showEndQuizDialogLambda
 import eltonio.projects.politicalsquare.util.AppUtil.slideLeft
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
@@ -66,8 +68,6 @@ class QuizActivity : BaseActivity() {
         binding.radioAnswer4.setOnTouchListener { v, event -> onTouchRadioButton(v, event) }
         binding.radioAnswer5.setOnTouchListener { v, event -> onTouchRadioButton(v, event) }
 
-        viewmodel.showNextQuestion()
-
         setContentViewForBase(binding.root)
     }
 
@@ -75,6 +75,12 @@ class QuizActivity : BaseActivity() {
 
 
     private fun subscribeObservers() {
+        viewmodel.questionDownloadedState.observe(this) {
+            if (it == true) {
+                viewmodel.showNextQuestion()
+            }
+        }
+
         viewmodel.questionCounterTotal.observe(this) { // TODO: Get rid of LiveData, this is never changed
             questionCountTotal = it
             Log.i(TAG, "Activity: QuestionCountTotal = $it")
@@ -83,7 +89,7 @@ class QuizActivity : BaseActivity() {
         viewmodel.questionCounter.observe(this) {
             questionCounter = it
             Log.i(TAG, "Activity: questionCounter = $it")
-            binding.textQuestionsLeft.text = "${questionCounter} / $questionCountTotal"
+            binding.textQuestionsLeft.text = "$questionCounter / $questionCountTotal"
         }
     }
 
@@ -276,21 +282,22 @@ class QuizActivity : BaseActivity() {
                 state = intArrayOf(android.R.attr.state_pressed, android.R.attr.state_enabled)
                 setColor(ContextCompat.getColorStateList(this@QuizActivity, R.color.selector_ripple_effect_normal))
             }
-            runBlocking { delay(200) }
+            MainScope().launch { delay(200)
+                rippleEffect.state = intArrayOf()
+                rippleEffect.setColor(ContextCompat.getColorStateList(this@QuizActivity, R.color.selector_ripple_effect_oldselected))
+                radioShapeHover.setColor(ContextCompat.getColor(this@QuizActivity, R.color.quiz_answer_old_selected))
 
-            rippleEffect.state = intArrayOf()
-            rippleEffect.setColor(ContextCompat.getColorStateList(this, R.color.selector_ripple_effect_oldselected))
-            radioShapeHover.setColor(ContextCompat.getColor(this@QuizActivity, R.color.quiz_answer_old_selected))
-
-            radioShapeHover.alpha = 0
-            ValueAnimator.ofArgb(0, 255).apply {
-                duration = 200 //200
-                addUpdateListener {
-                    radioShapeHover.setColor(ContextCompat.getColor(this@QuizActivity, R.color.quiz_answer_old_selected))
-                    radioShapeHover.alpha = this.animatedValue as Int
+                radioShapeHover.alpha = 0
+                ValueAnimator.ofArgb(0, 255).apply {
+                    duration = 200 //200
+                    addUpdateListener {
+                        radioShapeHover.setColor(ContextCompat.getColor(this@QuizActivity, R.color.quiz_answer_old_selected))
+                        radioShapeHover.alpha = this.animatedValue as Int
+                    }
+                    start()
                 }
-                start()
             }
+
         }
     }
 

@@ -35,8 +35,6 @@ class ResultActivity : BaseActivity() {
 
         title = getString(R.string.result_title_actionbar)
 
-        //startResultPointsAnimation()
-
         binding.buttonCompassInfo2.setOnClickListener {
             viewmodel.onCompassInfoClick()
             val intent = Intent(this, IdeologyInfoActivity::class.java)
@@ -53,7 +51,12 @@ class ResultActivity : BaseActivity() {
     /***********************************************************/
 
     private fun subscribeToObservers() {
-        // TODO: this is all One time information, get rid LiveData or not
+       viewmodel.allDataCollectedState.observe(this) {
+           if (it == true) {
+               startResultPointsAnimation()
+           }
+       }
+
         viewmodel.chosenIdeologyStringId.observe(this) {
             val youThoughtText = getString(R.string.result_subtitle_you_thought)
             binding.title22.text = "$youThoughtText: ${getIdeologyResIdByStringId(it).resString(this)}"
@@ -73,13 +76,16 @@ class ResultActivity : BaseActivity() {
         }
         viewmodel.chosenViewY.observe(this) {
             chosenIdeologyY = it
-            startResultPointsAnimation() // FIXME: get rid, replace
+            //startResultPointsAnimation() // FIXME: get rid, replace
         }
     }
 
     override fun onBackPressed() {
         showEndQuizDialogLambda(this) {
-            startActivity(Intent(this, MainActivity::class.java))
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
         }
     }
 

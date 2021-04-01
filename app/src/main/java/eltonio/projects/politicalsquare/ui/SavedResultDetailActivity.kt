@@ -19,7 +19,7 @@ import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import eltonio.projects.politicalsquare.views.ResultDetailPointView
 
 @AndroidEntryPoint
-class SavedResultDetailActivity : AppCompatActivity() {
+class SavedResultDetailActivity(): AppCompatActivity() {
     private val viewmodel: SavedResultDetailViewModel by viewModels()
     private val binding: ActivitySavedResultDetailBinding by lazy { ActivitySavedResultDetailBinding.inflate(layoutInflater) }
 
@@ -100,7 +100,7 @@ class SavedResultDetailActivity : AppCompatActivity() {
             verResultScore = it.getInt (EXTRA_VER_RESULT_SCORE, -100)
         }
         viewmodel.setOwner(quizId, this)
-        viewmodel.setIdeology(ideologyStringId, this)
+        viewmodel.setIdeologyTitle(ideologyStringId, this)
         ideologyResId = getIdeologyResIdByStringId(ideologyStringId)
     }
 
@@ -136,11 +136,10 @@ class SavedResultDetailActivity : AppCompatActivity() {
         }
     }
 
-    // todo use applicationContext or From Hilt Context
     private fun addPointsOnCompass() {
         val resultDetailPoint =
             ResultDetailPointView(
-                applicationContext,
+                this,
                 horStartScore,
                 verStartScore,
                 horResultScore,

@@ -3,7 +3,7 @@ package eltonio.projects.politicalsquare.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eltonio.projects.politicalsquare.model.QuestionWithAnswers
+import eltonio.projects.politicalsquare.repository.entity.QuestionWithAnswers
 import eltonio.projects.politicalsquare.model.Step
 import eltonio.projects.politicalsquare.repository.CloudRepository
 import eltonio.projects.politicalsquare.repository.DBRepository
@@ -12,7 +12,9 @@ import eltonio.projects.politicalsquare.util.LANG_EN
 import eltonio.projects.politicalsquare.util.LANG_RU
 import eltonio.projects.politicalsquare.util.LANG_UK
 import eltonio.projects.politicalsquare.util.TAG
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,46 +47,54 @@ class QuizViewModel @Inject constructor(
     private var questionCountTotalLocal = 0
     private var questionCounterLocal = 0
 
-    private var appQuestionsWithAnswers = mutableListOf<QuestionWithAnswers>()
+    private var questionsWithAnswers = mutableListOf<QuestionWithAnswers>()
     private lateinit var currentQuestion: QuestionWithAnswers
+
+    private var _questionDownloadedState = MutableLiveData<Boolean>()
+    val questionDownloadedState: LiveData<Boolean> = _questionDownloadedState
 
     private var horizontalScore = 0f
     private var verticalScore = 0f
     private var previousStepLocal: Step? = null
     private var isPreviousStep = false
 
-    init {
-        runBlocking {
-            cloudRepo.logQuizBeginEvent()
-            appQuestionsWithAnswers = dbRepo.getQuestionsWithAnswers(localRepo.loadQuizOption()) as MutableList<QuestionWithAnswers>
-            appQuestionsWithAnswers.shuffle()
-        }
+    private var langJob = viewModelScope.async { localRepo.getSavedLang() }
 
-        questionCountTotalLocal = appQuestionsWithAnswers.size
-        _questionCounterTotal.value = questionCountTotalLocal
+    init {
+        viewModelScope.launch {
+            val jobLoadedResult = loadAllQuestionsJob()
+            _questionDownloadedState.postValue(jobLoadedResult.await())
+        }
     }
 
-    fun showNextQuestion() {
+    private fun loadAllQuestionsJob() = viewModelScope.async(IO) {
+        cloudRepo.logQuizBeginEvent()
+        questionsWithAnswers = dbRepo.getQuestionsWithAnswers(localRepo.loadQuizOption()) as MutableList<QuestionWithAnswers>
+        questionsWithAnswers.shuffle()
+        questionCountTotalLocal = questionsWithAnswers.size
+        withContext(Main) {_questionCounterTotal.value = questionCountTotalLocal}
+        true
+    }
+
+    fun showNextQuestion() = viewModelScope.launch {
         if (questionCounterLocal < questionCountTotalLocal) {
             _quizFinishedEvent.value = false
-            currentQuestion = appQuestionsWithAnswers[questionCounterLocal]
+            currentQuestion = questionsWithAnswers[questionCounterLocal]
 
-            val lang = runBlocking { localRepo.getLang() }
-
-            when (lang) {
+            when (langJob.await()) {
                 LANG_UK -> {
                     if (questionCounterLocal > 0)
-                        _questionOld.value = appQuestionsWithAnswers[questionCounterLocal - 1].questionUk
+                        _questionOld.value = questionsWithAnswers[questionCounterLocal - 1].questionUk
                     _questionNew.value = currentQuestion.questionUk
                 }
                 LANG_RU -> {
                     if (questionCounterLocal > 0)
-                        _questionOld.value = appQuestionsWithAnswers[questionCounterLocal - 1].questionRu
+                        _questionOld.value = questionsWithAnswers[questionCounterLocal - 1].questionRu
                     _questionNew.value = currentQuestion.questionRu
                 }
                 LANG_EN -> {
                     if (questionCounterLocal > 0)
-                        _questionOld.value = appQuestionsWithAnswers[questionCounterLocal - 1].questionEn
+                        _questionOld.value = questionsWithAnswers[questionCounterLocal - 1].questionEn
                     _questionNew.value = currentQuestion.questionEn
                 }
                 // end
@@ -96,10 +106,9 @@ class QuizViewModel @Inject constructor(
             _quizFinishedEvent.value = true
             Log.i(TAG, "Vertical Score: $verticalScore, horizontal score: $horizontalScore")
 
-            runBlocking {
-                val chosenView = localRepo.loadChosenIdeology()
-                chosenView?.apply {
-                    localRepo.saveChosenIdeology(
+            withContext(IO) {
+                localRepo.loadChosenIdeologyData()?.apply {
+                    localRepo.saveChosenIdeologyData(
                         x = chosenViewX,
                         y = chosenViewY,
                         horStartScore = horStartScore,
@@ -115,17 +124,15 @@ class QuizViewModel @Inject constructor(
         }
     }
 
-    fun showPrevQuestion() {
+    fun showPrevQuestion() = viewModelScope.launch {
         isPreviousStep = true
         if (questionCounterLocal > 1) {
             questionCounterLocal--
             _questionCounter.value = questionCounterLocal
 
-            currentQuestion = appQuestionsWithAnswers[questionCounterLocal-1]
+            currentQuestion = questionsWithAnswers[questionCounterLocal-1]
 
-            val lang = runBlocking { localRepo.getLang() }
-
-            when (lang) {
+            when (langJob.await()) {
                 LANG_UK -> {
                     _questionOld.value = currentQuestion.questionUk
                 }

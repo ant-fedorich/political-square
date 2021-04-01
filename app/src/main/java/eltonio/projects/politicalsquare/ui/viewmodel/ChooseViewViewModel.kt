@@ -8,7 +8,8 @@ import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
 import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
 import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyResIdFromScore
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,9 +18,8 @@ class ChooseViewViewModel @Inject constructor(
     private val localRepo: LocalRepository,
 ) : ViewModel() {
     // TODO: Inner LiveData, why
-    private var _ideologyIsChosenEvent: MutableLiveData<Boolean> = MutableLiveData()
     private var _ideologyResId: MutableLiveData<Int> = MutableLiveData()
-
+    val ideologyResId: LiveData<Int> = _ideologyResId
     private var _quizOptionId: MutableLiveData<Int> = MutableLiveData()
     val quizOptionId: LiveData<Int> = _quizOptionId
     private var _horStartScore: MutableLiveData<Int> = MutableLiveData()
@@ -30,23 +30,24 @@ class ChooseViewViewModel @Inject constructor(
     private var x = 0f
     private var y = 0f
 
-    /** METHODS */
-    fun loadQuizOption() = runBlocking {
+    fun loadQuizOption() = viewModelScope.launch {
         _quizOptionId.value = localRepo.loadQuizOption()
     }
 
-
-
-    fun setQuizIsActive(isActive: Boolean) = runBlocking {
+    fun setQuizIsActive(isActive: Boolean) = viewModelScope.launch {
             localRepo.setQuizIsActive(isActive)
         }
 
-    fun saveChosenIdeology(x: Float, y: Float, horStartScore: Int, verStartScore: Int, ideologyStringId: String, quizId: Int) {
+    fun saveChosenIdeology(
+        x: Float,
+        y: Float,
+        horStartScore: Int,
+        verStartScore: Int,
+        ideologyStringId: String,
+        quizId: Int
+    ) = viewModelScope.launch(IO) {
         val startedAt = getDateTime()
-
-        runBlocking {
-            localRepo.saveChosenIdeology(x, y, horStartScore, verStartScore, ideologyStringId, quizId, startedAt, -1, -1)
-        }
+        localRepo.saveChosenIdeologyData(x, y, horStartScore, verStartScore, ideologyStringId, quizId, startedAt, -1, -1)
     }
 
     fun getXandYForHover(inputX: Float, inputY: Float, endX: Int, endY: Int) {
@@ -85,18 +86,10 @@ class ChooseViewViewModel @Inject constructor(
         }
     }
 
-    fun getIdeologyResId(): LiveData<Int> {
+    fun getIdeologyResId() {
         val step = convertDpToPx(context, 4f)
         _horStartScore.value = (x / step - 40).toInt()
         _verStartScore.value = (y / step - 40).toInt()
         _ideologyResId.value = getIdeologyResIdFromScore(_horStartScore.value!!, _verStartScore.value!!)
-        return _ideologyResId
-    }
-
-    fun setIdeologyIsChosenEvent(isChosen: Boolean) {
-        _ideologyIsChosenEvent.value = isChosen
-    }
-    fun getIdeologyIsChosenEvent(): LiveData<Boolean> {
-        return _ideologyIsChosenEvent
     }
 }

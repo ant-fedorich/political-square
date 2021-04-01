@@ -12,6 +12,7 @@ import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.model.ChosenIdeologyData
 import eltonio.projects.politicalsquare.model.ScreenItem
 import eltonio.projects.politicalsquare.util.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.util.*
@@ -36,10 +37,9 @@ class ProdLocalRepository @Inject constructor(
         val KEY_CHOSEN_IDEOLOGY_DATA = stringPreferencesKey(PREF_CHOSEN_IDEOLOGY_DATA)
     }
 
-    private val pref =
-        context.getSharedPreferences(PREF_QUIZ_FOR_TEST, Context.MODE_PRIVATE)
-
-    override fun clearPref() = pref.edit().clear().apply()
+    override suspend fun clearPref() {
+        prefDataStore.edit { it.clear() }
+    }
 
     override suspend fun setSplashIsAppeared() {
         prefDataStore.edit { pref ->
@@ -59,7 +59,7 @@ class ProdLocalRepository @Inject constructor(
         }.first()
     }
 
-    override suspend fun setLang(context: Context, lang: String) {
+    override suspend fun setupAndSaveLang(context: Context, lang: String) {
         val locale = Locale(lang)
         Log.d(TAG, "Lang: $lang, Default Lang: ${Locale.getDefault().language}")
         val config = Configuration()
@@ -71,7 +71,7 @@ class ProdLocalRepository @Inject constructor(
         }
     }
 
-    override suspend fun getLang(): String {
+    override suspend fun getSavedLang(): String {
         val defLang = Locale.getDefault().language
 
         return prefDataStore.data.map { prefs ->
@@ -154,7 +154,7 @@ class ProdLocalRepository @Inject constructor(
         }.first()
     }
 
-    override suspend fun saveChosenIdeology(
+    override suspend fun saveChosenIdeologyData(
         x: Float,
         y: Float,
         horStartScore: Int,
@@ -188,7 +188,7 @@ class ProdLocalRepository @Inject constructor(
         }
     }
 
-    override suspend fun loadChosenIdeology(): ChosenIdeologyData? {
+    override suspend fun loadChosenIdeologyData(): ChosenIdeologyData? {
         try {
             val jsonString = prefDataStore.data.map { prefs ->
                 prefs[PrefKeys.KEY_CHOSEN_IDEOLOGY_DATA] ?: ""

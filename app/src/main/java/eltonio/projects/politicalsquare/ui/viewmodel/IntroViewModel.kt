@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.model.ScreenItem
 import eltonio.projects.politicalsquare.repository.LocalRepository
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -27,11 +29,11 @@ class IntroViewModel @Inject constructor(
     val screenList: LiveData<MutableList<ScreenItem>> = _screenList
 
 
-    fun setSplashAnimationTime(time: Long) = runBlocking {
+    fun setSplashAnimationTime(time: Long) = viewModelScope.launch {
         localRepo.setSplashAnimationTime(time)
     }
 
-    fun checkIntroOpened() = runBlocking {
+    fun checkIntroOpened() = viewModelScope.launch {
         if (localRepo.getIntroOpened()) {
             _splashAnimationTime.value = 600L
             _introOpenEvent.value = true
@@ -43,12 +45,12 @@ class IntroViewModel @Inject constructor(
         }
     }
 
-    fun loadLang() = runBlocking {
-        _lang.value = localRepo.getLang()
+    fun loadLang() = viewModelScope.launch {
+        _lang.value = localRepo.getSavedLang()
     }
 
-    fun setLang(context: Context, lang: String) = runBlocking {
-        localRepo.setLang(context, lang)
+    fun setupAndSaveLang(context: Context, lang: String) = viewModelScope.launch {
+        localRepo.setupAndSaveLang(context, lang)
     }
 
     fun loadScreenList() {

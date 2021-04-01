@@ -2,7 +2,7 @@ package eltonio.projects.politicalsquare.repository
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import eltonio.projects.politicalsquare.model.ChosenIdeologyData
 import eltonio.projects.politicalsquare.model.ScreenItem
 
@@ -18,11 +18,11 @@ class FakeLocalRepository (
         quizResultListLiveData.postValue(quizResultList)
     }
 
-    override suspend fun setLang(context: Context, lang: String) {
+    override suspend fun setupAndSaveLang(context: Context, lang: String) {
         langInSettings = lang
     }
 
-    override suspend fun getLang(): String {
+    override suspend fun getSavedLang(): String {
         return langInSettings
     }
 
@@ -75,12 +75,12 @@ class FakeLocalRepository (
     override suspend fun setSplashIsAppeared() {}
     override suspend fun setSplashIsNOTAppeared() {}
 
-    override fun clearPref() {}
-    override suspend fun loadChosenIdeology(): ChosenIdeologyData {
+    override suspend fun clearPref() {}
+    override suspend fun loadChosenIdeologyData(): ChosenIdeologyData {
         return ChosenIdeologyData()
     }
 
-    override suspend fun saveChosenIdeology(
+    override suspend fun saveChosenIdeologyData(
         x: Float,
         y: Float,
         horStartScore: Int,
@@ -91,6 +91,5 @@ class FakeLocalRepository (
         horEndScore: Int,
         verEndScore: Int
     ) {
-        TODO("Not yet implemented")
     }
 }

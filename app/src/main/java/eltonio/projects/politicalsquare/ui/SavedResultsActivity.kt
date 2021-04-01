@@ -24,9 +24,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.databinding.ActivitySavedResultsBinding
 import eltonio.projects.politicalsquare.util.Ideologies
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import eltonio.projects.politicalsquare.ui.viewmodel.SavedResultViewModel
 import eltonio.projects.politicalsquare.util.*
+import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyResIdByStringId
 import eltonio.projects.politicalsquare.util.AppUtil.pushRight
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import org.jetbrains.annotations.TestOnly
@@ -54,7 +55,7 @@ class SavedResultsActivity : AppCompatActivity() {
     }
 
     private fun subscribeToObservers() {
-        viewmodel.getQuizResultList().observe(this) {
+        viewmodel.quizResultList.observe(this) {
             resultList = it
             quizAdapter.addQuizResultList(resultList)
         }
@@ -87,28 +88,15 @@ class SavedResultsActivity : AppCompatActivity() {
             if (direction == ItemTouchHelper.LEFT) {
                 deletedResultItem = quizAdapter.getQuizResultAt(position)
                 viewmodel.deleteQuizResult(deletedResultItem)
-                // TODO: VM
-                viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity) {
-                    resultList = it // TODO: How to get resultList immediately?
-                    quizAdapter.addQuizResultList(resultList)
-                }
 
-                for (ideo in Ideologies.values()) {
-                    if (ideo.stringId == deletedResultItem.ideologyStringId) {
-                        ideologyTitle = ideo.resId.resString(this@SavedResultsActivity)
-                    }
-                }
+                val ideologyResId = getIdeologyResIdByStringId(deletedResultItem.ideologyStringId)
+                ideologyTitle = ideologyResId.resString(this@SavedResultsActivity)
 
                 // Add Snackbar
                 Snackbar.make(binding.recyclerResultsList, "$ideologyTitle удален", Snackbar.LENGTH_LONG)
                     .setAction("Undo") {
                         viewmodel.addQuizResult(deletedResultItem)
-                        viewmodel.getResultListWithDelay().observe(this@SavedResultsActivity, Observer {
-                            resultList = it
-                            quizAdapter.addQuizResultList(resultList)
-                        })
-                    }
-                    .show()
+                    }.show()
             }
         }
 
@@ -142,22 +130,6 @@ class SavedResultsActivity : AppCompatActivity() {
         pushRight(this) //info out
     }
 
-
-
-
-    // TODO: ??? use this or not?
-//    private fun initRecycler() {
-//        quizAdapter = QuizRecycleAdapter(this)
-//        binding.recyclerResultsList.apply {
-//            adapter = quizAdapter
-//            layoutManager = LinearLayoutManager(this.context)
-//            setHasFixedSize(true)
-//        }
-//        quizAdapter.setQuizResults(resultList)
-//    }
-//
-
-
     private fun goToResultDetail(position: Int) {
         val itemView = binding.recyclerResultsList.layoutManager?.findViewByPosition(position) as ConstraintLayout
         val itemContainerTransitionName = itemView.findViewById<ConstraintLayout>(R.id.layout_item_container).transitionName
@@ -165,7 +137,6 @@ class SavedResultsActivity : AppCompatActivity() {
         val dateTransitionName = itemView.findViewById<TextView>(R.id.text_saved_result_date).transitionName
         val imageTransitionName = itemView.findViewById<ImageView>(R.id.image_compass_saved_result).transitionName
 
-        // TODO: MVVM Extra to Repository
         var intent = Intent(this, SavedResultDetailActivity::class.java).apply {
             putExtra(EXTRA_IDEOLOGY_ID, resultList[position].ideologyStringId)
             putExtra(EXTRA_QUIZ_ID, resultList[position].quizId)
