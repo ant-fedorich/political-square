@@ -10,7 +10,6 @@ import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -42,16 +41,16 @@ class IdeologiesTest {
     @Test
     fun changeLang_getIdeologyTitle_returnsTitlesChanged() = runBlocking {
         // action
-        // First lang setup
-        localRepo.setLang(context, enLocale)
+        // First savedLang setup
+        localRepo.setupAndSaveLang(context, enLocale)
         val resultOne = Ideologies.ANARCHY.resId.resString(context)
 
         // Lang changing
-        localRepo.setLang(context, ruLocale)
+        localRepo.setupAndSaveLang(context, ruLocale)
         val resultTwo = Ideologies.ANARCHY.resId.resString(context)
 
         // Lang changing
-        localRepo.setLang(context, ukLocale)
+        localRepo.setupAndSaveLang(context, ukLocale)
         val resultThree = Ideologies.ANARCHY.resId.resString(context)
 
         // verify
@@ -63,16 +62,16 @@ class IdeologiesTest {
     @Test
     fun changeLang_getLocale_returnsChangedLocaleSettings() = runBlocking {
         // action
-        // First lang setup
-        localRepo.setLang(context, enLocale)
-        val resultOne = localRepo.getLang()
+        // First savedLang setup
+        localRepo.setupAndSaveLang(context, enLocale)
+        val resultOne = localRepo.getSavedLang()
 
         // Lang changing
-        localRepo.setLang(context, ruLocale)
-        val resultTwo = localRepo.getLang()
+        localRepo.setupAndSaveLang(context, ruLocale)
+        val resultTwo = localRepo.getSavedLang()
         // Lang changing
-        localRepo.setLang(context, ukLocale)
-        val resultThree = localRepo.getLang()
+        localRepo.setupAndSaveLang(context, ukLocale)
+        val resultThree = localRepo.getSavedLang()
 
         // verify
         assertThat(resultOne).contains(enLocale)

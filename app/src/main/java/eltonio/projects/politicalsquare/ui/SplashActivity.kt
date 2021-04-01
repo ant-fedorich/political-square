@@ -44,12 +44,11 @@ class SplashActivity : AppCompatActivity() {
     }
 
    /*********************************************************************/
-    private fun startFadingAnimation() {
+    private fun startFadingAnimation() = MainScope().launch {
        //splashAnimationTime = 600L // For Test without Into
-       val fadingAnimation = AnimationUtils.loadAnimation(this, R.anim.splash_fading)
+       val fadingAnimation = AnimationUtils.loadAnimation(this@SplashActivity, R.anim.splash_fading)
        fadingAnimation.apply {
-           val animationTime = runBlocking { localRepo.getSplashAnimationTime() }
-           duration = animationTime
+           duration = localRepo.getSplashAnimationTime()
            interpolator = DecelerateInterpolator(2f)
        }
        binding.viewForeground.startAnimation(fadingAnimation)
@@ -60,13 +59,7 @@ class SplashActivity : AppCompatActivity() {
         binding.viewForeground.visibility = View.INVISIBLE
     }
 
-//    private suspend fun doActionAfterFading() {
-//        Handler().postDelayed({
-//            binding.viewForeground.visibility = View.INVISIBLE
-//        }, localRepo.getSplashAnimationTime()) //600
-//    }
-
-    private fun startMovingAnimation() = runBlocking {
+    private fun startMovingAnimation() = MainScope().launch {
         // Create moving animation
         val moveLeftUpAnimation = AnimationUtils.loadAnimation(this@SplashActivity, R.anim.splash_move_left_up)
         moveLeftUpAnimation.apply {
@@ -90,13 +83,11 @@ class SplashActivity : AppCompatActivity() {
 
 
 
-
     private fun doActionAfterMoving() = MainScope().launch {
         delay(600 + localRepo.getSplashAnimationTime())
 
         localRepo.setSplashIsAppeared()
         finish()
         overridePendingTransition(0, 0)
-
     }
 }

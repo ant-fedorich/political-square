@@ -31,7 +31,7 @@ class ProdLocalRepositoryTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
-    fun setup() {
+    fun setup() = runBlocking{
         context = ApplicationProvider.getApplicationContext()
         testSharedPref = context.getSharedPreferences(PREF_QUIZ_FOR_TEST, Context.MODE_PRIVATE)
         localRepo = ProdLocalRepository(context)
@@ -41,7 +41,7 @@ class ProdLocalRepositoryTest {
     @Test
     fun `put data for ResultActivity to SharedPref and get it`() = runBlocking {
         //given - setup
-        localRepo.saveChosenIdeology(
+        localRepo.saveChosenIdeologyData(
             x = 2.0f,
             y = 2.0f,
             horStartScore = 1,
@@ -53,7 +53,7 @@ class ProdLocalRepositoryTest {
             quizId = 1
         )
 
-        val result = localRepo.loadChosenIdeology()
+        val result = localRepo.loadChosenIdeologyData()
 
         //then - verify
         assertThat(result?.chosenQuizId).isEqualTo(1)

@@ -34,8 +34,6 @@ class SettingsActivity : AppCompatActivity() {
     private val viewmodel: SettingsViewModel by viewModels()
     private val binding: ActivitySettingsBinding by lazy { ActivitySettingsBinding.inflate(layoutInflater) }
 
-    //private val localRepo = AppRepository.Local()
-
     private lateinit var langBorderShapeUkr: GradientDrawable
     private lateinit var langBorderShapeRus: GradientDrawable
     private lateinit var langBorderShapeEng: GradientDrawable
@@ -56,7 +54,7 @@ class SettingsActivity : AppCompatActivity() {
             viewmodel.quizIsActiveState.observe(this) {
                 if (it == true) {
                     val baseBinding = ActivityBaseBinding.inflate(layoutInflater)
-                    baseBinding.activityContainer.closeDrawer(GravityCompat.START)
+                    baseBinding.baseContainer.closeDrawer(GravityCompat.START)
 
                     showEndQuizDialogLambda(this) {
                         checkRadioButton(checkedId)
@@ -66,7 +64,7 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.radioUkr.setOnTouchListener { v, e -> v.performClick() }
+        binding.radioUkr.setOnTouchListener { v, e -> onTouchItem(v, e) }
         binding.radioRus.setOnTouchListener { v, e -> onTouchItem(v, e) }
         binding.radioEng.setOnTouchListener { v, e -> onTouchItem(v, e) }
 
@@ -81,8 +79,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun subscribeToObservers() {
-        viewmodel.loadLang()
-        viewmodel.lang.observe(this) {
+        viewmodel.loadSavedLang()
+        viewmodel.savedLang.observe(this) {
             when (it) {
                 LANG_UK -> loadLangForSettings(binding.radioUkr, langBorderShapeUkr)
                 LANG_RU -> loadLangForSettings(binding.radioRus, langBorderShapeRus)
@@ -269,7 +267,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setLangAndStartMain(radioButton: RadioButton, lang: String) {
         radioButton.isChecked
-        viewmodel.setLang(this, lang)
+        viewmodel.setupAndSaveLang(this, lang)
         //refreshAllСatalogs(this)
 
         startActivity(Intent(this, MainActivity::class.java))

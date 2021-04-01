@@ -1,14 +1,15 @@
 package eltonio.projects.politicalsquare.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color.alpha
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.AdapterView
-import android.widget.Spinner
+import android.widget.Button
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.ConstraintLayout
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.model.*
@@ -30,14 +31,13 @@ class MainActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         subscribeToObservers()
-        runBlocking { delay(300) } // Needs to load Splash Activity Correctly
 
         this.title = getString(R.string.main_title_actionbar)
         startContainerFadeAnimation()
         setupSpinner()
 
         binding.buttonStart.setOnClickListener{
-            startActivity(Intent(this, ChooseViewActivity::class.java))
+            startActivity(Intent(this, ChooseIdeologyActivity::class.java))
             slideLeft(this)
         }
 
@@ -48,6 +48,8 @@ class MainActivity: BaseActivity() {
                     viewmodel.clickSpinnerItem(clickedItem.id)
                 }
             }
+
+        startContainerFadeAnimation()
 
         setContentViewForBase(binding.root)
     }
@@ -69,15 +71,5 @@ class MainActivity: BaseActivity() {
 
     private fun setupSpinner() {
         binding.spinnerQuizOptions.adapter = QuizOptionAdapter(this, QuizOptions.values())
-    }
-
-    private fun startContainerFadeAnimation() { // Is needed to load Splash Activity .alpha = 0f
-        val baseBinding = ActivityBaseBinding.inflate(LayoutInflater.from(this))
-
-        baseBinding.activityContainer.animate().apply {
-            duration = 500
-            alpha(1f)
-            interpolator = AccelerateInterpolator(3f)
-        }.start()
     }
 }

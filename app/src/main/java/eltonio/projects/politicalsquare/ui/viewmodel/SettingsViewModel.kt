@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eltonio.projects.politicalsquare.repository.LocalRepository
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -13,8 +15,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val localRepo: LocalRepository
 ) : ViewModel() {
-    private var _lang = MutableLiveData<String>()
-    val lang: LiveData<String> = _lang
+    private var _savedLang = MutableLiveData<String>()
+    val savedLang: LiveData<String> = _savedLang
 
     private var _quizOption = MutableLiveData<Int>()
     val quizOption: LiveData<Int> = _quizOption
@@ -22,24 +24,24 @@ class SettingsViewModel @Inject constructor(
     private var _quizIsActiveState = MutableLiveData<Boolean>()
     val quizIsActiveState: LiveData<Boolean> = _quizIsActiveState
 
-    fun loadLang() = runBlocking{
-        _lang.value = localRepo.getLang()
+    fun loadSavedLang() = viewModelScope.launch{
+        _savedLang.value = localRepo.getSavedLang()
     }
 
-    fun setLang(context: Context, lang: String) = runBlocking {
-        localRepo.setLang(context, lang)
+    fun setupAndSaveLang(context: Context, lang: String) = viewModelScope.launch {
+        localRepo.setupAndSaveLang(context, lang)
     }
 
-    fun loadQuizOption() = runBlocking {
-        localRepo.getLang()
+    fun loadQuizOption() = viewModelScope.launch {
+        localRepo.getSavedLang()
         _quizOption.value = localRepo.loadQuizOption()
     }
 
-    fun saveQuizOption(quizOptionId: Int) = runBlocking {
+    fun saveQuizOption(quizOptionId: Int) = viewModelScope.launch {
         localRepo.saveQuizOption(quizOptionId)
     }
 
-    fun loadQuizIsActiveState() = runBlocking {
+    fun loadQuizIsActiveState() = viewModelScope.launch {
         _quizIsActiveState.value = localRepo.getQuizIsActive()
     }
 }

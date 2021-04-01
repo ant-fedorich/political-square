@@ -14,7 +14,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @ExperimentalCoroutinesApi
@@ -40,7 +39,7 @@ class SettingsViewModelTest {
     @Test
     fun `get Lang from settings, returns en`() = runBlockingTest {
         val langDefault = "en"
-        val result = localRepo.getLang()
+        val result = localRepo.getSavedLang()
 
         assertThat(result).contains(langDefault)
     }
@@ -49,8 +48,8 @@ class SettingsViewModelTest {
     fun `change Lang in settings, returns uk`() = runBlockingTest {
         val langDefault = "en"
 
-        localRepo.setLang(context, "uk")
-        val result = localRepo.getLang()
+        localRepo.setupAndSaveLang(context, "uk")
+        val result = localRepo.getSavedLang()
 
         assertThat(result).isEqualTo("uk")
     }

@@ -8,10 +8,7 @@ import eltonio.projects.politicalsquare.repository.CloudRepository
 import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.QuizOptions
 import eltonio.projects.politicalsquare.util.AppUtil.getDateTime
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,26 +27,22 @@ class MainViewModel @Inject constructor(
     val spinnerSelection: LiveData<Int> = _spinnerSelection
 
     init {
-        runBlocking {
-            cloudRepo.setUserLangProperty(localRepo.getLang())
+        viewModelScope.launch {
             if (localRepo.getSplashAppeared() == false) _splashAppearedEvent.value = false
+            cloudRepo.setUserLangPropertyEvent(localRepo.getSavedLang())
             _spinnerSelection.value = if (localRepo.loadQuizOption() == QuizOptions.WORLD.id) 0 else 1
-            val test = localRepo.getSplashAppeared()
-            test
         }
-        initUser()
+        setupUser()
     }
 
-    private fun initUser() {
+    private fun setupUser() {
         usersRef = cloudRepo.usersRef
         currentUser = cloudRepo.firebaseUser
         lastSessionStarted = getDateTime()
 
-        runBlocking {
+        viewModelScope.launch {
             if (currentUser == null) {
-                withContext(Dispatchers.IO) {
-                    cloudRepo.createAndSignInAnonymously()
-                }
+                cloudRepo.createAndSignInAnonymously()
                 localRepo.setSessionStarted()
                 userId = currentUser?.uid ?: "none"
             } else {
@@ -68,7 +61,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun clickSpinnerItem(id: Int) = runBlocking {
+    fun clickSpinnerItem(id: Int) = viewModelScope.launch {
             when (id) {
                 QuizOptions.WORLD.id -> {
                     localRepo.saveQuizOption(QuizOptions.WORLD.id)
@@ -83,13 +76,13 @@ class MainViewModel @Inject constructor(
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    private fun onResume() = runBlocking {
+    private fun onResume() = viewModelScope.launch {
         localRepo.setMainActivityIsInFront(true)
         _spinnerSelection.value = if (localRepo.loadQuizOption() == QuizOptions.WORLD.id) 0 else 1
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    private fun onPause() = runBlocking {
+    private fun onPause() = viewModelScope.launch {
         localRepo.setMainActivityIsInFront(false)
     }
 

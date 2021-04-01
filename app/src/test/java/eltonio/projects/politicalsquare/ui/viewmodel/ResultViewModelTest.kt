@@ -3,6 +3,7 @@ package eltonio.projects.politicalsquare.ui.viewmodel
 import android.content.Context
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import eltonio.projects.politicalsquare.repository.*
@@ -10,11 +11,9 @@ import org.junit.Before
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import eltonio.projects.politicalsquare.getOrAwaitForUnitTest
-import eltonio.projects.politicalsquare.model.ChosenIdeologyData
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,7 +47,7 @@ class ResultViewModelTest {
     @Test
     fun `Get data from localRepo and put a new result to dbRepo, returns DB is not empty`() = runBlocking {
         // setup - given
-        coEvery { localRepo.loadChosenIdeology() } returns mockk {
+        coEvery { localRepo.loadChosenIdeologyData() } returns mockk {
             every { chosenViewX } returns 10.10f
             every { chosenViewY } returns 10.10f
             every { horStartScore } returns 1
@@ -67,7 +66,7 @@ class ResultViewModelTest {
 
         // action - when
         resultViewModel = ResultViewModel(context, localRepo, dbRepo, cloudRepo) // init trigger of getting data from localRepo and put a new getQuizResults to dbRepo
-        val result = dbRepo.getQuizResults().getOrAwaitForUnitTest()
+        val result = dbRepo.getQuizResults().asLiveData().getOrAwaitForUnitTest()
 
         // verify - then
         coVerify (atLeast = 1) {

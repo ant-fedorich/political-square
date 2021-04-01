@@ -2,6 +2,7 @@ package eltonio.projects.politicalsquare.ui
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onData
@@ -16,8 +17,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.getOrAwait
-import eltonio.projects.politicalsquare.model.Quiz
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import eltonio.projects.politicalsquare.repository.AppDatabase
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.Matchers.*
@@ -128,7 +128,7 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
         onView(withId(R.id.nav_main)).perform(click())
     }
 
-    @Ignore
+
     @Test /** USE CASE 2. User starts another quiz and quits **/
     fun useCase_userStartsAnotherQuizAndQuits() {
         launchActivity<MainActivity>()
@@ -155,7 +155,6 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
     }
 
 
-    @Ignore
     @Test /** USE CASE 3. User reviews all menu **/
     fun useCase_userReviewsAllMenu () = runBlockingTest {
         //given - setup
@@ -170,7 +169,7 @@ class CompleteUITest { // needs DB with Room.databaseBuilder
             duration = 100,
             avgAnswerTime = 10.0)
         database.quizResultDao().addQuizResult(quizResult)
-        val resultFromDB = database.quizResultDao().getQuizResults().getOrAwait()
+        val resultFromDB = database.quizResultDao().getQuizResults().asLiveData().getOrAwait()
 
         //verify
         assertThat(resultFromDB).isNotEmpty()

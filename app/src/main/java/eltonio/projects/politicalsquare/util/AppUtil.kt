@@ -20,6 +20,8 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.tabs.TabLayout
 import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.repository.ProdLocalRepository
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
@@ -78,7 +80,7 @@ fun showEndQuizDialogLambda(context: Context, onOkBlock: () -> Unit) {
         val dialogTitle = context.getString(R.string.all_dialog_do_you_want_to_end)
         setTitle(dialogTitle)
         setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.all_dialog_yes)) { _, _ ->
-            runBlocking {
+            MainScope().launch {
                 ProdLocalRepository(context).setQuizIsActive(false)
             }
 

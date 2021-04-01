@@ -14,9 +14,8 @@ import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import dagger.hilt.android.AndroidEntryPoint
 import eltonio.projects.politicalsquare.R
-import eltonio.projects.politicalsquare.databinding.ActivityChooseViewBinding
+import eltonio.projects.politicalsquare.databinding.ActivityChooseIdeologyBinding
 import eltonio.projects.politicalsquare.util.Ideologies
-import eltonio.projects.politicalsquare.util.Ideologies.Companion.resString
 import eltonio.projects.politicalsquare.ui.viewmodel.ChooseViewViewModel
 import eltonio.projects.politicalsquare.util.*
 import eltonio.projects.politicalsquare.util.AppUtil.convertDpToPx
@@ -27,9 +26,9 @@ import eltonio.projects.politicalsquare.views.ChoosePointView
 import kotlinx.coroutines.*
 
 @AndroidEntryPoint
-class ChooseViewActivity: BaseActivity() {
+class ChooseIdeologyActivity: BaseActivity() {
     private val viewmodel: ChooseViewViewModel by viewModels()
-    private val binding: ActivityChooseViewBinding by lazy { ActivityChooseViewBinding.inflate(layoutInflater)}
+    private val binding: ActivityChooseIdeologyBinding by lazy { ActivityChooseIdeologyBinding.inflate(layoutInflater)}
 
     //Chosen view vars
     private var ideologyStringId = ""
@@ -86,9 +85,11 @@ class ChooseViewActivity: BaseActivity() {
                 toast(this, getString(R.string.chooseview_toast_choose_first))
             }
         }
+
         binding.buttonCompassInfo.setOnClickListener {
             startActivity(Intent(this, InfoActivity::class.java))
         }
+
         binding.frame1.setOnTouchListener { v, event ->
             containerHeight = binding.frame1.height
             containerWidth = binding.frame1.width
@@ -155,14 +156,14 @@ class ChooseViewActivity: BaseActivity() {
         // end
 
         viewmodel.getXandYForHover(x, y, endX, endY)
+        viewmodel.getIdeologyResId()
 
-        viewmodel.getIdeologyResId().observe(this) {
+        viewmodel.ideologyResId.observe(this) {
             ideologyStringId = getIdeologyStringIdByResId(it)
             when (it) {
-                // TODO: Crutch: Change titleRes to StringId
                 Ideologies.AUTHORITARIAN_LEFT.resId -> showThisIdeologyHover(binding.imageAuthoLeftHover)
                 Ideologies.RADICAL_NATIONALISM.resId  -> showThisIdeologyHover(binding.imageNationHover)
-                Ideologies.POWER_CENTRISM.resId  -> showThisIdeologyHover(binding.imageProgHover)
+                Ideologies.POWER_CENTRISM.resId  -> showThisIdeologyHover(binding.imageGovHover)
                 Ideologies.SOCIAL_DEMOCRACY.resId  -> showThisIdeologyHover(binding.imageSocDemoHover)
                 Ideologies.SOCIALISM.resId  -> showThisIdeologyHover(binding.imageSocHover)
 
@@ -226,7 +227,7 @@ class ChooseViewActivity: BaseActivity() {
             interpolator = DecelerateInterpolator()
             addUpdateListener {
                 pointView = ChoosePointView(
-                    this@ChooseViewActivity,
+                    this@ChooseIdeologyActivity,
                     100f,
                     100f,
                     animatedValue as Float
@@ -260,7 +261,7 @@ class ChooseViewActivity: BaseActivity() {
             interpolator = AccelerateInterpolator()
             addUpdateListener {
                 oldPointView = ChoosePointView(
-                    this@ChooseViewActivity,
+                    this@ChooseIdeologyActivity,
                     100f,
                     100f,
                     animatedValue as Float
@@ -286,7 +287,7 @@ class ChooseViewActivity: BaseActivity() {
             interpolator = DecelerateInterpolator()
             addUpdateListener {
                 pointView = ChoosePointView(
-                    this@ChooseViewActivity,
+                    this@ChooseIdeologyActivity,
                     100f,
                     100f,
                     animatedValue as Float

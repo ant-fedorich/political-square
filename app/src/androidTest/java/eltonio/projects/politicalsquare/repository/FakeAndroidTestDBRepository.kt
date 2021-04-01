@@ -1,10 +1,10 @@
 package eltonio.projects.politicalsquare.repository
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import eltonio.projects.politicalsquare.model.QuestionWithAnswers
-import eltonio.projects.politicalsquare.model.QuizResult
-import eltonio.projects.politicalsquare.repository.DBRepository
+import androidx.lifecycle.asFlow
+import eltonio.projects.politicalsquare.repository.entity.QuestionWithAnswers
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
+import kotlinx.coroutines.flow.Flow
 
 class FakeAndroidTestDBRepository : DBRepository {
     private var quizResultList = mutableListOf<QuizResult>() // Imitation DB
@@ -32,8 +32,8 @@ class FakeAndroidTestDBRepository : DBRepository {
         refreshLiveDataInDB()
     }
 
-    override fun getQuizResults(): LiveData<List<QuizResult>> {
-        return quizResultListLiveData
+    override fun getQuizResults(): Flow<List<QuizResult>> {
+        return quizResultListLiveData.asFlow()
     }
 
     override suspend fun getQuestionsWithAnswers(quizId: Int): List<QuestionWithAnswers> {

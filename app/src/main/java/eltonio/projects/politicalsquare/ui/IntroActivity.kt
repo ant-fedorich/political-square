@@ -7,11 +7,9 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
-import eltonio.projects.politicalsquare.R
 import eltonio.projects.politicalsquare.model.ScreenItem
 import eltonio.projects.politicalsquare.adapter.IntroViewPagerAdapter
 import eltonio.projects.politicalsquare.databinding.ActivityIntroBinding
@@ -31,11 +29,10 @@ class IntroActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUISettings()
-        setContentView(R.layout.activity_intro) // TODO: Get rid, simplify
         subscribeToObservers()
 
-        // TODO: 03/17/2021 : Get rid of this. Make it in viewmodel  with Livedata
         viewmodel.checkIntroOpened()
+
 
         // Listeners
         binding.buttonNext.setOnClickListener {
@@ -80,7 +77,7 @@ class IntroActivity : AppCompatActivity() {
 
     private fun subscribeToObservers() {
         viewmodel.lang.observe(this) {
-            viewmodel.setLang(this, it) // TODO: Why to do this?
+            viewmodel.setupAndSaveLang(this, it)
         }
         viewmodel.introOpenedEvent.observe(this) {
             if (it == true) {
@@ -91,7 +88,6 @@ class IntroActivity : AppCompatActivity() {
         }
         viewmodel.splashAnimationTime.observe(this) {
             viewmodel.setSplashAnimationTime(it)
-
         }
         viewmodel.screenList.observe(this) {
             screenList = it
@@ -100,7 +96,7 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun setupUISettings() {
-        // We have to set a lang before loading UI, cause it will take a lang by system default
+        // We have to set a savedLang before loading UI, cause it will take a savedLang by system default
         viewmodel.loadLang()
         viewmodel.loadScreenList()
         window.setFlags(

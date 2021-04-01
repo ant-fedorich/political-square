@@ -5,15 +5,18 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import eltonio.projects.politicalsquare.util.QuizOptions
-import eltonio.projects.politicalsquare.model.QuizResult
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
 import eltonio.projects.politicalsquare.model.ChosenIdeologyData
 import eltonio.projects.politicalsquare.repository.CloudRepository
 import eltonio.projects.politicalsquare.repository.DBRepository
 import eltonio.projects.politicalsquare.repository.LocalRepository
 import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyStringIdByResId
 import eltonio.projects.politicalsquare.util.AppUtil.getIdeologyResIdFromScore
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -26,8 +29,6 @@ class ResultViewModel @Inject constructor(
     private var dbRepo: DBRepository,
     private var cloudRepo: CloudRepository
 ) : ViewModel() {
-
-    // TODO: Get rid of many vars
 
     private var startedAt = ""
     private var endedAt = ""
@@ -63,36 +64,40 @@ class ResultViewModel @Inject constructor(
     private var _compassY = MutableLiveData<Int>()
     val compassY: LiveData<Int> = _compassY
 
-    init {
-        runBlocking {
-            cloudRepo.logQuizCompleteEvent()
-        }
-        collectAllResultData()
-        getIdeologyData()
-        getTimeData()
-        addQuizResultToRepository()
+    private var _allDataCollectedState = MutableLiveData<Boolean>()
+    val allDataCollectedState: LiveData<Boolean> = _allDataCollectedState
 
-//        _compassX.value = horScore.plus(40)
-//        _compassY.value = verScore.plus(40)
+    init {
+        viewModelScope.launch {
+            cloudRepo.logQuizCompleteEvent()
+            val jobResult = collectAllResultData()
+            _allDataCollectedState.value = jobResult.await()
+            getIdeologyData()
+            getTimeData()
+            addQuizResultToRepository()
+        }
+
     }
 
-    private fun collectAllResultData() = runBlocking {
-        chosenIdeology = localRepo.loadChosenIdeology()?.also {
+    private fun collectAllResultData() = viewModelScope.async (IO) {
+        chosenIdeology = localRepo.loadChosenIdeologyData()?.also {
             quizId = it.chosenQuizId
-            _chosenViewX.value = it.chosenViewX
-            _chosenViewY.value = it.chosenViewY
+
             horStartScore = it.horStartScore
             verStartScore = it.verStartScore
             horEndScore = it.horEndScore
             verEndScore = it.verEndScore
             startedAt = it.startedAt
-            _chosenIdeologyStringId.value = it.chosenIdeologyStringId
-            _compassX.value = it.horEndScore.plus(40)
-            _compassY.value = it.verEndScore.plus(40)
+            withContext(Main) {
+                _chosenIdeologyStringId.value = it.chosenIdeologyStringId
+                _chosenViewX.value = it.chosenViewX
+                _chosenViewY.value = it.chosenViewY
+                _compassX.value = it.horEndScore.plus(40)
+                _compassY.value = it.verEndScore.plus(40)
+            }
         }
         userId = cloudRepo.firebaseUser?.uid.toString()
-
-        delay(1000)
+        true
     }
 
     private fun getIdeologyData() {
@@ -118,7 +123,7 @@ class ResultViewModel @Inject constructor(
                 duration/ QuizOptions.UKRAINE.quesAmount.toDouble()
     }
 
-    private fun addQuizResultToRepository() {
+    private fun addQuizResultToRepository() = viewModelScope.launch(IO) {
         val quizResult = QuizResult(
             id = 0, //id is autoincrement
             quizId = quizId,
@@ -133,13 +138,11 @@ class ResultViewModel @Inject constructor(
             avgAnswerTime = avgAnswerTime
         )
 
-        runBlocking {
             dbRepo.addQuizResult(quizResult)
             cloudRepo.addQuizResult(userId, quizResult)
-        }
     }
 
-    fun onCompassInfoClick() = runBlocking {
+    fun onCompassInfoClick() = viewModelScope.launch {
             cloudRepo.logDetailedInfoEvent()
     }
 }

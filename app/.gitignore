@@ -1,1 +1,8 @@
+#app folder
 /build
+/libs
+/release
+/sampledata
+/srs/main/assets/
+google-services.json
+

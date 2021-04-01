@@ -5,11 +5,14 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import eltonio.projects.politicalsquare.model.*
+import eltonio.projects.politicalsquare.repository.entity.QuestionWithAnswers
+import eltonio.projects.politicalsquare.repository.entity.QuizResult
+import kotlinx.coroutines.flow.Flow
 
 
 interface LocalRepository {
-    suspend fun setLang(context: Context, lang: String)
-    suspend fun getLang(): String
+    suspend fun setupAndSaveLang(context: Context, lang: String)
+    suspend fun getSavedLang(): String
     suspend fun loadQuizOption(): Int
     suspend fun setQuizIsActive(active: Boolean)
     suspend fun getIntroOpened(): Boolean
@@ -26,9 +29,9 @@ interface LocalRepository {
     suspend fun getMainActivityIsInFront(): Boolean
     suspend fun setSplashIsAppeared()
     suspend fun setSplashIsNOTAppeared()
-    fun clearPref()
-    suspend fun loadChosenIdeology(): ChosenIdeologyData?
-    suspend fun saveChosenIdeology(
+    suspend fun clearPref()
+    suspend fun loadChosenIdeologyData(): ChosenIdeologyData?
+    suspend fun saveChosenIdeologyData(
         x: Float,
         y: Float,
         horStartScore: Int,
@@ -46,7 +49,7 @@ interface DBRepository
 {
     suspend fun addQuizResult(quizResult: QuizResult)
     suspend fun deleteQuizResult(quizResult: QuizResult)
-    fun getQuizResults(): LiveData<List<QuizResult>>
+    fun getQuizResults(): Flow<List<QuizResult>>
     suspend fun getQuestionsWithAnswers(quizId: Int): List<QuestionWithAnswers>
 }
 
@@ -54,7 +57,7 @@ interface CloudRepository {
     val firebaseUser: FirebaseUser?
     val usersRef: DatabaseReference
 
-    suspend fun setUserLangProperty(lang: String)
+    suspend fun setUserLangPropertyEvent(lang: String)
     suspend fun createAndSignInAnonymously()
     suspend fun updateUser(userId: String, lastSessionStarted: String)
     suspend fun setAnalyticsUserId(userId: String)
