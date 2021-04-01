@@ -17,6 +17,7 @@
 /gradle
 /.idea
 /.gradle
+/app/src/main/assets/PoliticalSquare.db
 
 
 # Template
