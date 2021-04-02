@@ -13,3 +13,7 @@ http://eltonio.tilda.ws/political-compass
 
 ### Download
 [Google Play](https://play.google.com/store/apps/details?id=eltonio.projects.politicalsquare)
+
+#### Warning about DB
+> The origin quiz for Ukraine is a property of VoxUkraine.
+> So to build the project use `PoliticalSquare-test.db` in assets instead.
