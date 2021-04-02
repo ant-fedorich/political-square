@@ -2,6 +2,8 @@ package eltonio.projects.politicalsquare.util
 
 const val TAG = "MyApp"
 
+const val DB_NAME = "PoliticalSquare.db"
+
 const val PREF_QUIZ = "app_pref"
 const val PREF_QUIZ_FOR_TEST = "test_app_pref"
 const val PREF_SETTINGS = "PREF_SETTINGS"
@@ -45,9 +47,6 @@ const val EVENT_QUIZ_BEGIN = "quiz_begin"
 const val EVENT_QUIZ_COMPLETE = "quiz_complete"
 const val EVENT_DETAILED_INFO = "quiz_detailed_info"
 const val PARAM_LOGIN_DATE = "login_date"
-
-const val DB_NAME = "PoliticalSquare.db"
-const val TEST_DB_NAME = "test_database.db"
 
 const val LANG_UK = "uk"
 const val LANG_RU = "ru"
