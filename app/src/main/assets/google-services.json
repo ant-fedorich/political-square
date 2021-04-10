@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "2233422465423308",
+    "firebase_url": "https://political-compass-8792.firebaseio.com",
+    "project_id": "political-compass-8792",
+    "storage_bucket": "political-compass-8792.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285621923308:android:e9aa6b50065489050065489",
+        "android_client_info": {
+          "package_name": "eltonio.projects.politicalcompass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285621923308-biu12e9aa6b50065489050065489.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eltonio.projects.politicalcompass",
+            "certificate_hash": "d0854041d155b4a87esdfdsfsdfsdf1399a2a"
+          }
+        },
+        {
+          "client_id": "285621923308-tmbuu20m9gf2hsdfdsfsdfsdfr1720c2oo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC0NH8AWbbhzsOq4cn6r_234324dsf"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285621923308-tmbuu20m9sdfsdfsdfsda720c2oo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "2"
+}
