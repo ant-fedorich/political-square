@@ -25,7 +25,7 @@ In `.../util/ConstUtil.kt`, in the constant DB_NAME change DB name: from `Politi
 3. Setup a Firebase `google-service.json` file. </br>  
 > You should config this file only to run your project on Android Studio (not for using Firebase features)  
 
-See [Setup Firebase to build the Political Square](https://github.com/ant-fedorich/political-square/wiki/Setup-Firebase-to-build-the-Political-Square/_edit)
+See [Setup Firebase to build the Political Square](https://github.com/ant-fedorich/political-square/wiki/Setup-Firebase-to-build-the-Political-Square)
 
 4. Build it!
 
