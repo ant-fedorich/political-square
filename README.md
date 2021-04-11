@@ -1,5 +1,3 @@
-Info for README.md
-
 ### About the project
 Political Square (aka compass, spectrum) is a quiz about finding of your political view.  
 Is a system of coordinates on which various political movements can be distributed depending on the attitude to personal and economic freedom of a person.
