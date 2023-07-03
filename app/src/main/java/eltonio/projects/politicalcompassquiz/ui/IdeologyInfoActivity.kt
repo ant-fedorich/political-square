@@ -38,7 +38,6 @@ class IdeologyInfoActivity : AppCompatActivity() {
         ideologyResId = intent.getIntExtra(EXTRA_IDEOLOGY_TITLE_RES, 0)
         binding.titleViewInfo.text = ideologyResId.resString(this)
 
-
         viewmodel.updateData(ideologyResId)
 
         binding.motionViewinfo.setTransitionListener(object : MotionLayout.TransitionListener by DefaultTransitionListener {
@@ -50,6 +49,8 @@ class IdeologyInfoActivity : AppCompatActivity() {
 
         setContentView(binding.root)
     }
+
+//    on
 
     private fun subscribeToObservers() {
         viewmodel.imageId.observe(this) {

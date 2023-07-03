@@ -140,6 +140,19 @@
                 android:background="@color/on_surface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textPrivacyPolicy" />
+
+            <TextView
+                android:id="@+id/textPrivacyPolicy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/about_privacy_policy_link"
+                android:textAppearance="@style/TextAppearance.MyApp.Body1"
+                android:textColor="#2f80bd"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_about_desc_4" />
 
             <TextView
