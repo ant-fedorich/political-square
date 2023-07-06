@@ -6,7 +6,19 @@ apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
@@ -29,7 +41,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable false
-//            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
 //        debug {
 ////            signingConfig signingConfigs.debug

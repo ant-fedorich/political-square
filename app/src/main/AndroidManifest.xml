@@ -17,7 +17,8 @@
 
         <activity android:name="eltonio.projects.politicalcompassquiz.ui.IntroActivity"
             android:theme="@style/Theme.MyApp.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

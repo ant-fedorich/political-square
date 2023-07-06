@@ -18,6 +18,7 @@
 /.idea
 /.gradle
 /app/src/main/assets/PoliticalSquare.db
+keystore.properties
 
 
 # Template
